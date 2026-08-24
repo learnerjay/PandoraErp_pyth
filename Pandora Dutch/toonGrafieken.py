@@ -9,32 +9,48 @@ from PyQt5.QtWidgets import QDialog, QLabel, QLineEdit, QGridLayout,\
         QPushButton, QMessageBox, QComboBox
 from sqlalchemy import (Table, Column, Integer, String, MetaData,\
                         create_engine, Float, select, and_)
+import logging
+logger = logging.getLogger(__name__)
 
 def jaarweek():
+    logger.debug(">>> Entering jaarweek()")
     dt = datetime.datetime.now()
+    logger.debug("jaarweek(): dt → %s", dt)
     week = str('0'+str(dt.isocalendar()[1]))[-2:]
+    logger.debug("jaarweek(): week → %s", week)
     jaar = str(dt.isocalendar()[0])
     jrwk = jaar+week
+    logger.debug("jaarweek(): jaar → %s", jaar)
+    logger.debug("jaarweek(): jrwk → %s", jrwk)
+    logger.debug("<<< Exiting jaarweek()")
     return(jrwk)
     
 def windowSluit(self, m_email):
+    logger.debug(">>> Entering windowSluit(m_email=%s)", m_email)
     self.close()
     hoofdMenu(m_email)
+    logger.debug("<<< Exiting windowSluit(m_email=%s)", m_email)
     
 def sluit(self, m_email):
+    logger.debug(">>> Entering sluit(m_email=%s)", m_email)
     self.close()
     zoekwk(m_email)   
+    logger.debug("<<< Exiting sluit(m_email=%s)", m_email)
     
 def ongInvoer():
+    logger.debug(">>> Entering ongInvoer()")
     msg = QMessageBox()
+    logger.debug("ongInvoer(): msg → %s", msg)
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setIcon(QMessageBox.Warning)
     msg.setText('Foutieve invoer\nzoekterm opnieuw invoeren s.v.p.!')
     msg.setWindowTitle('Voortgangsgrafieken')               
+    logger.debug("<<< Exiting ongInvoer()")
     msg.exec_()
  
 def zoekwk(m_email):
+    logger.debug(">>> Entering zoekwk(m_email=%s)", m_email)
     class Widget(QDialog):
         def __init__(self, parent=None):
             super(Widget, self).__init__(parent)
@@ -111,23 +127,105 @@ def zoekwk(m_email):
             sluitBtn.setFont(QFont("Arial", 10))
             sluitBtn.setFixedWidth(100)
             sluitBtn.setStyleSheet("color: black;  background-color: gainsboro")
+            logger.debug(">>> Entering __init__(parent=%s)", parent)
+            logger.debug("__init__(parent=%s): con → %s", parent, con)
+            logger.debug("__init__(parent=%s): rppar → %s", parent, rppar)
+            logger.debug("__init__(parent=%s): resultaten → %s", parent, resultaten)
+            logger.debug("__init__(self=%s,parent=%s): resultaten → %s", self, parent, resultaten)
+            logger.debug("__init__(parent=%s): grid → %s", parent, grid)
+            logger.debug("__init__(self=%s,parent=%s): grid → %s", self, parent, grid)
+            logger.debug("__init__(parent=%s): metadata → %s", parent, metadata)
+            logger.debug("__init__(self=%s,parent=%s): metadata → %s", self, parent, metadata)
+            logger.debug("__init__(self=%s,parent=%s): params_graphs → %s", self, parent, params_graphs)
+            logger.debug("__init__(parent=%s): engine → %s", parent, engine)
+            logger.debug("__init__(self=%s,parent=%s): engine → %s", self, parent, engine)
+            logger.debug("__init__(self=%s,parent=%s): con → %s", self, parent, con)
+            logger.debug("__init__(parent=%s): selpar → %s", parent, selpar)
+            logger.debug("__init__(self=%s,parent=%s): selpar → %s", self, parent, selpar)
+            logger.debug("__init__(self=%s,parent=%s): rppar → %s", self, parent, rppar)
+            logger.debug("__init__(self=%s,parent=%s): bo_incr → %s", self, parent, bo_incr)
+            logger.debug("__init__(self=%s,parent=%s): bw_incr → %s", self, parent, bw_incr)
+            logger.debug("__init__(self=%s,parent=%s): jaar → %s", self, parent, jaar)
+            logger.debug("__init__(parent=%s): selres → %s", parent, selres)
+            logger.debug("__init__(self=%s,parent=%s): rpres → %s", self, parent, rpres)
+            logger.debug("__init__(parent=%s): rpres → %s", parent, rpres)
+            logger.debug("__init__(parent=%s): t1 → %s", parent, t1)
+            logger.debug("__init__(parent=%s): t2 → %s", parent, t2)
+            logger.debug("__init__(parent=%s): t3 → %s", parent, t3)
+            logger.debug("__init__(self=%s,parent=%s): ysch → %s", self, parent, ysch)
+            logger.debug("__init__(parent=%s): y3 → %s", parent, y3)
+            logger.debug("__init__(self=%s,parent=%s): y3val → %s", self, parent, y3val)
+            logger.debug("__init__(parent=%s): x1 → %s", parent, x1)
+            logger.debug("__init__(self=%s,parent=%s): xval1 → %s", self, parent, xval1)
+            logger.debug("__init__(parent=%s): y4 → %s", parent, y4)
+            logger.debug("__init__(self=%s,parent=%s): y4val → %s", self, parent, y4val)
+            logger.debug("__init__(parent=%s): x2 → %s", parent, x2)
+            logger.debug("__init__(self=%s,parent=%s): xval2 → %s", self, parent, xval2)
+            logger.debug("__init__(parent=%s): x → %s", parent, x)
+            logger.debug("__init__(parent=%s): y1 → %s", parent, y1)
+            logger.debug("__init__(parent=%s): y2 → %s", parent, y2)
+            logger.debug("__init__(self=%s,parent=%s): idx → %s", self, parent, idx)
+            logger.debug("__init__(self=%s,parent=%s): yval1 → %s", self, parent, yval1)
+            logger.debug("__init__(self=%s,parent=%s): yval2 → %s", self, parent, yval2)
+            logger.debug("__init__(parent=%s): series1 → %s", parent, series1)
+            logger.debug("__init__(self=%s,parent=%s): series1 → %s", self, parent, series1)
+            logger.debug("__init__(parent=%s): series2 → %s", parent, series2)
+            logger.debug("__init__(self=%s,parent=%s): series2 → %s", self, parent, series2)
+            logger.debug("__init__(parent=%s): chart → %s", parent, chart)
+            logger.debug("__init__(self=%s,parent=%s): chart → %s", self, parent, chart)
+            logger.debug("__init__(parent=%s): font → %s", parent, font)
+            logger.debug("__init__(self=%s,parent=%s): font → %s", self, parent, font)
+            logger.debug("__init__(parent=%s): axisY → %s", parent, axisY)
+            logger.debug("__init__(parent=%s): axisX → %s", parent, axisX)
+            logger.debug("__init__(self=%s,parent=%s): axisX → %s", self, parent, axisX)
+            logger.debug("__init__(self=%s,parent=%s): axisY → %s", self, parent, axisY)
+            logger.debug("__init__(parent=%s): axisPen → %s", parent, axisPen)
+            logger.debug("__init__(self=%s,parent=%s): axisPen → %s", self, parent, axisPen)
+            logger.debug("__init__(parent=%s): axisBrush → %s", parent, axisBrush)
+            logger.debug("__init__(self=%s,parent=%s): axisBrush → %s", self, parent, axisBrush)
+            logger.debug("__init__(parent=%s): Dfont → %s", parent, Dfont)
+            logger.debug("__init__(parent=%s): Lfont → %s", parent, Lfont)
+            logger.debug("__init__(self=%s,parent=%s): Lfont → %s", self, parent, Lfont)
+            logger.debug("__init__(self=%s,parent=%s): Dfont → %s", self, parent, Dfont)
+            logger.debug("__init__(parent=%s): self.chartView → %s", parent, self.chartView)
+            logger.debug("__init__(self=%s,parent=%s): chartView → %s", self, parent, chartView)
+            logger.debug("__init__(parent=%s): buttonPreview → %s", parent, buttonPreview)
+            logger.debug("__init__(self=%s,parent=%s): buttonPreview → %s", self, parent, buttonPreview)
+            logger.debug("__init__(parent=%s): buttonPrint → %s", parent, buttonPrint)
+            logger.debug("__init__(self=%s,parent=%s): buttonPrint → %s", self, parent, buttonPrint)
+            logger.debug("__init__(parent=%s): buttonSluit → %s", parent, buttonSluit)
+            logger.debug("__init__(self=%s,parent=%s): buttonSluit → %s", self, parent, buttonSluit)
+            logger.debug("<<< Exiting __init__(parent=%s)", parent)
           
         def kChanged(self, text):
+            logger.debug(">>> Entering kChanged(text=%s)", text)
+            logger.debug("kChanged(self=%s,text=%s): Keuze → %s", self, text, Keuze)
             self.Keuze.setText(text)
+            logger.debug("<<< Exiting kChanged(text=%s)", text)
             
         def zktermChanged(self, text):
+            logger.debug(">>> Entering zktermChanged(text=%s)", text)
+            logger.debug("zktermChanged(self=%s,text=%s): Zoekterm → %s", self, text, Zoekterm)
             self.Zoekterm.setText(text)
+            logger.debug("<<< Exiting zktermChanged(text=%s)", text)
  
         def returnk(self):
+            logger.debug(">>> Entering returnk()")
+            logger.debug("<<< Exiting returnk()")
             return self.Keuze.text()
         
         def returnzkterm(self):
+            logger.debug(">>> Entering returnzkterm()")
+            logger.debug("<<< Exiting returnzkterm()")
             return self.Zoekterm.text()
         
         @staticmethod
         def getData(parent=None):
+            logger.debug(">>> Entering getData(parent=%s)", parent)
             dialog = Widget(parent)
+            logger.debug("getData(parent=%s): dialog → %s", parent, dialog)
             dialog.exec_()
+            logger.debug("<<< Exiting getData(parent=%s)", parent)
             return [dialog.returnk(),dialog.returnzkterm()]       
 
     window = Widget()
@@ -148,6 +246,7 @@ def zoekwk(m_email):
         zoekwk(m_email)
         
 def printGrafiek(keuze, jrwk, m_email):
+    logger.debug(">>> Entering printGrafiek(keuze=%s,jrwk=%s,m_email=%s)", keuze, jrwk, m_email)
     class Widget(QDialog):
         def __init__(self, parent=None):
             super(Widget, self).__init__(parent)
@@ -449,14 +548,23 @@ def printGrafiek(keuze, jrwk, m_email):
             self.setGeometry(200, 40, 1395, 930)
             
         def handle_print(self):
+            logger.debug(">>> Entering handle_print()")
             printer = QPrinter(QPrinter.HighResolution)
+            logger.debug("handle_print(): printer → %s", printer)
+            logger.debug("handle_print(self=%s): printer → %s", self, printer)
             printer.setOrientation(QPrinter.Landscape)                      
             dialog = QPrintDialog(printer, self)
             if dialog.exec_() == QPrintDialog.Accepted:
+                logger.debug("handle_print(self=%s): dialog → %s", self, dialog)
+                logger.debug("handle_print(): dialog → %s", dialog)
                 self.handle_paint_request(printer)
+                logger.debug("<<< Exiting handle_print()")
     
         def handle_preview(self):
+            logger.debug(">>> Entering handle_preview()")
             dialog = QPrintPreviewDialog()
+            logger.debug("handle_preview(): dialog → %s", dialog)
+            logger.debug("handle_preview(self=%s): dialog → %s", self, dialog)
             dialog.setWindowIcon(QIcon('./images/logos/logo.jpg'))
             dialog.setWindowFlags(dialog.windowFlags()| Qt.WindowSystemMenuHint |
                                                       Qt.WindowMinMaxButtonsHint)
@@ -464,14 +572,20 @@ def printGrafiek(keuze, jrwk, m_email):
             dialog.resize(1470, 980)
             #dialog.setMinimumSize(1470, 980)
             dialog.exec_()
+            logger.debug("<<< Exiting handle_preview()")
     
         def handle_paint_request(self, printer):
+            logger.debug(">>> Entering handle_paint_request(printer=%s)", printer)
+            logger.debug("handle_paint_request(self=%s,printer=%s): printer → %s", self, printer, printer)
+            logger.debug("handle_paint_request(self=%s,printer=%s): painter → %s", self, printer, painter)
+            logger.debug("handle_paint_request(printer=%s): painter → %s", printer, painter)
             printer.setPageOrientation(QPageLayout.Landscape)
             painter = QPainter(printer)            
             painter.setViewport(self.chartView.rect())
             painter.setWindow(self.chartView.rect()) 
             self.chartView.render(painter)
             painter.end()
+            logger.debug("<<< Exiting handle_paint_request(printer=%s)", printer)
 
     win = Widget()
     win.exec_()

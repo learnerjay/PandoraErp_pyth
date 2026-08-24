@@ -6,17 +6,25 @@ from PyQt5.QtCore import Qt, QRegExp
 from PyQt5.QtGui import QFont, QPixmap, QIcon, QMovie, QColor, QRegExpValidator
 from PyQt5.QtWidgets import (QDialog, QGridLayout, QMessageBox, QLabel, QLineEdit, QPushButton, QComboBox)
 from sqlalchemy import (Table, Column, Integer, String, MetaData, create_engine, select)
+import logging
+logger = logging.getLogger(__name__)
 
 def password_check(hashed_password, password):
+    logger.debug(">>> Entering password_check(hashed_password=<redacted>,password=<redacted>)")
     ph = PasswordHasher()
+    logger.debug("password_check(hashed_password=<redacted>,password=<redacted>): ph → %s", ph)
     try:
         if ph.verify(hashed_password, password) and (len(password) > 7):  # True
            return True
     except Exception as e:
+        logger.error("Exception in password_check(hashed_password=<redacted>,password=<redacted>): %s", str(e), exc_info=True)
+        logger.debug("<<< Exiting password_check(hashed_password=<redacted>,password=<redacted>)")
         return False
 
 def goodbye():
+    logger.debug(">>> Entering goodbye()")
     msg = QMessageBox()
+    logger.debug("goodbye(): msg → %s", msg)
     msg.setStyleSheet("font: 10pt Arial; color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./image7s/logos/logo.jpg'))
     msg.setIcon(QMessageBox.Information)
@@ -24,8 +32,10 @@ def goodbye():
     msg.setWindowTitle('LOGON')
     msg.exec_()
     sys.exit()
+    logger.debug("<<< Exiting goodbye()")
 
 def info():
+    logger.debug(">>> Entering info()")
     class Widget(QDialog):
         def __init__(self, parent=None):
             super(Widget, self).__init__(parent)

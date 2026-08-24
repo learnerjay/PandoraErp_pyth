@@ -6,30 +6,41 @@ from PyQt5.QtCore import Qt, QAbstractTableModel
 from PyQt5.QtGui import QFont, QPixmap, QIcon
 from sqlalchemy import (Table, Column, Integer, String, MetaData, create_engine)
 from sqlalchemy.sql import select
+import logging
+logger = logging.getLogger(__name__)
 
 def ongInvoer():
+    logger.debug(">>> Entering ongInvoer()")
     msg = QMessageBox()
+    logger.debug("ongInvoer(): msg → %s", msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     msg.setIcon(QMessageBox.Information)
     msg.setText('Please re-enter incorrect input\nsearch term!')
     msg.setWindowTitle('Request sales companies')               
+    logger.debug("<<< Exiting ongInvoer()")
     msg.exec_() 
     
 def geenRecord():
+    logger.debug(">>> Entering geenRecord()")
     msg = QMessageBox()
+    logger.debug("geenRecord(): msg → %s", msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     msg.setIcon(QMessageBox.Warning)
     msg.setText('No record found\ncreate another selection please!')
     msg.setWindowTitle('Request sales companies')               
+    logger.debug("<<< Exiting geenRecord()")
     msg.exec_() 
      
 def windowSluit(self, m_email):
+    logger.debug(">>> Entering windowSluit(m_email=%s)", m_email)
     self.close()
     hoofdMenu(m_email)
+    logger.debug("<<< Exiting windowSluit(m_email=%s)", m_email)
 
 def koperKeuze(m_email):
+    logger.debug(">>> Entering koperKeuze(m_email=%s)", m_email)
     class Widget(QDialog):
         def __init__(self, parent=None):
             super(Widget, self).__init__(parent)
@@ -95,23 +106,46 @@ def koperKeuze(m_email):
             cancelBtn.setFont(QFont("Arial",10))
             cancelBtn.setFixedWidth(100)
             cancelBtn.setStyleSheet("color: black;  background-color: gainsboro")
+            logger.debug(">>> Entering __init__(data_list=%s,header=%s)", data_list, header)
+            logger.debug("__init__(data_list=%s,header=%s): font → %s", data_list, header, font)
+            logger.debug("__init__(data_list=%s,header=%s): table_view → %s", data_list, header, table_view)
+            logger.debug("__init__(data_list=%s,header=%s): table_model → %s", data_list, header, table_model)
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): table_model → %s", self, data_list, header, table_model)
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): table_view → %s", self, data_list, header, table_view)
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): font → %s", self, data_list, header, font)
+            logger.debug("__init__(data_list=%s,header=%s): layout → %s", data_list, header, layout)
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): layout → %s", self, data_list, header, layout)
+            logger.debug("<<< Exiting __init__(data_list=%s,header=%s)", data_list, header)
                    
         def k4Changed(self, text):
+            logger.debug(">>> Entering k4Changed(text=%s)", text)
+            logger.debug("k4Changed(self=%s,text=%s): Keuze4 → %s", self, text, Keuze4)
             self.Keuze4.setText(text)
+            logger.debug("<<< Exiting k4Changed(text=%s)", text)
             
         def zktermChanged(self, text):
+            logger.debug(">>> Entering zktermChanged(text=%s)", text)
+            logger.debug("zktermChanged(self=%s,text=%s): Zoekterm → %s", self, text, Zoekterm)
             self.Zoekterm.setText(text)
+            logger.debug("<<< Exiting zktermChanged(text=%s)", text)
  
         def returnk4(self):
+            logger.debug(">>> Entering returnk4()")
+            logger.debug("<<< Exiting returnk4()")
             return self.Keuze4.text()
         
         def returnzkterm(self):
+            logger.debug(">>> Entering returnzkterm()")
+            logger.debug("<<< Exiting returnzkterm()")
             return self.Zoekterm.text()
         
         @staticmethod
         def getData(parent=None):
+            logger.debug(">>> Entering getData(parent=%s)", parent)
             dialog = Widget(parent)
+            logger.debug("getData(parent=%s): dialog → %s", parent, dialog)
             dialog.exec_()
+            logger.debug("<<< Exiting getData(parent=%s)", parent)
             return [dialog.returnk4(), dialog.returnzkterm()]       
 
     window = Widget()
@@ -129,8 +163,10 @@ def koperKeuze(m_email):
     toonBedrijfverkoop(keuze,zoekterm,m_email)
    
 def toonBedrijfverkoop(keuze,zoekterm, m_email):
+    logger.debug(">>> Entering toonBedrijfverkoop(keuze=%s,zoekterm=%s,m_email=%s)", keuze, zoekterm, m_email)
     import validZt
     class MyWindow(QDialog):
+        logger.debug("<<< Exiting toonBedrijfverkoop(keuze=%s,zoekterm=%s,m_email=%s)", keuze, zoekterm, m_email)
         def __init__(self, data_list, header, *args):
             QWidget.__init__(self, *args,)
             self.setGeometry(50, 50, 1500, 900)
@@ -149,18 +185,75 @@ def toonBedrijfverkoop(keuze,zoekterm, m_email):
             layout = QVBoxLayout(self)
             layout.addWidget(table_view)
             self.setLayout(layout)
+            logger.debug(">>> Entering __init__(parent=%s,mylist=%s,header=%s)", parent, mylist, header)
+            logger.debug("<<< Exiting __init__(parent=%s,mylist=%s,header=%s)", parent, mylist, header)
+            logger.debug("__init__(self=%s,parent=%s,mylist=%s,header=%s): self.mylist → %s", self, parent, mylist, header, self.mylist)
     
     class MyTableModel(QAbstractTableModel):
         def __init__(self, parent, mylist, header, *args):
+            logger.debug("__init__(self=%s,parent=%s,mylist=%s,header=%s): self.header → %s", self, parent, mylist, header, self.header)
             QAbstractTableModel.__init__(self, parent, *args)
             self.mylist = mylist
+            logger.debug(">>> Entering __init__(parent=%s)", parent)
+            logger.debug("__init__(parent=%s): pixmap → %s", parent, pixmap)
+            logger.debug("__init__(parent=%s): q3Edit → %s", parent, q3Edit)
+            logger.debug("__init__(parent=%s): self.Bedrijfsnaam → %s", parent, self.Bedrijfsnaam)
+            logger.debug("__init__(self=%s,parent=%s): q3Edit → %s", self, parent, q3Edit)
+            logger.debug("__init__(parent=%s): q16Edit → %s", parent, q16Edit)
+            logger.debug("__init__(parent=%s): self.Afdeling → %s", parent, self.Afdeling)
+            logger.debug("__init__(self=%s,parent=%s): q16Edit → %s", self, parent, q16Edit)
+            logger.debug("__init__(parent=%s): q5Edit → %s", parent, q5Edit)
+            logger.debug("__init__(parent=%s): self.Rechtsvorm → %s", parent, self.Rechtsvorm)
+            logger.debug("__init__(self=%s,parent=%s): q5Edit → %s", self, parent, q5Edit)
+            logger.debug("__init__(parent=%s): q2Edit → %s", parent, q2Edit)
+            logger.debug("__init__(parent=%s): self.BTWnummer → %s", parent, self.BTWnummer)
+            logger.debug("__init__(self=%s,parent=%s): q2Edit → %s", self, parent, q2Edit)
+            logger.debug("__init__(parent=%s): q4Edit → %s", parent, q4Edit)
+            logger.debug("__init__(parent=%s): self.KvKnummer → %s", parent, self.KvKnummer)
+            logger.debug("__init__(self=%s,parent=%s): q4Edit → %s", self, parent, q4Edit)
+            logger.debug("__init__(parent=%s): q1Edit → %s", parent, q1Edit)
+            logger.debug("__init__(parent=%s): self.Straat → %s", parent, self.Straat)
+            logger.debug("__init__(self=%s,parent=%s): q1Edit → %s", self, parent, q1Edit)
+            logger.debug("__init__(parent=%s): q7Edit → %s", parent, q7Edit)
+            logger.debug("__init__(parent=%s): self.Huisnummer → %s", parent, self.Huisnummer)
+            logger.debug("__init__(self=%s,parent=%s): q7Edit → %s", self, parent, q7Edit)
+            logger.debug("__init__(parent=%s): q8Edit → %s", parent, q8Edit)
+            logger.debug("__init__(parent=%s): self.Toevoeging → %s", parent, self.Toevoeging)
+            logger.debug("__init__(self=%s,parent=%s): q8Edit → %s", self, parent, q8Edit)
+            logger.debug("__init__(parent=%s): q6Edit → %s", parent, q6Edit)
+            logger.debug("__init__(parent=%s): self.Postcode → %s", parent, self.Postcode)
+            logger.debug("__init__(self=%s,parent=%s): q6Edit → %s", self, parent, q6Edit)
+            logger.debug("__init__(parent=%s): q15Edit → %s", parent, q15Edit)
+            logger.debug("__init__(parent=%s): self.Woonplaats → %s", parent, self.Woonplaats)
+            logger.debug("__init__(self=%s,parent=%s): q15Edit → %s", self, parent, q15Edit)
+            logger.debug("__init__(parent=%s): q13Edit → %s", parent, q13Edit)
+            logger.debug("__init__(parent=%s): self.Telefoonnr → %s", parent, self.Telefoonnr)
+            logger.debug("__init__(self=%s,parent=%s): q13Edit → %s", self, parent, q13Edit)
+            logger.debug("__init__(parent=%s): q14Edit → %s", parent, q14Edit)
+            logger.debug("__init__(parent=%s): self.Bedrijfverkoopnummer → %s", parent, self.Bedrijfverkoopnummer)
+            logger.debug("__init__(self=%s,parent=%s): q14Edit → %s", self, parent, q14Edit)
+            logger.debug("__init__(parent=%s): grid → %s", parent, grid)
+            logger.debug("__init__(self=%s,parent=%s): grid → %s", self, parent, grid)
+            logger.debug("__init__(parent=%s): lbl → %s", parent, lbl)
+            logger.debug("__init__(self=%s,parent=%s): lbl → %s", self, parent, lbl)
+            logger.debug("__init__(self=%s,parent=%s): pixmap → %s", self, parent, pixmap)
+            logger.debug("__init__(parent=%s): logo → %s", parent, logo)
+            logger.debug("__init__(self=%s,parent=%s): logo → %s", self, parent, logo)
+            logger.debug("__init__(parent=%s): terugBtn → %s", parent, terugBtn)
+            logger.debug("__init__(self=%s,parent=%s): terugBtn → %s", self, parent, terugBtn)
+            logger.debug("<<< Exiting __init__(parent=%s)", parent)
             self.header = header
         def rowCount(self, parent):
+            logger.debug(">>> Entering rowCount(parent=%s)", parent)
             return len(self.mylist)
         def columnCount(self, parent):
+            logger.debug(">>> Entering columnCount(parent=%s)", parent)
             return len(self.mylist[0])
         def data(self, index, role):
+            logger.debug(">>> Entering data(index=%s,role=%s)", index, role)
             veld = self.mylist[index.row()][index.column()]
+            logger.debug("data(index=%s,role=%s): veld → %s", index, role, veld)
+            logger.debug("data(self=%s,index=%s,role=%s): veld → %s", self, index, role, veld)
             if not index.isValid():
                 return None
             elif role == Qt.TextAlignmentRole and (type(veld) == float or type(veld) == int):
@@ -170,10 +263,13 @@ def toonBedrijfverkoop(keuze,zoekterm, m_email):
             if type(veld) == float:
                 return '{:12.2f}'.format(veld)
             else:
+                logger.debug("<<< Exiting data(index=%s,role=%s)", index, role)
                 return veld
         def headerData(self, col, orientation, role):
+            logger.debug(">>> Entering headerData(col=%s,orientation=%s,role=%s)", col, orientation, role)
             if orientation == Qt.Horizontal and role == Qt.DisplayRole:
                 return self.header[col]
+            logger.debug("<<< Exiting headerData(col=%s,orientation=%s,role=%s)", col, orientation, role)
             return None
  
     header = ['Sales companyID','Company name', 'Legal status','Department', 'VAT number', 'KVK number',\
@@ -227,20 +323,30 @@ def toonBedrijfverkoop(keuze,zoekterm, m_email):
                      row[6],mstraat,int(row[7]),row[8],row[9],mplaats)]     
                                  
     def showBedrijf(idx):
+        logger.debug(">>> Entering showBedrijf(idx=%s)", idx)
         mbedrnr = idx.data()
+        logger.debug("showBedrijf(idx=%s): mbedrnr → %s", idx, mbedrnr)
         if idx.column() == 0:
             selkoper = select([kopers]).where(kopers.c.koperID == mbedrnr)
+            logger.debug("showBedrijf(idx=%s): selkoper → %s", idx, selkoper)
             rpkoper = conn.execute(selkoper).first()
+            logger.debug("showBedrijf(idx=%s): rpkoper → %s", idx, rpkoper)
             mpostcode = rpkoper[9]
             mhuisnr = int(rpkoper[7])
+            logger.debug("showBedrijf(idx=%s): mpostcode → %s", idx, mpostcode)
+            logger.debug("showBedrijf(idx=%s): mhuisnr → %s", idx, mhuisnr)
             import postcode
             mstrtplts = postcode.checkpostcode(mpostcode,mhuisnr)
             mstraat = mstrtplts[0]
+            logger.debug("showBedrijf(idx=%s): mstrtplts → %s", idx, mstrtplts)
             mplaats = mstrtplts[1]  
             
+            logger.debug("showBedrijf(idx=%s): mstraat → %s", idx, mstraat)
+            logger.debug("showBedrijf(idx=%s): mplaats → %s", idx, mplaats)
             class Widget(QDialog):
                 def __init__(self, parent=None):
                     super(Widget, self).__init__(parent)
+                    logger.debug("<<< Exiting showBedrijf(idx=%s)", idx)
                     self.setWindowTitle("Request sales comanies")
                     self.setWindowIcon(QIcon('./images/logos/logo.jpg'))
                                           
@@ -387,6 +493,7 @@ def toonBedrijfverkoop(keuze,zoekterm, m_email):
                        
                     self.setLayout(grid)
                     self.setGeometry(500, 100, 150, 150)
+                    logger.debug("<<< Exiting __init__(parent=%s)", parent)
                 
             mainWin = Widget()
             mainWin.exec_()  

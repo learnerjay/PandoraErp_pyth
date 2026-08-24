@@ -7,42 +7,61 @@ from PyQt5.QtWidgets import QLineEdit, QGridLayout, QDialog, QLabel, QPushButton
         QMessageBox, QSpinBox, QTextEdit
 from sqlalchemy import (Table, Column, Integer, String, MetaData, create_engine, Float,\
                         select, update,insert, delete, func, and_, Boolean)
+import logging
+logger = logging.getLogger(__name__)
 
 def geenGegevens():
+    logger.debug(">>> Entering geenGegevens()")
     msg = QMessageBox()
+    logger.debug("geenGegevens(): msg → %s", msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     msg.setFont(QFont("Arial", 10))
     msg.setIcon(QMessageBox.Warning)
     msg.setText('Er zijn nog geen transacties!')
     msg.setWindowTitle('Transacties')
+    logger.debug("<<< Exiting geenGegevens()")
     msg.exec_() 
 
 def info():
+    logger.debug(">>> Entering info()")
     class Widget(QDialog):
         def __init__(self, parent=None):
             super(Widget, self).__init__(parent)
+            logger.debug(">>> Entering __init__(parent=%s)", parent)
             self.setWindowTitle("Informatie Barcodescannen")
             self.setWindowIcon(QIcon('./images/logos/logo.jpg'))
             self.setFont(QFont('Arial', 10))
             grid = QGridLayout()
+            logger.debug("__init__(self=%s,parent=%s): grid → %s", self, parent, grid)
+            logger.debug("__init__(parent=%s): grid → %s", parent, grid)
             grid.setSpacing(20)
             
+            logger.debug("__init__(parent=%s): pixmap → %s", parent, pixmap)
             lblinfo = QLabel('Informatie ERP Pandora')
+            logger.debug("__init__(self=%s,parent=%s): lblinfo → %s", self, parent, lblinfo)
+            logger.debug("__init__(parent=%s): lblinfo → %s", parent, lblinfo)
             grid.addWidget(lblinfo, 0, 0, 1, 2, Qt.AlignCenter)
             lblinfo.setStyleSheet("color:rgba(45, 83, 115, 255); font: 25pt Comic Sans MS")
             
             logo = QLabel()
+            logger.debug("__init__(self=%s,parent=%s): logo → %s", self, parent, logo)
+            logger.debug("__init__(parent=%s): logo → %s", parent, logo)
             pixmap = QPixmap('./images/logos/logo.jpg')
+            logger.debug("__init__(self=%s,parent=%s): pixmap → %s", self, parent, pixmap)
             logo.setPixmap(pixmap)
             grid.addWidget(logo , 0, 0, 1, 1, Qt.AlignRight)
         
             lbl = QLabel()
+            logger.debug("__init__(self=%s,parent=%s): lbl → %s", self, parent, lbl)
+            logger.debug("__init__(parent=%s): lbl → %s", parent, lbl)
             pixmap = QPixmap('./images/logos/verbinding.jpg')
             lbl.setPixmap(pixmap)
             grid.addWidget(lbl, 0, 0)
+            logger.debug("<<< Exiting __init__(parent=%s)", parent)
             
             infolbl = QLabel('''\t\t\t\t\t\t\t\t\t\t
+            logger.debug("__init__(self=%s,parent=%s): infolbl → %s", self, parent, infolbl)
         Instruktie barcode scannen.
         
         Als testscanner is een hand laserscanner gebruikt van het type Nedis BCRLR100BK

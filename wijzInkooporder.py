@@ -7,54 +7,75 @@ from PyQt5.QtCore import Qt, QRegExp
 from sqlalchemy import (Table, Column, Integer, String, Float, ForeignKey, \
                         MetaData, create_engine, and_, Boolean)
 from sqlalchemy.sql import select, update, insert, func
+import logging
+logger = logging.getLogger(__name__)
 
 def invoerOK():
+    logger.debug(">>> Entering invoerOK()")
     msg = QMessageBox()
+    logger.debug("invoerOK(): msg → %s", msg)
     msg.setFont(QFont("Arial", 10))
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setIcon(QMessageBox.Information)
     msg.setText('Insert successful!')
     msg.setWindowTitle('Insert purchase order')
+    logger.debug("<<< Exiting invoerOK()")
     msg.exec_()
      
 def closeRegels(m_email, minkordernr, mregel, self):
+    logger.debug(">>> Entering closeRegels(m_email=%s,minkordernr=%s,mregel=%s)", m_email, minkordernr, mregel)
     self.close()
     inkoopOrder(m_email, minkordernr, mregel)
+    logger.debug("<<< Exiting closeRegels(m_email=%s,minkordernr=%s,mregel=%s)", m_email, minkordernr, mregel)
     
 def windowSluit(self, m_email):
+    logger.debug(">>> Entering windowSluit(m_email=%s)", m_email)
     self.close()
     hoofdMenu(m_email)
+    logger.debug("<<< Exiting windowSluit(m_email=%s)", m_email)
     
 def closeOrder(m_email, minkordernr, mregel, self):
+    logger.debug(">>> Entering closeOrder(m_email=%s,minkordernr=%s,mregel=%s)", m_email, minkordernr, mregel)
     self.close()
     zoekInkooporder(m_email, minkordernr, mregel)
+    logger.debug("<<< Exiting closeOrder(m_email=%s,minkordernr=%s,mregel=%s)", m_email, minkordernr, mregel)
     
 def foutCombinatie():
+    logger.debug(">>> Entering foutCombinatie()")
     msg = QMessageBox()
+    logger.debug("foutCombinatie(): msg → %s", msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setIcon(QMessageBox.Warning)
     msg.setText('This is not a purchase order for materials!')
     msg.setWindowTitle('Modify purchase order articles.')
+    logger.debug("<<< Exiting foutCombinatie()")
     msg.exec_()   
     
 def foutOrder():
+    logger.debug(">>> Entering foutOrder()")
     msg = QMessageBox()
+    logger.debug("foutOrder(): msg → %s", msg)
     msg.setFont(QFont("Arial", 10))
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setIcon(QMessageBox.Warning)
     msg.setText('Order number is incorrect!')
     msg.setWindowTitle('Modify purchase order articles.')
+    logger.debug("<<< Exiting foutOrder()")
     msg.exec_()   
     
 def foutInkooporder():
+    logger.debug(">>> Entering foutInkooporder()")
     msg = QMessageBox()
+    logger.debug("foutInkooporder(): msg → %s", msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setIcon(QMessageBox.Warning)
     msg.setText('Order not found!')
     msg.setWindowTitle('Modify purchase order articles.')
+    logger.debug("<<< Exiting foutInkooporder()")
     msg.exec_()
     
 def zoekInkooporder(m_email, minkordernr, mregel):
+    logger.debug(">>> Entering zoekInkooporder(m_email=%s,minkordernr=%s,mregel=%s)", m_email, minkordernr, mregel)
     class Widget(QDialog):
         def __init__(self, parent=None):
             super(Widget, self).__init__(parent)
@@ -110,17 +131,23 @@ def zoekInkooporder(m_email, minkordernr, mregel):
             
             self.setLayout(grid)
             self.setGeometry(500, 250, 150, 150)
+            logger.debug("<<< Exiting __init__(parent=%s)", parent)
     
         def inkordChanged(self, text):
             self.Inkoopordernummer.setText(text)
+            logger.debug(">>> Entering inkordChanged(text=%s)", text)
+            logger.debug("<<< Exiting inkordChanged(text=%s)", text)
     
         def returnInkoopordernummer(self):
             return self.Inkoopordernummer.text()
     
+        logger.debug(">>> Entering returnInkoopordernummer()")
+        logger.debug("<<< Exiting returnInkoopordernummer()")
         @staticmethod
         def getData(parent=None):
             dialog = Widget(parent)
             dialog.exec_()
+            logger.debug("<<< Exiting getData(parent=%s)", parent)
             return [dialog.returnInkoopordernummer()]
        
     window = Widget()
@@ -145,7 +172,9 @@ def zoekInkooporder(m_email, minkordernr, mregel):
         zoekInkooporder(m_email, minkordernr, mregel)
 
 def inkoopOrder(m_email, minkordernr, mregel):
+    logger.debug(">>> Entering inkoopOrder(m_email=%s,minkordernr=%s,mregel=%s)", m_email, minkordernr, mregel)
     metadata = MetaData()
+    logger.debug("inkoopOrder(m_email=%s,minkordernr=%s,mregel=%s): metadata → %s", m_email, minkordernr, mregel, metadata)
     orders_inkoop = Table('orders_inkoop', metadata,
         Column('orderinkoopID', Integer(), primary_key=True),
         Column('leverancierID', None, ForeignKey('leveranciers.leverancierID')),
@@ -178,30 +207,44 @@ def inkoopOrder(m_email, minkordernr, mregel):
         Column('regel', Integer))
     
     engine = create_engine('postgresql+psycopg2://postgres@localhost/bisystem')
+    logger.debug("inkoopOrder(m_email=%s,minkordernr=%s,mregel=%s): engine → %s", m_email, minkordernr, mregel, engine)
     conn = engine.connect()  
     
+    logger.debug("inkoopOrder(m_email=%s,minkordernr=%s,mregel=%s): conn → %s", m_email, minkordernr, mregel, conn)
     sel1 = select([orders_inkoop]).where(orders_inkoop.c.orderinkoopID == minkordernr)
     sel2 = select([leveranciers]).where(and_(leveranciers.c.leverancierID==\
        orders_inkoop.c.leverancierID, orders_inkoop.c.orderinkoopID == minkordernr))
+    logger.debug("inkoopOrder(m_email=%s,minkordernr=%s,mregel=%s): sel1 → %s", m_email, minkordernr, mregel, sel1)
     sel3 = select([orders_inkoop_artikelen]).where(orders_inkoop_artikelen.\
            c.orderinkoopID == minkordernr).order_by(orders_inkoop_artikelen.c.regel)
+    logger.debug("inkoopOrder(m_email=%s,minkordernr=%s,mregel=%s): sel2 → %s", m_email, minkordernr, mregel, sel2)
+    logger.debug("inkoopOrder(m_email=%s,minkordernr=%s,mregel=%s): sel3 → %s", m_email, minkordernr, mregel, sel3)
     rp1 = conn.execute(sel1).first()
     rp2 = conn.execute(sel2).first()
     
+    logger.debug("inkoopOrder(m_email=%s,minkordernr=%s,mregel=%s): rp1 → %s", m_email, minkordernr, mregel, rp1)
     if conn.execute(sel3).fetchone():
         rp3 = conn.execute(sel3)
+        logger.debug("inkoopOrder(m_email=%s,minkordernr=%s,mregel=%s): rp2 → %s", m_email, minkordernr, mregel, rp2)
     else:
         foutCombinatie()
+        logger.debug("inkoopOrder(m_email=%s,minkordernr=%s,mregel=%s): rp3 → %s", m_email, minkordernr, mregel, rp3)
         zoekInkooporder(m_email, minkordernr, mregel)
         
     mpostcode = rp2[3]
+    logger.debug("inkoopOrder(m_email=%s,minkordernr=%s,mregel=%s): mpostcode → %s", m_email, minkordernr, mregel, mpostcode)
     mhuisnr = int(rp2[4])
+    logger.debug("inkoopOrder(m_email=%s,minkordernr=%s,mregel=%s): mhuisnr → %s", m_email, minkordernr, mregel, mhuisnr)
     import postcode
     mstrpls = postcode.checkpostcode(mpostcode, mhuisnr)
+    logger.debug("inkoopOrder(m_email=%s,minkordernr=%s,mregel=%s): mstrpls → %s", m_email, minkordernr, mregel, mstrpls)
     mstraat = mstrpls[0]
+    logger.debug("inkoopOrder(m_email=%s,minkordernr=%s,mregel=%s): mstraat → %s", m_email, minkordernr, mregel, mstraat)
     mplaats = mstrpls[1]
+    logger.debug("inkoopOrder(m_email=%s,minkordernr=%s,mregel=%s): mplaats → %s", m_email, minkordernr, mregel, mplaats)
                     
     class Widget(QDialog):
+        logger.debug("<<< Exiting inkoopOrder(m_email=%s,minkordernr=%s,mregel=%s)", m_email, minkordernr, mregel)
         def __init__(self, parent=None):
             super(Widget, self).__init__(parent)
             self.setWindowTitle("Change purchase order items.")
@@ -308,35 +351,138 @@ def inkoopOrder(m_email, minkordernr, mregel):
             
             self.setLayout(grid)
             self.setGeometry(500, 200, 350, 300)
+            logger.debug(">>> Entering __init__(parent=%s)", parent)
+            logger.debug("__init__(parent=%s): input_validator → %s", parent, input_validator)
+            logger.debug("__init__(parent=%s): q1Edit → %s", parent, q1Edit)
+            logger.debug("__init__(parent=%s): self.Inkoopordernummer → %s", parent, self.Inkoopordernummer)
+            logger.debug("__init__(self=%s,parent=%s): q1Edit → %s", self, parent, q1Edit)
+            logger.debug("__init__(parent=%s): q2Edit → %s", parent, q2Edit)
+            logger.debug("__init__(parent=%s): self.BestelregelArtikel → %s", parent, self.BestelregelArtikel)
+            logger.debug("__init__(self=%s,parent=%s): q2Edit → %s", self, parent, q2Edit)
+            logger.debug("__init__(parent=%s): q3Edit → %s", parent, q3Edit)
+            logger.debug("__init__(parent=%s): self.BestelHoeveelheid → %s", parent, self.BestelHoeveelheid)
+            logger.debug("__init__(self=%s,parent=%s): q3Edit → %s", self, parent, q3Edit)
+            logger.debug("__init__(parent=%s): rreg_ex → %s", parent, rreg_ex)
+            logger.debug("__init__(self=%s,parent=%s): rreg_ex → %s", self, parent, rreg_ex)
+            logger.debug("__init__(self=%s,parent=%s): input_validator → %s", self, parent, input_validator)
+            logger.debug("__init__(parent=%s): q4Edit → %s", parent, q4Edit)
+            logger.debug("__init__(parent=%s): self.Inkoopeenheidsprijs → %s", parent, self.Inkoopeenheidsprijs)
+            logger.debug("__init__(self=%s,parent=%s): q4Edit → %s", self, parent, q4Edit)
+            logger.debug("__init__(parent=%s): q5Edit → %s", parent, q5Edit)
+            logger.debug("__init__(parent=%s): self.Levering_start → %s", parent, self.Levering_start)
+            logger.debug("__init__(self=%s,parent=%s): q5Edit → %s", self, parent, q5Edit)
+            logger.debug("__init__(parent=%s): reg_ex → %s", parent, reg_ex)
+            logger.debug("__init__(self=%s,parent=%s): reg_ex → %s", self, parent, reg_ex)
+            logger.debug("__init__(parent=%s): q13Edit → %s", parent, q13Edit)
+            logger.debug("__init__(parent=%s): self.Levering_eind → %s", parent, self.Levering_eind)
+            logger.debug("__init__(self=%s,parent=%s): q13Edit → %s", self, parent, q13Edit)
+            logger.debug("__init__(parent=%s): q6Edit → %s", parent, q6Edit)
+            logger.debug("__init__(parent=%s): self.Reclamatie → %s", parent, self.Reclamatie)
+            logger.debug("__init__(self=%s,parent=%s): q6Edit → %s", self, parent, q6Edit)
+            logger.debug("__init__(parent=%s): q7Edit → %s", parent, q7Edit)
+            logger.debug("__init__(parent=%s): self.Aantal_reclamaties → %s", parent, self.Aantal_reclamaties)
+            logger.debug("__init__(self=%s,parent=%s): q7Edit → %s", self, parent, q7Edit)
+            logger.debug("__init__(parent=%s): q8Edit → %s", parent, q8Edit)
+            logger.debug("__init__(parent=%s): self.Ontvangstdatum → %s", parent, self.Ontvangstdatum)
+            logger.debug("__init__(self=%s,parent=%s): q8Edit → %s", self, parent, q8Edit)
+            logger.debug("__init__(parent=%s): q9Edit → %s", parent, q9Edit)
+            logger.debug("__init__(parent=%s): self.Ontvangen_Hoeveelheid → %s", parent, self.Ontvangen_Hoeveelheid)
+            logger.debug("__init__(self=%s,parent=%s): q9Edit → %s", self, parent, q9Edit)
+            logger.debug("__init__(parent=%s): q10Edit → %s", parent, q10Edit)
+            logger.debug("__init__(parent=%s): self.Acceptatiedatum → %s", parent, self.Acceptatiedatum)
+            logger.debug("__init__(self=%s,parent=%s): q10Edit → %s", self, parent, q10Edit)
+            logger.debug("__init__(parent=%s): self.Hoeveelheid_acceptatie → %s", parent, self.Hoeveelheid_acceptatie)
+            logger.debug("__init__(self=%s,parent=%s): q11Edit → %s", self, parent, q11Edit)
+            logger.debug("__init__(parent=%s): q11Edit → %s", parent, q11Edit)
+            logger.debug("__init__(parent=%s): self.Betaald → %s", parent, self.Betaald)
+            logger.debug("__init__(self=%s,parent=%s): q12Edit → %s", self, parent, q12Edit)
+            logger.debug("__init__(parent=%s): q12Edit → %s", parent, q12Edit)
+            logger.debug("__init__(self=%s,parent=%s): grid → %s", self, parent, grid)
+            logger.debug("__init__(parent=%s): grid → %s", parent, grid)
+            logger.debug("__init__(self=%s,parent=%s): lbl → %s", self, parent, lbl)
+            logger.debug("__init__(parent=%s): lbl → %s", parent, lbl)
+            logger.debug("__init__(self=%s,parent=%s): pixmap → %s", self, parent, pixmap)
+            logger.debug("__init__(parent=%s): pixmap → %s", parent, pixmap)
+            logger.debug("__init__(self=%s,parent=%s): logo → %s", self, parent, logo)
+            logger.debug("__init__(parent=%s): logo → %s", parent, logo)
+            logger.debug("__init__(parent=%s): lbl1 → %s", parent, lbl1)
+            logger.debug("__init__(self=%s,parent=%s): lbl1 → %s", self, parent, lbl1)
+            logger.debug("__init__(parent=%s): lbl2 → %s", parent, lbl2)
+            logger.debug("__init__(self=%s,parent=%s): lbl2 → %s", self, parent, lbl2)
+            logger.debug("__init__(parent=%s): lbl3 → %s", parent, lbl3)
+            logger.debug("__init__(self=%s,parent=%s): lbl3 → %s", self, parent, lbl3)
+            logger.debug("__init__(parent=%s): lbl4 → %s", parent, lbl4)
+            logger.debug("__init__(self=%s,parent=%s): lbl4 → %s", self, parent, lbl4)
+            logger.debug("__init__(parent=%s): lbl5 → %s", parent, lbl5)
+            logger.debug("__init__(self=%s,parent=%s): lbl5 → %s", self, parent, lbl5)
+            logger.debug("__init__(parent=%s): lbl13 → %s", parent, lbl13)
+            logger.debug("__init__(self=%s,parent=%s): lbl13 → %s", self, parent, lbl13)
+            logger.debug("__init__(parent=%s): lbl6 → %s", parent, lbl6)
+            logger.debug("__init__(self=%s,parent=%s): lbl6 → %s", self, parent, lbl6)
+            logger.debug("__init__(parent=%s): lbl7 → %s", parent, lbl7)
+            logger.debug("__init__(self=%s,parent=%s): lbl7 → %s", self, parent, lbl7)
+            logger.debug("__init__(parent=%s): lbl8 → %s", parent, lbl8)
+            logger.debug("__init__(self=%s,parent=%s): lbl8 → %s", self, parent, lbl8)
+            logger.debug("__init__(parent=%s): lbl9 → %s", parent, lbl9)
+            logger.debug("__init__(self=%s,parent=%s): lbl9 → %s", self, parent, lbl9)
+            logger.debug("__init__(parent=%s): lbl10 → %s", parent, lbl10)
+            logger.debug("__init__(self=%s,parent=%s): lbl10 → %s", self, parent, lbl10)
+            logger.debug("__init__(parent=%s): lbl11 → %s", parent, lbl11)
+            logger.debug("__init__(self=%s,parent=%s): lbl11 → %s", self, parent, lbl11)
+            logger.debug("__init__(parent=%s): lbl12 → %s", parent, lbl12)
+            logger.debug("__init__(self=%s,parent=%s): lbl12 → %s", self, parent, lbl12)
+            logger.debug("__init__(parent=%s): applyBtn → %s", parent, applyBtn)
+            logger.debug("__init__(self=%s,parent=%s): applyBtn → %s", self, parent, applyBtn)
+            logger.debug("__init__(parent=%s): cancelBtn → %s", parent, cancelBtn)
+            logger.debug("__init__(self=%s,parent=%s): cancelBtn → %s", self, parent, cancelBtn)
                   
         def inkordChanged(self, text):
+            logger.debug("inkordChanged(self=%s,text=%s): Inkoopordernummer → %s", self, text, Inkoopordernummer)
             self.Inkoopordernummer.setText(text)
           
         def q3Changed(self, text):
             self.Besteldatum.setText(text)
+            logger.debug(">>> Entering q3Changed(text=%s)", text)
+            logger.debug("<<< Exiting q3Changed(text=%s)", text)
             
         def q4Changed(self, text):
             self.Goedgekeurd.setText(text)
+            logger.debug(">>> Entering q4Changed(text=%s)", text)
+            logger.debug("<<< Exiting q4Changed(text=%s)", text)
             
         def q5Changed(self, text):
             self.Betaald.setText(text)
+            logger.debug(">>> Entering q5Changed(text=%s)", text)
+            logger.debug("<<< Exiting q5Changed(text=%s)", text)
             
         def q6Changed(self, text):
+            logger.debug(">>> Entering q6Changed(text=%s)", text)
+            logger.debug("q6Changed(self=%s,text=%s): Afgemeld → %s", self, text, Afgemeld)
             self.Afgemeld.setText(text)
+            logger.debug("<<< Exiting q6Changed(text=%s)", text)
                                                           
         def returnInkoopordernummer(self):
+            logger.debug(">>> Entering returnInkoopordernummer()")
             return self.Inkoopordernummer.text()
         
         def returnBesteldatum(self):
+            logger.debug(">>> Entering returnBesteldatum()")
+            logger.debug("<<< Exiting returnBesteldatum()")
             return self.Besteldatum.text()
         
         def returnGoedgekeurd(self):
+            logger.debug(">>> Entering returnGoedgekeurd()")
+            logger.debug("<<< Exiting returnGoedgekeurd()")
             return self.Goedgekeurd.text()
         
         def returnBetaald(self):
+            logger.debug(">>> Entering returnBetaald()")
+            logger.debug("<<< Exiting returnBetaald()")
             return self.Betaald.text()
 
         def returnAfgemeld(self):
+            logger.debug(">>> Entering returnAfgemeld()")
+            logger.debug("<<< Exiting returnAfgemeld()")
             return self.Afgemeld.text()
                                  
         @staticmethod
@@ -345,6 +491,8 @@ def inkoopOrder(m_email, minkordernr, mregel):
             dialog.exec_()
             return [dialog.returnGoedgekeurd(), dialog.returnBetaald(),\
                     dialog.returnAfgemeld()]
+            logger.debug(">>> Entering getData(parent=%s)", parent)
+            logger.debug("getData(parent=%s): dialog → %s", parent, dialog)
     
     window = Widget()
     data = window.getData()
@@ -371,12 +519,17 @@ def inkoopOrder(m_email, minkordernr, mregel):
     inkoopRegels(m_email, rp1, rp2, rp3, mstraat, mplaats, mregel)
      
 def inkoopRegels(m_email, rp1, rp2, rp3, mstraat, mplaats, mregel): 
+    logger.debug(">>> Entering inkoopRegels(m_email=%s,rp1=%s,rp2=%s,rp3=%s,mstraat=%s,mplaats=%s,mregel=%s)", m_email, rp1, rp2, rp3, mstraat, mplaats, mregel)
     minkordernr = int(rp1[0])
+    logger.debug("inkoopRegels(m_email=%s,rp1=%s,rp2=%s,rp3=%s,mstraat=%s,mplaats=%s,mregel=%s): minkordernr → %s", m_email, rp1, rp2, rp3, mstraat, mplaats, mregel, minkordernr)
     for row in rp3:
         mregel += 1
+        logger.error("Exception in inkoopRegels(m_email=%s,rp1=%s,rp2=%s,rp3=%s,mstraat=%s,mplaats=%s,mregel=%s)", m_email, rp1, rp2, rp3, mstraat, mplaats, mregel, exc_info=True)
         class Widget(QDialog):
+            logger.debug("<<< Exiting inkoopRegels(m_email=%s,rp1=%s,rp2=%s,rp3=%s,mstraat=%s,mplaats=%s,mregel=%s)", m_email, rp1, rp2, rp3, mstraat, mplaats, mregel)
             def __init__(self, parent=None):
                 super(Widget, self).__init__(parent)
+                logger.debug(">>> Entering __init__(parent=%s)", parent)
         
                 self.setFont(QFont('Arial', 10))
                 self.setWindowTitle("Change purchase order line items")
@@ -615,92 +768,157 @@ def inkoopRegels(m_email, rp1, rp2, rp3, mstraat, mplaats, mregel):
                 cancelBtn.clicked.connect(lambda: closeRegels(m_email, minkordernr, mregel, self))
                 
                 grid.addWidget(cancelBtn, 13, 3, 1, 1, Qt.AlignRight)
+                logger.debug("<<< Exiting __init__(parent=%s)", parent)
                 cancelBtn.setFont(QFont("Arial",10))
                 cancelBtn.setFixedWidth(140)
                 cancelBtn.setStyleSheet("color: black;  background-color: gainsboro")
                                                                                            
             def q1Changed(self, text):
+                logger.debug(">>> Entering q1Changed(text=%s)", text)
+                logger.debug("q1Changed(self=%s,text=%s): Inkoopordernummer → %s", self, text, Inkoopordernummer)
                 self.Inkoopordernummer.setText(text)
+                logger.debug("<<< Exiting q1Changed(text=%s)", text)
                 
             def q2Changed(self,text):
+                logger.debug(">>> Entering q2Changed(text=%s)", text)
+                logger.debug("q2Changed(self=%s,text=%s): BestelregelArtikel → %s", self, text, BestelregelArtikel)
                 self.BestelregelArtikel.setText(text)
+                logger.debug("<<< Exiting q2Changed(text=%s)", text)
                 
             def q3Changed(self,text):
+                logger.debug(">>> Entering q3Changed(text=%s)", text)
+                logger.debug("q3Changed(self=%s,text=%s): BestelHoeveelheid → %s", self, text, BestelHoeveelheid)
                 self.BestelHoeveelheid.setText(text)
+                logger.debug("<<< Exiting q3Changed(text=%s)", text)
                 
             def q4Changed(self,text):
+                logger.debug(">>> Entering q4Changed(text=%s)", text)
+                logger.debug("q4Changed(self=%s,text=%s): Inkoopeenheidsprijs → %s", self, text, Inkoopeenheidsprijs)
                 self.Inkoopeenheidsprijs.setText(text)
+                logger.debug("<<< Exiting q4Changed(text=%s)", text)
             
             def q5Changed(self,text):
+                logger.debug(">>> Entering q5Changed(text=%s)", text)
+                logger.debug("q5Changed(self=%s,text=%s): Levering_start → %s", self, text, Levering_start)
                 self.Levering_start.setText(text)
+                logger.debug("<<< Exiting q5Changed(text=%s)", text)
             
             def q13Changed(self,text):
+                logger.debug(">>> Entering q13Changed(text=%s)", text)
+                logger.debug("q13Changed(self=%s,text=%s): Levering_eind → %s", self, text, Levering_eind)
                 self.Levering_eind.setText(text)
+                logger.debug("<<< Exiting q13Changed(text=%s)", text)
                 
             def q6Changed(self,text):
                 self.Reclamatie.setText(text)  
               
             def q7Changed(self,text):
+                logger.debug(">>> Entering q7Changed(text=%s)", text)
+                logger.debug("q7Changed(self=%s,text=%s): Aantal_reclamaties → %s", self, text, Aantal_reclamaties)
                 self.Aantal_reclamaties.setText(text)
+                logger.debug("<<< Exiting q7Changed(text=%s)", text)
                 
             def q8Changed(self,text):
+                logger.debug(">>> Entering q8Changed(text=%s)", text)
+                logger.debug("q8Changed(self=%s,text=%s): Ontvangstdatum → %s", self, text, Ontvangstdatum)
                 self.Ontvangstdatum.setText(text)
+                logger.debug("<<< Exiting q8Changed(text=%s)", text)
                 
             def q9Changed(self,text):
+                logger.debug(">>> Entering q9Changed(text=%s)", text)
+                logger.debug("q9Changed(self=%s,text=%s): Ontvangen_Hoeveelheid → %s", self, text, Ontvangen_Hoeveelheid)
                 self.Ontvangen_Hoeveelheid.setText(text)
+                logger.debug("<<< Exiting q9Changed(text=%s)", text)
                 
             def q10Changed(self,text):
+                logger.debug(">>> Entering q10Changed(text=%s)", text)
+                logger.debug("q10Changed(self=%s,text=%s): Acceptatiedatum → %s", self, text, Acceptatiedatum)
                 self.Acceptatiedatum.setText(text)
+                logger.debug("<<< Exiting q10Changed(text=%s)", text)
                 
             def q11Changed(self,text):
+                logger.debug(">>> Entering q11Changed(text=%s)", text)
+                logger.debug("q11Changed(self=%s,text=%s): Hoeveelheid_acceptatie → %s", self, text, Hoeveelheid_acceptatie)
                 self.Hoeveelheid_acceptatie.setText(text)
+                logger.debug("<<< Exiting q11Changed(text=%s)", text)
                 
             def q12Changed(self,text):
+                logger.debug(">>> Entering q12Changed(text=%s)", text)
+                logger.debug("q12Changed(self=%s,text=%s): Betaald → %s", self, text, Betaald)
                 self.Betaald.setText(text)   
+                logger.debug("<<< Exiting q12Changed(text=%s)", text)
                           
             def returnq1(self):
+                logger.debug(">>> Entering returnq1()")
+                logger.debug("<<< Exiting returnq1()")
                 return self.Inkoopordernummer.text()
             
             def returnq2(self):
+                logger.debug(">>> Entering returnq2()")
+                logger.debug("<<< Exiting returnq2()")
                 return self.BestelregelArtikel.text()
             
             def returnq3(self):
+                logger.debug(">>> Entering returnq3()")
+                logger.debug("<<< Exiting returnq3()")
                 return self.BestelHoeveelheid.text()
             
             def returnq4(self):
+                logger.debug(">>> Entering returnq4()")
+                logger.debug("<<< Exiting returnq4()")
                 return self.Inkoopeenheidsprijs.text()
             
             def returnq5(self):
+                logger.debug(">>> Entering returnq5()")
+                logger.debug("<<< Exiting returnq5()")
                 return self.Levering_start.text()
             
             def returnq13(self):
+                logger.debug(">>> Entering returnq13()")
+                logger.debug("<<< Exiting returnq13()")
                 return self.Levering_eind.text()
             
             def returnq6(self):
+                logger.debug(">>> Entering returnq6()")
+                logger.debug("<<< Exiting returnq6()")
                 return self.Reclamatie.text()
             
             def returnq7(self):
+                logger.debug(">>> Entering returnq7()")
+                logger.debug("<<< Exiting returnq7()")
                 return self.Aantal_reclamaties.text()
             
             def returnq8(self):
+                logger.debug(">>> Entering returnq8()")
+                logger.debug("<<< Exiting returnq8()")
                 return self.Ontvangstdatum.text()
             
             def returnq9(self):
+                logger.debug(">>> Entering returnq9()")
+                logger.debug("<<< Exiting returnq9()")
                 return self.Ontvangen_Hoeveelheid.text()
             
             def returnq10(self):
+                logger.debug(">>> Entering returnq10()")
+                logger.debug("<<< Exiting returnq10()")
                 return self.Acceptatiedatum.text()
             
             def returnq11(self):
+                logger.debug(">>> Entering returnq11()")
+                logger.debug("<<< Exiting returnq11()")
                 return self.Hoeveelheid_acceptatie.text()
             
             def returnq12(self):
+                logger.debug(">>> Entering returnq12()")
+                logger.debug("<<< Exiting returnq12()")
                 return self.Betaald.text()
             
             @staticmethod
             def getData(parent=None):
+                logger.debug(">>> Entering getData(parent=%s)", parent)
                 dialog = Widget(parent)
                 dialog.exec_()
+                logger.debug("<<< Exiting getData(parent=%s)", parent)
                 return [dialog.returnq1(), dialog.returnq2(), dialog.returnq3(),\
                         dialog.returnq4(), dialog.returnq5(), dialog.returnq13(),\
                         dialog.returnq6(), dialog.returnq7(), dialog.returnq8(),\

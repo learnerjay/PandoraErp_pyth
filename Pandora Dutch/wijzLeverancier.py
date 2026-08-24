@@ -6,66 +6,90 @@ from PyQt5.QtCore import QRegExp, Qt
 from sqlalchemy import (Table, Column, Integer, String, MetaData,\
                             create_engine, update)
 from sqlalchemy.sql import select
+import logging
+logger = logging.getLogger(__name__)
   
 def invoerCancel():
+    logger.debug(">>> Entering invoerCancel()")
     msg = QMessageBox()
+    logger.debug("invoerCancel(): msg → %s", msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))   
     msg.setIcon(QMessageBox.Information)
     msg.setText('NIET ingevoerd!')
     msg.setWindowTitle('Gegevens')
+    logger.debug("<<< Exiting invoerCancel()")
     msg.exec_()
   
 def winzlevSluit(self, m_email):
+    logger.debug(">>> Entering winzlevSluit(m_email=%s)", m_email)
     self.close()
     zoekLeverancier(m_email)    
+    logger.debug("<<< Exiting winzlevSluit(m_email=%s)", m_email)
 
 def windowSluit(self, m_email):
+    logger.debug(">>> Entering windowSluit(m_email=%s)", m_email)
     self.close()
     hoofdMenu(m_email)
+    logger.debug("<<< Exiting windowSluit(m_email=%s)", m_email)
     
 def foutTelnr():
+    logger.debug(">>> Entering foutTelnr()")
     msg = QMessageBox()
+    logger.debug("foutTelnr(): msg → %s", msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     msg.setIcon(QMessageBox.Critical)
     msg.setText('geen 10 cijfers!')
     msg.setWindowTitle('Telefoonnummer!')
+    logger.debug("<<< Exiting foutTelnr()")
     msg.exec_()
     
 def foutLevnr():
+    logger.debug(">>> Entering foutLevnr()")
     msg = QMessageBox()
+    logger.debug("foutLevnr(): msg → %s", msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     msg.setIcon(QMessageBox.Critical)
     msg.setText('Leverancier niet aanwezig\nLeverancier bestaat niet!')
     msg.setWindowTitle('Leverancier')
+    logger.debug("<<< Exiting foutLevnr()")
     msg.exec_()
          
 def updateOK():
+    logger.debug(">>> Entering updateOK()")
     msg = QMessageBox()
+    logger.debug("updateOK(): msg → %s", msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     msg.setIcon(QMessageBox.Information)
     msg.setText('Je gegevens zijn aangepast!')
     msg.setWindowTitle('Gegevens!')
+    logger.debug("<<< Exiting updateOK()")
     msg.exec_()
            
 def _11check(martikelnr):
+    logger.debug(">>> Entering _11check(martikelnr=%s)", martikelnr)
     number = str(martikelnr)
+    logger.debug("_11check(martikelnr=%s): number → %s", martikelnr, number)
     total = 0       
     fullnumber = number                       
+    logger.debug("_11check(martikelnr=%s): total → %s", martikelnr, total)
     for i in range(8):
         total += int(fullnumber[i])*(9-i)
+        logger.debug("_11check(martikelnr=%s): fullnumber → %s", martikelnr, fullnumber)
         checkdigit = total % 11
     if checkdigit == 10:
         checkdigit = 0
     if checkdigit == int(fullnumber[8]):
         return True
     else:
+        logger.debug("<<< Exiting _11check(martikelnr=%s)", martikelnr)
         return False
 
 def zoekLeverancier(m_email):     
+    logger.debug(">>> Entering zoekLeverancier(m_email=%s)", m_email)
     class Widget(QDialog):
         def __init__(self, parent=None):
             super(Widget, self).__init__(parent)
@@ -121,17 +145,78 @@ def zoekLeverancier(m_email):
             
             self.setLayout(grid)
             self.setGeometry(500, 100, 150, 150)
+            logger.debug(">>> Entering __init__(parent=%s)", parent)
+            logger.debug("__init__(parent=%s): input_validator → %s", parent, input_validator)
+            logger.debug("__init__(parent=%s): q3Edit → %s", parent, q3Edit)
+            logger.debug("__init__(parent=%s): self.Bedrijfsnaam → %s", parent, self.Bedrijfsnaam)
+            logger.debug("__init__(self=%s,parent=%s): q3Edit → %s", self, parent, q3Edit)
+            logger.debug("__init__(parent=%s): reg_ex → %s", parent, reg_ex)
+            logger.debug("__init__(self=%s,parent=%s): reg_ex → %s", self, parent, reg_ex)
+            logger.debug("__init__(self=%s,parent=%s): input_validator → %s", self, parent, input_validator)
+            logger.debug("__init__(parent=%s): q5Edit → %s", parent, q5Edit)
+            logger.debug("__init__(parent=%s): self.Rechtsvorm → %s", parent, self.Rechtsvorm)
+            logger.debug("__init__(self=%s,parent=%s): q5Edit → %s", self, parent, q5Edit)
+            logger.debug("__init__(parent=%s): q2Edit → %s", parent, q2Edit)
+            logger.debug("__init__(parent=%s): self.BTWnummer → %s", parent, self.BTWnummer)
+            logger.debug("__init__(self=%s,parent=%s): q2Edit → %s", self, parent, q2Edit)
+            logger.debug("__init__(parent=%s): q4Edit → %s", parent, q4Edit)
+            logger.debug("__init__(parent=%s): self.KvKnummer → %s", parent, self.KvKnummer)
+            logger.debug("__init__(self=%s,parent=%s): q4Edit → %s", self, parent, q4Edit)
+            logger.debug("__init__(parent=%s): q1Edit → %s", parent, q1Edit)
+            logger.debug("__init__(parent=%s): self.Straat → %s", parent, self.Straat)
+            logger.debug("__init__(self=%s,parent=%s): q1Edit → %s", self, parent, q1Edit)
+            logger.debug("__init__(parent=%s): q7Edit → %s", parent, q7Edit)
+            logger.debug("__init__(parent=%s): self.Huisnummer → %s", parent, self.Huisnummer)
+            logger.debug("__init__(self=%s,parent=%s): q7Edit → %s", self, parent, q7Edit)
+            logger.debug("__init__(parent=%s): q8Edit → %s", parent, q8Edit)
+            logger.debug("__init__(parent=%s): self.Toevoeging → %s", parent, self.Toevoeging)
+            logger.debug("__init__(self=%s,parent=%s): q8Edit → %s", self, parent, q8Edit)
+            logger.debug("__init__(parent=%s): q6Edit → %s", parent, q6Edit)
+            logger.debug("__init__(parent=%s): self.Postcode → %s", parent, self.Postcode)
+            logger.debug("__init__(self=%s,parent=%s): q6Edit → %s", self, parent, q6Edit)
+            logger.debug("__init__(self=%s,parent=%s): font → %s", self, parent, font)
+            logger.debug("__init__(parent=%s): font → %s", parent, font)
+            logger.debug("__init__(parent=%s): self.Woonplaats → %s", parent, self.Woonplaats)
+            logger.debug("__init__(self=%s,parent=%s): q15Edit → %s", self, parent, q15Edit)
+            logger.debug("__init__(parent=%s): q15Edit → %s", parent, q15Edit)
+            logger.debug("__init__(parent=%s): self.Telefoonnr → %s", parent, self.Telefoonnr)
+            logger.debug("__init__(self=%s,parent=%s): q13Edit → %s", self, parent, q13Edit)
+            logger.debug("__init__(parent=%s): q13Edit → %s", parent, q13Edit)
+            logger.debug("__init__(parent=%s): self.Leveranciernummer → %s", parent, self.Leveranciernummer)
+            logger.debug("__init__(self=%s,parent=%s): q14Edit → %s", self, parent, q14Edit)
+            logger.debug("__init__(parent=%s): q14Edit → %s", parent, q14Edit)
+            logger.debug("__init__(self=%s,parent=%s): grid → %s", self, parent, grid)
+            logger.debug("__init__(parent=%s): grid → %s", parent, grid)
+            logger.debug("__init__(self=%s,parent=%s): lbl → %s", self, parent, lbl)
+            logger.debug("__init__(parent=%s): lbl → %s", parent, lbl)
+            logger.debug("__init__(self=%s,parent=%s): pixmap → %s", self, parent, pixmap)
+            logger.debug("__init__(parent=%s): pixmap → %s", parent, pixmap)
+            logger.debug("__init__(self=%s,parent=%s): logo → %s", self, parent, logo)
+            logger.debug("__init__(parent=%s): logo → %s", parent, logo)
+            logger.debug("__init__(parent=%s): cancelBtn → %s", parent, cancelBtn)
+            logger.debug("__init__(self=%s,parent=%s): cancelBtn → %s", self, parent, cancelBtn)
+            logger.debug("__init__(parent=%s): applyBtn → %s", parent, applyBtn)
+            logger.debug("__init__(self=%s,parent=%s): applyBtn → %s", self, parent, applyBtn)
+            logger.debug("<<< Exiting __init__(parent=%s)", parent)
     
         def levChanged(self, text):
+            logger.debug(">>> Entering levChanged(text=%s)", text)
+            logger.debug("levChanged(self=%s,text=%s): Leverancier → %s", self, text, Leverancier)
             self.Leverancier.setText(text)
+            logger.debug("<<< Exiting levChanged(text=%s)", text)
     
         def returnLeverancier(self):
+            logger.debug(">>> Entering returnLeverancier()")
+            logger.debug("<<< Exiting returnLeverancier()")
             return self.Leverancier.text()
     
         @staticmethod
         def getData(parent=None):
             dialog = Widget(parent)
             dialog.exec_()
+            logger.debug(">>> Entering getData(parent=%s)", parent)
+            logger.debug("getData(parent=%s): dialog → %s", parent, dialog)
+            logger.debug("<<< Exiting getData(parent=%s)", parent)
             return [dialog.returnLeverancier()]
 
     window = Widget()
@@ -158,7 +243,9 @@ def zoekLeverancier(m_email):
         zoekLeverancier(m_email)
      
 def updateLeverancier(mlevnr, m_email):
+    logger.debug(">>> Entering updateLeverancier(mlevnr=%s,m_email=%s)", mlevnr, m_email)
     metadata = MetaData()
+    logger.debug("updateLeverancier(mlevnr=%s,m_email=%s): metadata → %s", mlevnr, m_email, metadata)
     leveranciers = Table('leveranciers', metadata,
         Column('leverancierID', Integer(), primary_key=True),
         Column('bedrijfsnaam', String),
@@ -171,29 +258,44 @@ def updateLeverancier(mlevnr, m_email):
         Column('postcode', String))       
               
     engine = create_engine('postgresql+psycopg2://postgres@localhost/bisystem')
+    logger.debug("updateLeverancier(mlevnr=%s,m_email=%s): engine → %s", mlevnr, m_email, engine)
     conn = engine.connect()
     sel = select([leveranciers]).\
             where(leveranciers.c.leverancierID == mlevnr)
+    logger.debug("updateLeverancier(mlevnr=%s,m_email=%s): conn → %s", mlevnr, m_email, conn)
+    logger.debug("updateLeverancier(mlevnr=%s,m_email=%s): sel → %s", mlevnr, m_email, sel)
     rplev = conn.execute(sel).first()
     if rplev:
         mlevnr = rplev[0]
+        logger.debug("updateLeverancier(mlevnr=%s,m_email=%s): rplev → %s", mlevnr, m_email, rplev)
         mbedrnaam = rplev[1]
         mrechtsvorm = rplev[2]
+        logger.debug("updateLeverancier(mlevnr=%s,m_email=%s): mbedrnaam → %s", mlevnr, m_email, mbedrnaam)
+        logger.debug("updateLeverancier(mlevnr=%s,m_email=%s): mrechtsvorm → %s", mlevnr, m_email, mrechtsvorm)
         mbtwnr = rplev[3]
+        logger.debug("updateLeverancier(mlevnr=%s,m_email=%s): mbtwnr → %s", mlevnr, m_email, mbtwnr)
         mkvknr = rplev[4]
+        logger.debug("updateLeverancier(mlevnr=%s,m_email=%s): mkvknr → %s", mlevnr, m_email, mkvknr)
         mtelnr = rplev[5]
+        logger.debug("updateLeverancier(mlevnr=%s,m_email=%s): mtelnr → %s", mlevnr, m_email, mtelnr)
         mhuisnr = rplev[6]
         mhuisnr = int(mhuisnr)
+        logger.debug("updateLeverancier(mlevnr=%s,m_email=%s): mhuisnr → %s", mlevnr, m_email, mhuisnr)
         mtoev = rplev[7]
         mpostcode = rplev[8]
         import postcode
         mstrtplts = postcode.checkpostcode(mpostcode,mhuisnr)
+        logger.debug("updateLeverancier(mlevnr=%s,m_email=%s): mtoev → %s", mlevnr, m_email, mtoev)
+        logger.debug("updateLeverancier(mlevnr=%s,m_email=%s): mpostcode → %s", mlevnr, m_email, mpostcode)
+        logger.debug("updateLeverancier(mlevnr=%s,m_email=%s): mstrtplts → %s", mlevnr, m_email, mstrtplts)
         mstraat = mstrtplts[0]
         mplaats = mstrtplts[1]
                                 
     class Widget(QDialog):
+        logger.debug("updateLeverancier(mlevnr=%s,m_email=%s): mstraat → %s", mlevnr, m_email, mstraat)
         def __init__(self, parent=None):
             super(Widget, self).__init__(parent)
+            logger.debug("<<< Exiting updateLeverancier(mlevnr=%s,m_email=%s)", mlevnr, m_email)
             self.setWindowTitle("Wijzigen leverancier")
             self.setWindowIcon(QIcon('./images/logos/logo.jpg'))
                                   
@@ -382,69 +484,124 @@ def updateLeverancier(mlevnr, m_email):
             self.setGeometry(500, 100, 150, 150)
           
         def q3Changed(self, text):
+            logger.debug(">>> Entering q3Changed(text=%s)", text)
+            logger.debug("q3Changed(self=%s,text=%s): Bedrijfsnaam → %s", self, text, Bedrijfsnaam)
             self.Bedrijfsnaam.setText(text)
+            logger.debug("<<< Exiting q3Changed(text=%s)", text)
                     
         def q5Changed(self, text):
+            logger.debug(">>> Entering q5Changed(text=%s)", text)
+            logger.debug("q5Changed(self=%s,text=%s): Rechtsvorm → %s", self, text, Rechtsvorm)
             self.Rechtsvorm.setText(text)
+            logger.debug("<<< Exiting q5Changed(text=%s)", text)
             
         def q2Changed(self, text):
+            logger.debug(">>> Entering q2Changed(text=%s)", text)
+            logger.debug("q2Changed(self=%s,text=%s): BTWnummer → %s", self, text, BTWnummer)
             self.BTWnummer.setText(text)      
+            logger.debug("<<< Exiting q2Changed(text=%s)", text)
             
         def q4Changed(self, text):
+            logger.debug(">>> Entering q4Changed(text=%s)", text)
+            logger.debug("q4Changed(self=%s,text=%s): KvKnummer → %s", self, text, KvKnummer)
             self.KvKnummer.setText(text)
+            logger.debug("<<< Exiting q4Changed(text=%s)", text)
       
         def q1Changed(self, text):
+            logger.debug(">>> Entering q1Changed(text=%s)", text)
+            logger.debug("q1Changed(self=%s,text=%s): Straat → %s", self, text, Straat)
             self.Straat.setText(text)
+            logger.debug("<<< Exiting q1Changed(text=%s)", text)
                   
         def q7Changed(self, text):
+            logger.debug(">>> Entering q7Changed(text=%s)", text)
+            logger.debug("q7Changed(self=%s,text=%s): Huisnummer → %s", self, text, Huisnummer)
             self.Huisnummer.setText(text)
+            logger.debug("<<< Exiting q7Changed(text=%s)", text)
     
         def q8Changed(self, text):
+            logger.debug(">>> Entering q8Changed(text=%s)", text)
+            logger.debug("q8Changed(self=%s,text=%s): Toevoeging → %s", self, text, Toevoeging)
             self.Toevoeging.setText(text)          
+            logger.debug("<<< Exiting q8Changed(text=%s)", text)
     
         def q6Changed(self, text):
+            logger.debug(">>> Entering q6Changed(text=%s)", text)
+            logger.debug("q6Changed(self=%s,text=%s): Postcode → %s", self, text, Postcode)
             self.Postcode.setText(text)
+            logger.debug("<<< Exiting q6Changed(text=%s)", text)
             
         def q15Changed(self, text):
+            logger.debug(">>> Entering q15Changed(text=%s)", text)
+            logger.debug("q15Changed(self=%s,text=%s): Woonplaats → %s", self, text, Woonplaats)
             self.Woonplaats.setText(text)
+            logger.debug("<<< Exiting q15Changed(text=%s)", text)
               
         def q13Changed(self, text):
+            logger.debug(">>> Entering q13Changed(text=%s)", text)
+            logger.debug("q13Changed(self=%s,text=%s): Telefoonnr → %s", self, text, Telefoonnr)
             self.Telefoonnr.setText(text)
+            logger.debug("<<< Exiting q13Changed(text=%s)", text)
             
         def q14Changed(self, text):
+            logger.debug(">>> Entering q14Changed(text=%s)", text)
+            logger.debug("q14Changed(self=%s,text=%s): Leveranciernummer → %s", self, text, Leveranciernummer)
             self.Leveranciernummer.setText(text)
+            logger.debug("<<< Exiting q14Changed(text=%s)", text)
                 
         def returnBedrijfsnaam(self):
+            logger.debug(">>> Entering returnBedrijfsnaam()")
+            logger.debug("<<< Exiting returnBedrijfsnaam()")
             return self.Bedrijfsnaam.text()
         
         def returnRechtsvorm(self):
+            logger.debug(">>> Entering returnRechtsvorm()")
+            logger.debug("<<< Exiting returnRechtsvorm()")
             return self.Rechtsvorm.text()
     
         def returnBTWnummer(self):
+            logger.debug(">>> Entering returnBTWnummer()")
+            logger.debug("<<< Exiting returnBTWnummer()")
             return self.BTWnummer.text()
         
         def returnKvKnummer(self):
+            logger.debug(">>> Entering returnKvKnummer()")
+            logger.debug("<<< Exiting returnKvKnummer()")
             return self.KvKnummer.text()
         
         def returnStraat(self):
+            logger.debug(">>> Entering returnStraat()")
+            logger.debug("<<< Exiting returnStraat()")
             return self.Straat.text()
    
         def returnHuisnummer(self):
+            logger.debug(">>> Entering returnHuisnummer()")
+            logger.debug("<<< Exiting returnHuisnummer()")
             return self.Huisnummer.text()
     
         def returnToevoeging(self):
+            logger.debug(">>> Entering returnToevoeging()")
+            logger.debug("<<< Exiting returnToevoeging()")
             return self.Toevoeging.text()
     
         def returnPostcode(self):
+            logger.debug(">>> Entering returnPostcode()")
+            logger.debug("<<< Exiting returnPostcode()")
             return self.Postcode.text()
         
         def returnWoonplaats(self):
+            logger.debug(">>> Entering returnWoonplaats()")
+            logger.debug("<<< Exiting returnWoonplaats()")
             return self.Woonplaats.text()
            
         def returnTelefoonnummer(self):
+            logger.debug(">>> Entering returnTelefoonnummer()")
+            logger.debug("<<< Exiting returnTelefoonnummer()")
             return self.Telefoonnr.text()   
     
         def returnLeveranciernummer(self):
+            logger.debug(">>> Entering returnLeveranciernummer()")
+            logger.debug("<<< Exiting returnLeveranciernummer()")
             return self.Leveranciernummer.text() 
          
         @staticmethod

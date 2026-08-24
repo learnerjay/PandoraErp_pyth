@@ -5,69 +5,95 @@ from PyQt5.QtWidgets import QWidget, QTableView, QDialog, QLabel,\
        QGridLayout, QPushButton, QMessageBox, QLineEdit, QComboBox
 from sqlalchemy import (Table, Column, Integer, String, Float, MetaData,\
                          create_engine, select, update)
+import logging
+logger = logging.getLogger(__name__)
 
 def refresh(keuze, m_email, self):
+    logger.debug(">>> Entering refresh(keuze=%s,m_email=%s)", keuze, m_email)
     self.close()
     toonClusters(keuze, m_email)
+    logger.debug("<<< Exiting refresh(keuze=%s,m_email=%s)", keuze, m_email)
     
 def updateOK():
+    logger.debug(">>> Entering updateOK()")
     msg = QMessageBox()
+    logger.debug("updateOK(): msg → %s", msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setIcon(QMessageBox.Information)
     msg.setText('Je gegevens zijn aangepast!')
     msg.setWindowTitle('Clusters invoeren')
+    logger.debug("<<< Exiting updateOK()")
     msg.exec_()
 
 def invoerOK():
+    logger.debug(">>> Entering invoerOK()")
     msg = QMessageBox()
+    logger.debug("invoerOK(): msg → %s", msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setIcon(QMessageBox.Information)
     msg.setText('Invoer gelukt')
     msg.setWindowTitle('Clusters invoeren')
+    logger.debug("<<< Exiting invoerOK()")
     msg.exec_()
     
 def calcBestaat():
+    logger.debug(">>> Entering calcBestaat()")
     msg = QMessageBox()
+    logger.debug("calcBestaat(): msg → %s", msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setIcon(QMessageBox.Information)
     msg.setText('Calculatieregel bestaat al\nen is verrekend met\ningebrachte hoeveelheid!')
     msg.setWindowTitle('Clusters invoeren')
+    logger.debug("<<< Exiting calcBestaat()")
     msg.exec_()   
 
 def windowSluit(self, m_email):
+    logger.debug(">>> Entering windowSluit(m_email=%s)", m_email)
     self.close()
     hoofdMenu(m_email)
+    logger.debug("<<< Exiting windowSluit(m_email=%s)", m_email)
     
 def geenRecord():
+    logger.debug(">>> Entering geenRecord()")
     msg = QMessageBox()
+    logger.debug("geenRecord(): msg → %s", msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     msg.setIcon(QMessageBox.Warning)
     msg.setText('Geen cluster gevonden\nmaak een andere selektie\nof maak een nieuwe cluster s.v.p.!')
     msg.setFont(QFont("Arial",10))
     msg.setWindowTitle('Clusters invoeren')               
+    logger.debug("<<< Exiting geenRecord()")
     msg.exec_() 
     
 def ongKeuze():
+    logger.debug(">>> Entering ongKeuze()")
     msg = QMessageBox()
+    logger.debug("ongKeuze(): msg → %s", msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     msg.setIcon(QMessageBox.Warning)
     msg.setText('Ongeldige keuze')
     msg.setWindowTitle('Clusters invoeren')               
+    logger.debug("<<< Exiting ongKeuze()")
     msg.exec_() 
                 
 def zoeken(m_email):
+    logger.debug(">>> Entering zoeken(m_email=%s)", m_email)
     class Widget(QDialog):
         def __init__(self, parent=None):
             super(Widget, self).__init__(parent)
+            logger.debug(">>> Entering __init__(parent=%s)", parent)
             self.setWindowTitle("Cluster selektie")
             self.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     
             self.setFont(QFont('Arial', 10))
                               
             self.Keuze = QLabel()
+            logger.debug("__init__(parent=%s): self.Keuze → %s", parent, self.Keuze)
             k0Edit = QComboBox()
+            logger.debug("__init__(self=%s,parent=%s): k0Edit → %s", self, parent, k0Edit)
+            logger.debug("__init__(parent=%s): k0Edit → %s", parent, k0Edit)
             k0Edit.setFixedWidth(340)
             k0Edit.setFont(QFont("Arial",10))
             k0Edit.setStyleSheet("color: black;  background-color: #F8F7EE")
@@ -83,12 +109,18 @@ def zoeken(m_email):
             k0Edit.addItem('HA-HK. Bovenleiding + draagconstruktie')
             k0Edit.addItem('JA-JK. Voedingen + Onderstations')
             k0Edit.activated[str].connect(self.k0Changed)
+            logger.debug("__init__(parent=%s): pixmap → %s", parent, pixmap)
 
             grid = QGridLayout()
+            logger.debug("__init__(self=%s,parent=%s): grid → %s", self, parent, grid)
+            logger.debug("__init__(parent=%s): grid → %s", parent, grid)
             grid.setSpacing(20)
                           
             lbl = QLabel()
+            logger.debug("__init__(self=%s,parent=%s): lbl → %s", self, parent, lbl)
+            logger.debug("__init__(parent=%s): lbl → %s", parent, lbl)
             pixmap = QPixmap('./images/logos/verbinding.jpg')
+            logger.debug("__init__(self=%s,parent=%s): pixmap → %s", self, parent, pixmap)
             lbl.setPixmap(pixmap)
             grid.addWidget(lbl , 0, 0, 1, 2)
                         
@@ -100,11 +132,15 @@ def zoeken(m_email):
             grid.addWidget(QLabel('\u00A9 2017 all rights reserved dj.jansen@casema.nl'), 3, 0, 1, 2, Qt.AlignCenter)
             
             logo = QLabel()
+            logger.debug("__init__(self=%s,parent=%s): logo → %s", self, parent, logo)
+            logger.debug("__init__(parent=%s): logo → %s", parent, logo)
             pixmap = QPixmap('./images/logos/logo.jpg')
             logo.setPixmap(pixmap)
             grid.addWidget(logo , 0, 1, 1, 1, Qt.AlignRight)
    
             applyBtn = QPushButton('Zoeken')
+            logger.debug("__init__(self=%s,parent=%s): applyBtn → %s", self, parent, applyBtn)
+            logger.debug("__init__(parent=%s): applyBtn → %s", parent, applyBtn)
             applyBtn.clicked.connect(self.accept)
     
             grid.addWidget(applyBtn, 2, 1, 1, 1, Qt.AlignRight)
@@ -113,23 +149,54 @@ def zoeken(m_email):
             applyBtn.setStyleSheet("color: black;  background-color: gainsboro")
             
             cancelBtn = QPushButton('Sluiten')
+            logger.debug("__init__(self=%s,parent=%s): cancelBtn → %s", self, parent, cancelBtn)
+            logger.debug("__init__(parent=%s): cancelBtn → %s", parent, cancelBtn)
             cancelBtn.clicked.connect(lambda: windowSluit(self, m_email))
     
             grid.addWidget(cancelBtn, 2, 1, 1, 1,Qt.AlignCenter)
+            logger.debug("<<< Exiting __init__(parent=%s)", parent)
             cancelBtn.setFont(QFont("Arial",10))
             cancelBtn.setFixedWidth(100)
             cancelBtn.setStyleSheet("color: black;  background-color: gainsboro")
+            logger.debug(">>> Entering __init__(data_list=%s,header=%s)", data_list, header)
+            logger.debug("__init__(data_list=%s,header=%s): font → %s", data_list, header, font)
+            logger.debug("__init__(data_list=%s,header=%s): table_view → %s", data_list, header, table_view)
+            logger.debug("__init__(data_list=%s,header=%s): grid → %s", data_list, header, grid)
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): grid → %s", self, data_list, header, grid)
+            logger.debug("__init__(data_list=%s,header=%s): table_model → %s", data_list, header, table_model)
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): table_model → %s", self, data_list, header, table_model)
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): table_view → %s", self, data_list, header, table_view)
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): font → %s", self, data_list, header, font)
+            logger.debug("__init__(data_list=%s,header=%s): pixmap → %s", data_list, header, pixmap)
+            logger.debug("__init__(data_list=%s,header=%s): lbl → %s", data_list, header, lbl)
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): lbl → %s", self, data_list, header, lbl)
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): pixmap → %s", self, data_list, header, pixmap)
+            logger.debug("__init__(data_list=%s,header=%s): logo → %s", data_list, header, logo)
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): logo → %s", self, data_list, header, logo)
+            logger.debug("__init__(data_list=%s,header=%s): freshBtn → %s", data_list, header, freshBtn)
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): freshBtn → %s", self, data_list, header, freshBtn)
+            logger.debug("__init__(data_list=%s,header=%s): sluitBtn → %s", data_list, header, sluitBtn)
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): sluitBtn → %s", self, data_list, header, sluitBtn)
+            logger.debug("<<< Exiting __init__(data_list=%s,header=%s)", data_list, header)
            
         def k0Changed(self, text):
+            logger.debug(">>> Entering k0Changed(text=%s)", text)
+            logger.debug("k0Changed(self=%s,text=%s): Keuze → %s", self, text, Keuze)
             self.Keuze.setText(text)
+            logger.debug("<<< Exiting k0Changed(text=%s)", text)
             
         def returnk0(self):
+            logger.debug(">>> Entering returnk0()")
+            logger.debug("<<< Exiting returnk0()")
             return self.Keuze.text()
                  
         @staticmethod
         def getData(parent=None):
             dialog = Widget(parent)
             dialog.exec_()
+            logger.debug(">>> Entering getData(parent=%s)", parent)
+            logger.debug("getData(parent=%s): dialog → %s", parent, dialog)
+            logger.debug("<<< Exiting getData(parent=%s)", parent)
             return [dialog.returnk0()]       
 
     window = Widget()
@@ -145,6 +212,7 @@ def zoeken(m_email):
     toonClusters(keuze, m_email)  
   
 def toonClusters(keuze, m_email):              
+    logger.debug(">>> Entering toonClusters(keuze=%s,m_email=%s)", keuze, m_email)
     class MyWindow(QDialog):
         def __init__(self, data_list, header, *args):
             QWidget.__init__(self, *args,)
@@ -207,18 +275,196 @@ def toonClusters(keuze, m_email):
             self.setLayout(grid)
             self.setGeometry(50, 50, 1800, 900)
             self.setLayout(grid)
+            logger.debug(">>> Entering __init__(parent=%s,mylist=%s,header=%s)", parent, mylist, header)
+            logger.debug("<<< Exiting __init__(parent=%s,mylist=%s,header=%s)", parent, mylist, header)
+            logger.debug("__init__(self=%s,parent=%s,mylist=%s,header=%s): self.mylist → %s", self, parent, mylist, header, self.mylist)
 
     class MyTableModel(QAbstractTableModel):
         def __init__(self, parent, mylist, header, *args):
+            logger.debug("__init__(self=%s,parent=%s,mylist=%s,header=%s): self.header → %s", self, parent, mylist, header, self.header)
             QAbstractTableModel.__init__(self, parent, *args)
             self.mylist = mylist
+            logger.debug(">>> Entering __init__()")
+            logger.debug("__init__(): input_validator → %s", input_validator)
+            logger.debug("__init__(): grid → %s", grid)
+            logger.debug("__init__(self=%s): grid → %s", self, grid)
+            logger.debug("__init__(): q1Edit → %s", q1Edit)
+            logger.debug("__init__(): self.Omschrijving → %s", self.Omschrijving)
+            logger.debug("__init__(self=%s): q1Edit → %s", self, q1Edit)
+            logger.debug("__init__(): reg_ex → %s", reg_ex)
+            logger.debug("__init__(self=%s): reg_ex → %s", self, reg_ex)
+            logger.debug("__init__(self=%s): input_validator → %s", self, input_validator)
+            logger.debug("__init__(): q2Edit → %s", q2Edit)
+            logger.debug("__init__(): self.Prijs → %s", self.Prijs)
+            logger.debug("__init__(self=%s): q2Edit → %s", self, q2Edit)
+            logger.debug("__init__(): q3Edit → %s", q3Edit)
+            logger.debug("__init__(): self.Eenheid → %s", self.Eenheid)
+            logger.debug("__init__(self=%s): q3Edit → %s", self, q3Edit)
+            logger.debug("__init__(): q4Edit → %s", q4Edit)
+            logger.debug("__init__(): self.Materialen → %s", self.Materialen)
+            logger.debug("__init__(self=%s): q4Edit → %s", self, q4Edit)
+            logger.debug("__init__(): q5Edit → %s", q5Edit)
+            logger.debug("__init__(): self.Lonen → %s", self.Lonen)
+            logger.debug("__init__(self=%s): q5Edit → %s", self, q5Edit)
+            logger.debug("__init__(): q6Edit → %s", q6Edit)
+            logger.debug("__init__(): self.Diensten → %s", self.Diensten)
+            logger.debug("__init__(self=%s): q6Edit → %s", self, q6Edit)
+            logger.debug("__init__(): q7Edit → %s", q7Edit)
+            logger.debug("__init__(self=%s): q7Edit → %s", self, q7Edit)
+            logger.debug("__init__(): q8Edit → %s", q8Edit)
+            logger.debug("__init__(): self.Inhuur → %s", self.Inhuur)
+            logger.debug("__init__(self=%s): q8Edit → %s", self, q8Edit)
+            logger.debug("__init__(): q9Edit → %s", q9Edit)
+            logger.debug("__init__(): self.Construktieuren → %s", self.Construktieuren)
+            logger.debug("__init__(self=%s): q9Edit → %s", self, q9Edit)
+            logger.debug("__init__(): q10Edit → %s", q10Edit)
+            logger.debug("__init__(): self.Montageuren → %s", self.Montageuren)
+            logger.debug("__init__(self=%s): q10Edit → %s", self, q10Edit)
+            logger.debug("__init__(): q11Edit → %s", q11Edit)
+            logger.debug("__init__(): self.Retourlasuren → %s", self.Retourlasuren)
+            logger.debug("__init__(self=%s): q11Edit → %s", self, q11Edit)
+            logger.debug("__init__(): q12Edit → %s", q12Edit)
+            logger.debug("__init__(): self.BFIuren → %s", self.BFIuren)
+            logger.debug("__init__(self=%s): q12Edit → %s", self, q12Edit)
+            logger.debug("__init__(): q29Edit → %s", q29Edit)
+            logger.debug("__init__(): self.Telecomuren → %s", self.Telecomuren)
+            logger.debug("__init__(self=%s): q29Edit → %s", self, q29Edit)
+            logger.debug("__init__(): self.Voedinguren → %s", self.Voedinguren)
+            logger.debug("__init__(self=%s): q13Edit → %s", self, q13Edit)
+            logger.debug("__init__(): q13Edit → %s", q13Edit)
+            logger.debug("__init__(): self.Bvluren → %s", self.Bvluren)
+            logger.debug("__init__(self=%s): q14Edit → %s", self, q14Edit)
+            logger.debug("__init__(): q14Edit → %s", q14Edit)
+            logger.debug("__init__(): self.Spoorleguren → %s", self.Spoorleguren)
+            logger.debug("__init__(self=%s): q15Edit → %s", self, q15Edit)
+            logger.debug("__init__(): q15Edit → %s", q15Edit)
+            logger.debug("__init__(): self.Spoorlasuren → %s", self.Spoorlasuren)
+            logger.debug("__init__(self=%s): q16Edit → %s", self, q16Edit)
+            logger.debug("__init__(): q16Edit → %s", q16Edit)
+            logger.debug("__init__(): self.Inhuururen → %s", self.Inhuururen)
+            logger.debug("__init__(self=%s): q17Edit → %s", self, q17Edit)
+            logger.debug("__init__(): q17Edit → %s", q17Edit)
+            logger.debug("__init__(): self.Sleuvengraver → %s", self.Sleuvengraver)
+            logger.debug("__init__(self=%s): q18Edit → %s", self, q18Edit)
+            logger.debug("__init__(): q18Edit → %s", q18Edit)
+            logger.debug("__init__(): self.Persapparaat → %s", self.Persapparaat)
+            logger.debug("__init__(self=%s): q19Edit → %s", self, q19Edit)
+            logger.debug("__init__(): q19Edit → %s", q19Edit)
+            logger.debug("__init__(): self.Atlaskraan → %s", self.Atlaskraan)
+            logger.debug("__init__(self=%s): q20Edit → %s", self, q20Edit)
+            logger.debug("__init__(): q20Edit → %s", q20Edit)
+            logger.debug("__init__(): self.Kraan_groot → %s", self.Kraan_groot)
+            logger.debug("__init__(self=%s): q21Edit → %s", self, q21Edit)
+            logger.debug("__init__(): q21Edit → %s", q21Edit)
+            logger.debug("__init__(): self.Mainliner → %s", self.Mainliner)
+            logger.debug("__init__(self=%s): q22Edit → %s", self, q22Edit)
+            logger.debug("__init__(): q22Edit → %s", q22Edit)
+            logger.debug("__init__(): self.Hormachine → %s", self.Hormachine)
+            logger.debug("__init__(self=%s): q23Edit → %s", self, q23Edit)
+            logger.debug("__init__(): q23Edit → %s", q23Edit)
+            logger.debug("__init__(): self.Wagon → %s", self.Wagon)
+            logger.debug("__init__(self=%s): q24Edit → %s", self, q24Edit)
+            logger.debug("__init__(): q24Edit → %s", q24Edit)
+            logger.debug("__init__(): self.Locomotor → %s", self.Locomotor)
+            logger.debug("__init__(self=%s): q25Edit → %s", self, q25Edit)
+            logger.debug("__init__(): q25Edit → %s", q25Edit)
+            logger.debug("__init__(): self.Locomotief → %s", self.Locomotief)
+            logger.debug("__init__(self=%s): q26Edit → %s", self, q26Edit)
+            logger.debug("__init__(): q26Edit → %s", q26Edit)
+            logger.debug("__init__(): self.Stormobiel → %s", self.Stormobiel)
+            logger.debug("__init__(self=%s): q27Edit → %s", self, q27Edit)
+            logger.debug("__init__(): q27Edit → %s", q27Edit)
+            logger.debug("__init__(): self.Montagewagen → %s", self.Montagewagen)
+            logger.debug("__init__(self=%s): q28Edit → %s", self, q28Edit)
+            logger.debug("__init__(): q28Edit → %s", q28Edit)
+            logger.debug("__init__(): self.Robeltrein → %s", self.Robeltrein)
+            logger.debug("__init__(self=%s): q30Edit → %s", self, q30Edit)
+            logger.debug("__init__(): q30Edit → %s", q30Edit)
+            logger.debug("__init__(self=%s): lbl1 → %s", self, lbl1)
+            logger.debug("__init__(): lbl1 → %s", lbl1)
+            logger.debug("__init__(self=%s): lbl2 → %s", self, lbl2)
+            logger.debug("__init__(): lbl2 → %s", lbl2)
+            logger.debug("__init__(self=%s): lbl3 → %s", self, lbl3)
+            logger.debug("__init__(): lbl3 → %s", lbl3)
+            logger.debug("__init__(self=%s): lbl4 → %s", self, lbl4)
+            logger.debug("__init__(): lbl4 → %s", lbl4)
+            logger.debug("__init__(self=%s): lbl5 → %s", self, lbl5)
+            logger.debug("__init__(): lbl5 → %s", lbl5)
+            logger.debug("__init__(self=%s): lbl6 → %s", self, lbl6)
+            logger.debug("__init__(): lbl6 → %s", lbl6)
+            logger.debug("__init__(self=%s): lbl7 → %s", self, lbl7)
+            logger.debug("__init__(): lbl7 → %s", lbl7)
+            logger.debug("__init__(self=%s): lbl8 → %s", self, lbl8)
+            logger.debug("__init__(): lbl8 → %s", lbl8)
+            logger.debug("__init__(self=%s): lbl9 → %s", self, lbl9)
+            logger.debug("__init__(): lbl9 → %s", lbl9)
+            logger.debug("__init__(self=%s): lbl10 → %s", self, lbl10)
+            logger.debug("__init__(): lbl10 → %s", lbl10)
+            logger.debug("__init__(): lbl20 → %s", lbl20)
+            logger.debug("__init__(self=%s): lbl20 → %s", self, lbl20)
+            logger.debug("__init__(): lbl21 → %s", lbl21)
+            logger.debug("__init__(self=%s): lbl21 → %s", self, lbl21)
+            logger.debug("__init__(): lbl22 → %s", lbl22)
+            logger.debug("__init__(self=%s): lbl22 → %s", self, lbl22)
+            logger.debug("__init__(): lbl23 → %s", lbl23)
+            logger.debug("__init__(self=%s): lbl23 → %s", self, lbl23)
+            logger.debug("__init__(): lbl24 → %s", lbl24)
+            logger.debug("__init__(self=%s): lbl24 → %s", self, lbl24)
+            logger.debug("__init__(): lbl25 → %s", lbl25)
+            logger.debug("__init__(self=%s): lbl25 → %s", self, lbl25)
+            logger.debug("__init__(): lbl26 → %s", lbl26)
+            logger.debug("__init__(self=%s): lbl26 → %s", self, lbl26)
+            logger.debug("__init__(): lbl27 → %s", lbl27)
+            logger.debug("__init__(self=%s): lbl27 → %s", self, lbl27)
+            logger.debug("__init__(): lbl28 → %s", lbl28)
+            logger.debug("__init__(self=%s): lbl28 → %s", self, lbl28)
+            logger.debug("__init__(): lbl29 → %s", lbl29)
+            logger.debug("__init__(self=%s): lbl29 → %s", self, lbl29)
+            logger.debug("__init__(): lbl30 → %s", lbl30)
+            logger.debug("__init__(self=%s): lbl30 → %s", self, lbl30)
+            logger.debug("__init__(): lbl31 → %s", lbl31)
+            logger.debug("__init__(self=%s): lbl31 → %s", self, lbl31)
+            logger.debug("__init__(): lbl19 → %s", lbl19)
+            logger.debug("__init__(self=%s): lbl19 → %s", self, lbl19)
+            logger.debug("__init__(): lbl11 → %s", lbl11)
+            logger.debug("__init__(self=%s): lbl11 → %s", self, lbl11)
+            logger.debug("__init__(): lbl12 → %s", lbl12)
+            logger.debug("__init__(self=%s): lbl12 → %s", self, lbl12)
+            logger.debug("__init__(): lbl13 → %s", lbl13)
+            logger.debug("__init__(self=%s): lbl13 → %s", self, lbl13)
+            logger.debug("__init__(): lbl14 → %s", lbl14)
+            logger.debug("__init__(self=%s): lbl14 → %s", self, lbl14)
+            logger.debug("__init__(): lbl15 → %s", lbl15)
+            logger.debug("__init__(self=%s): lbl15 → %s", self, lbl15)
+            logger.debug("__init__(): lbl16 → %s", lbl16)
+            logger.debug("__init__(self=%s): lbl16 → %s", self, lbl16)
+            logger.debug("__init__(): lbl17 → %s", lbl17)
+            logger.debug("__init__(self=%s): lbl17 → %s", self, lbl17)
+            logger.debug("__init__(): lbl18 → %s", lbl18)
+            logger.debug("__init__(self=%s): lbl18 → %s", self, lbl18)
+            logger.debug("__init__(): pixmap → %s", pixmap)
+            logger.debug("__init__(): lbl → %s", lbl)
+            logger.debug("__init__(self=%s): lbl → %s", self, lbl)
+            logger.debug("__init__(self=%s): pixmap → %s", self, pixmap)
+            logger.debug("__init__(): logo → %s", logo)
+            logger.debug("__init__(self=%s): logo → %s", self, logo)
+            logger.debug("__init__(): applyBtn → %s", applyBtn)
+            logger.debug("__init__(self=%s): applyBtn → %s", self, applyBtn)
+            logger.debug("__init__(): closeBtn → %s", closeBtn)
+            logger.debug("__init__(self=%s): closeBtn → %s", self, closeBtn)
+            logger.debug("<<< Exiting __init__()")
             self.header = header
         def rowCount(self, parent):
+            logger.debug(">>> Entering rowCount(parent=%s)", parent)
             return len(self.mylist)
         def columnCount(self, parent):
+            logger.debug(">>> Entering columnCount(parent=%s)", parent)
             return len(self.mylist[0])
         def data(self, index, role):
+            logger.debug(">>> Entering data(index=%s,role=%s)", index, role)
             veld = self.mylist[index.row()][index.column()]
+            logger.debug("data(index=%s,role=%s): veld → %s", index, role, veld)
+            logger.debug("data(self=%s,index=%s,role=%s): veld → %s", self, index, role, veld)
             if not index.isValid():
                 return None
             elif role == Qt.TextAlignmentRole and (type(veld) == float or type(veld) == int):
@@ -228,10 +474,13 @@ def toonClusters(keuze, m_email):
             if type(veld) == float:
                 return '{:12.2f}'.format(veld)
             else:
+                logger.debug("<<< Exiting data(index=%s,role=%s)", index, role)
                 return veld
         def headerData(self, col, orientation, role):
+            logger.debug(">>> Entering headerData(col=%s,orientation=%s,role=%s)", col, orientation, role)
             if orientation == Qt.Horizontal and role == Qt.DisplayRole:
                 return self.header[col]
+            logger.debug("<<< Exiting headerData(col=%s,orientation=%s,role=%s)", col, orientation, role)
             return None
              
     header = ['Clusternr', 'Omschrijving', 'Prijs', 'Eenheid', 'Materialen', 'Lonen',\
@@ -300,15 +549,22 @@ def toonClusters(keuze, m_email):
         data_list += [(row)]
 
     def showSelection(idx):
+        logger.debug(">>> Entering showSelection(idx=%s)", idx)
         clusternr = idx.data()
+        logger.debug("showSelection(idx=%s): clusternr → %s", idx, clusternr)
         if idx.column() == 0:
             engine = create_engine('postgresql+psycopg2://postgres@localhost/bisystem')
+            logger.debug("showSelection(idx=%s): engine → %s", idx, engine)
             con = engine.connect()
             selcl = select([clusters]).where(clusters.c.clusterID == clusternr)
+            logger.debug("showSelection(idx=%s): con → %s", idx, con)
             rpsel = con.execute(selcl).first()
             
+            logger.debug("showSelection(idx=%s): selcl → %s", idx, selcl)
+            logger.debug("showSelection(idx=%s): rpsel → %s", idx, rpsel)
             class MainWindow(QDialog):
                 def __init__(self):
+                    logger.debug("<<< Exiting showSelection(idx=%s)", idx)
                     QDialog.__init__(self)
                     
                     grid = QGridLayout()
@@ -792,153 +1048,275 @@ def toonClusters(keuze, m_email):
                     closeBtn.setStyleSheet("color: black;  background-color: gainsboro")
                                              
                 def q1Changed(self,text):
+                    logger.debug(">>> Entering q1Changed(text=%s)", text)
+                    logger.debug("q1Changed(self=%s,text=%s): Omschrijving → %s", self, text, Omschrijving)
                     self.Omschrijving.setText(text)
+                    logger.debug("<<< Exiting q1Changed(text=%s)", text)
             
                 def q3Changed(self,text):
+                    logger.debug(">>> Entering q3Changed(text=%s)", text)
+                    logger.debug("q3Changed(self=%s,text=%s): Eenheid → %s", self, text, Eenheid)
                     self.Eenheid.setText(text)
+                    logger.debug("<<< Exiting q3Changed(text=%s)", text)
                              
                 def q9Changed(self,text):
+                    logger.debug(">>> Entering q9Changed(text=%s)", text)
+                    logger.debug("q9Changed(self=%s,text=%s): Construktieuren → %s", self, text, Construktieuren)
                     self.Construktieuren.setText(text)
+                    logger.debug("<<< Exiting q9Changed(text=%s)", text)
                     
                 def q10Changed(self,text):
+                    logger.debug(">>> Entering q10Changed(text=%s)", text)
+                    logger.debug("q10Changed(self=%s,text=%s): Montageuren → %s", self, text, Montageuren)
                     self.Montageuren.setText(text)
+                    logger.debug("<<< Exiting q10Changed(text=%s)", text)
                        
                 def q11Changed(self,text):
+                    logger.debug(">>> Entering q11Changed(text=%s)", text)
+                    logger.debug("q11Changed(self=%s,text=%s): Retourlasuren → %s", self, text, Retourlasuren)
                     self.Retourlasuren.setText(text)
+                    logger.debug("<<< Exiting q11Changed(text=%s)", text)
                     
                 def q12Changed(self,text):
+                    logger.debug(">>> Entering q12Changed(text=%s)", text)
+                    logger.debug("q12Changed(self=%s,text=%s): BFIuren → %s", self, text, BFIuren)
                     self.BFIuren.setText(text)
+                    logger.debug("<<< Exiting q12Changed(text=%s)", text)
                     
                 def q13Changed(self,text):
+                    logger.debug(">>> Entering q13Changed(text=%s)", text)
+                    logger.debug("q13Changed(self=%s,text=%s): Voedinguren → %s", self, text, Voedinguren)
                     self.Voedinguren.setText(text)
+                    logger.debug("<<< Exiting q13Changed(text=%s)", text)
                     
                 def q14Changed(self,text):
+                    logger.debug(">>> Entering q14Changed(text=%s)", text)
+                    logger.debug("q14Changed(self=%s,text=%s): Bvluren → %s", self, text, Bvluren)
                     self.Bvluren.setText(text)
+                    logger.debug("<<< Exiting q14Changed(text=%s)", text)
                     
                 def q15Changed(self,text):
+                    logger.debug(">>> Entering q15Changed(text=%s)", text)
+                    logger.debug("q15Changed(self=%s,text=%s): Spoorleguren → %s", self, text, Spoorleguren)
                     self.Spoorleguren.setText(text)
+                    logger.debug("<<< Exiting q15Changed(text=%s)", text)
                     
                 def q16Changed(self,text):
+                    logger.debug(">>> Entering q16Changed(text=%s)", text)
+                    logger.debug("q16Changed(self=%s,text=%s): Spoorlasuren → %s", self, text, Spoorlasuren)
                     self.Spoorlasuren.setText(text)
+                    logger.debug("<<< Exiting q16Changed(text=%s)", text)
                     
                 def q17Changed(self,text):
+                    logger.debug(">>> Entering q17Changed(text=%s)", text)
+                    logger.debug("q17Changed(self=%s,text=%s): Inhuururen → %s", self, text, Inhuururen)
                     self.Inhuururen.setText(text)
+                    logger.debug("<<< Exiting q17Changed(text=%s)", text)
                     
                 def q18Changed(self,text):
+                    logger.debug(">>> Entering q18Changed(text=%s)", text)
+                    logger.debug("q18Changed(self=%s,text=%s): Sleuvengraver → %s", self, text, Sleuvengraver)
                     self.Sleuvengraver.setText(text)
+                    logger.debug("<<< Exiting q18Changed(text=%s)", text)
                     
                 def q19Changed(self,text):
+                    logger.debug(">>> Entering q19Changed(text=%s)", text)
+                    logger.debug("q19Changed(self=%s,text=%s): Persapparaat → %s", self, text, Persapparaat)
                     self.Persapparaat.setText(text)
+                    logger.debug("<<< Exiting q19Changed(text=%s)", text)
                     
                 def q20Changed(self,text):
+                    logger.debug(">>> Entering q20Changed(text=%s)", text)
+                    logger.debug("q20Changed(self=%s,text=%s): Atlaskraan → %s", self, text, Atlaskraan)
                     self.Atlaskraan.setText(text)
+                    logger.debug("<<< Exiting q20Changed(text=%s)", text)
                     
                 def q21Changed(self,text):
+                    logger.debug(">>> Entering q21Changed(text=%s)", text)
+                    logger.debug("q21Changed(self=%s,text=%s): Kraan_groot → %s", self, text, Kraan_groot)
                     self.Kraan_groot.setText(text)
+                    logger.debug("<<< Exiting q21Changed(text=%s)", text)
                     
                 def q22Changed(self,text):
+                    logger.debug(">>> Entering q22Changed(text=%s)", text)
+                    logger.debug("q22Changed(self=%s,text=%s): Mainliner → %s", self, text, Mainliner)
                     self.Mainliner.setText(text)
+                    logger.debug("<<< Exiting q22Changed(text=%s)", text)
                     
                 def q23Changed(self,text):
+                    logger.debug(">>> Entering q23Changed(text=%s)", text)
+                    logger.debug("q23Changed(self=%s,text=%s): Hormachine → %s", self, text, Hormachine)
                     self.Hormachine.setText(text)
+                    logger.debug("<<< Exiting q23Changed(text=%s)", text)
                     
                 def q24Changed(self,text):
+                    logger.debug(">>> Entering q24Changed(text=%s)", text)
+                    logger.debug("q24Changed(self=%s,text=%s): Wagon → %s", self, text, Wagon)
                     self.Wagon.setText(text)
+                    logger.debug("<<< Exiting q24Changed(text=%s)", text)
                     
                 def q25Changed(self,text):
+                    logger.debug(">>> Entering q25Changed(text=%s)", text)
+                    logger.debug("q25Changed(self=%s,text=%s): Locomotor → %s", self, text, Locomotor)
                     self.Locomotor.setText(text)
+                    logger.debug("<<< Exiting q25Changed(text=%s)", text)
                     
                 def q26Changed(self,text):
+                    logger.debug(">>> Entering q26Changed(text=%s)", text)
+                    logger.debug("q26Changed(self=%s,text=%s): Locomotief → %s", self, text, Locomotief)
                     self.Locomotief.setText(text)
+                    logger.debug("<<< Exiting q26Changed(text=%s)", text)
                     
                 def q27Changed(self,text):
+                    logger.debug(">>> Entering q27Changed(text=%s)", text)
+                    logger.debug("q27Changed(self=%s,text=%s): Stormobiel → %s", self, text, Stormobiel)
                     self.Stormobiel.setText(text)
+                    logger.debug("<<< Exiting q27Changed(text=%s)", text)
                     
                 def q28Changed(self,text):
+                    logger.debug(">>> Entering q28Changed(text=%s)", text)
+                    logger.debug("q28Changed(self=%s,text=%s): Montagewagen → %s", self, text, Montagewagen)
                     self.Montagewagen.setText(text)
+                    logger.debug("<<< Exiting q28Changed(text=%s)", text)
                     
                 def q29Changed(self,text):
+                    logger.debug(">>> Entering q29Changed(text=%s)", text)
+                    logger.debug("q29Changed(self=%s,text=%s): Telecomuren → %s", self, text, Telecomuren)
                     self.Telecomuren.setText(text)
+                    logger.debug("<<< Exiting q29Changed(text=%s)", text)
                     
                 def q30Changed(self,text):
+                    logger.debug(">>> Entering q30Changed(text=%s)", text)
+                    logger.debug("q30Changed(self=%s,text=%s): Robeltrein → %s", self, text, Robeltrein)
                     self.Robeltrein.setText(text)
+                    logger.debug("<<< Exiting q30Changed(text=%s)", text)
 
                 def returnq1(self):
+                    logger.debug(">>> Entering returnq1()")
+                    logger.debug("<<< Exiting returnq1()")
                     return self.Omschrijving.text()
                                 
                 def returnq3(self):
+                    logger.debug(">>> Entering returnq3()")
+                    logger.debug("<<< Exiting returnq3()")
                     return self.Eenheid.text()
                                 
                 def returnq9(self):
+                    logger.debug(">>> Entering returnq9()")
+                    logger.debug("<<< Exiting returnq9()")
                     return self.Construktieuren.text()
                 
                 def returnq10(self):
+                    logger.debug(">>> Entering returnq10()")
+                    logger.debug("<<< Exiting returnq10()")
                     return self.Montageuren.text()
                 
                 def returnq11(self):
+                    logger.debug(">>> Entering returnq11()")
+                    logger.debug("<<< Exiting returnq11()")
                     return self.Retourlasuren.text()
                 
                 def returnq12(self):
+                    logger.debug(">>> Entering returnq12()")
+                    logger.debug("<<< Exiting returnq12()")
                     return self.BFIuren.text()
                 
                 def returnq13(self):
+                    logger.debug(">>> Entering returnq13()")
+                    logger.debug("<<< Exiting returnq13()")
                     return self.Voedinguren.text()
                 
                 def returnq14(self):
+                    logger.debug(">>> Entering returnq14()")
+                    logger.debug("<<< Exiting returnq14()")
                     return self.Bvluren.text()
                 
                 def returnq15(self):
+                    logger.debug(">>> Entering returnq15()")
+                    logger.debug("<<< Exiting returnq15()")
                     return self.Spoorleguren.text()
                 
                 def returnq16(self):
+                    logger.debug(">>> Entering returnq16()")
+                    logger.debug("<<< Exiting returnq16()")
                     return self.Spoorlasuren.text()
                 
                 def returnq17(self):
+                    logger.debug(">>> Entering returnq17()")
+                    logger.debug("<<< Exiting returnq17()")
                     return self.Inhuururen.text()
                 
                 def returnq18(self):
+                    logger.debug(">>> Entering returnq18()")
+                    logger.debug("<<< Exiting returnq18()")
                     return self.Sleuvengraver.text()
                 
                 def returnq19(self):
+                    logger.debug(">>> Entering returnq19()")
+                    logger.debug("<<< Exiting returnq19()")
                     return self.Persapparaat.text()
                 
                 def returnq20(self):
+                    logger.debug(">>> Entering returnq20()")
+                    logger.debug("<<< Exiting returnq20()")
                     return self.Atlaskraan.text()
                 
                 def returnq21(self):
+                    logger.debug(">>> Entering returnq21()")
+                    logger.debug("<<< Exiting returnq21()")
                     return self.Kraan_groot.text()
                 
                 def returnq22(self):
+                    logger.debug(">>> Entering returnq22()")
+                    logger.debug("<<< Exiting returnq22()")
                     return self.Mainliner.text()
                 
                 def returnq23(self):
+                    logger.debug(">>> Entering returnq23()")
+                    logger.debug("<<< Exiting returnq23()")
                     return self.Hormachine.text()
               
                 def returnq24(self):
+                    logger.debug(">>> Entering returnq24()")
+                    logger.debug("<<< Exiting returnq24()")
                     return self.Wagon.text()
                 
                 def returnq25(self):
+                    logger.debug(">>> Entering returnq25()")
+                    logger.debug("<<< Exiting returnq25()")
                     return self.Locomotor.text()
                 
                 def returnq26(self):
+                    logger.debug(">>> Entering returnq26()")
+                    logger.debug("<<< Exiting returnq26()")
                     return self.Locomotief.text()
               
                 def returnq27(self):
+                    logger.debug(">>> Entering returnq27()")
+                    logger.debug("<<< Exiting returnq27()")
                     return self.Stormobiel.text()
                 
                 def returnq28(self):
+                    logger.debug(">>> Entering returnq28()")
+                    logger.debug("<<< Exiting returnq28()")
                     return self.Montagewagen.text()
                 
                 def returnq29(self):
+                    logger.debug(">>> Entering returnq29()")
+                    logger.debug("<<< Exiting returnq29()")
                     return self.Telecomuren.text()
         
                 def returnq30(self):
+                    logger.debug(">>> Entering returnq30()")
+                    logger.debug("<<< Exiting returnq30()")
                     return self.Robeltrein.text()
 
                 @staticmethod
                 def getData(parent=None):
+                    logger.debug(">>> Entering getData(parent=%s)", parent)
                     dialog = MainWindow()
                     dialog.exec_()
+                    logger.debug("<<< Exiting getData(parent=%s)", parent)
                     return [dialog.returnq1(), dialog.returnq3(), dialog.returnq9(),\
                             dialog.returnq10(), dialog.returnq11(), dialog.returnq12(),\
                             dialog.returnq13(), dialog.returnq14(), dialog.returnq15(),\

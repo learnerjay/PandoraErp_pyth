@@ -5,60 +5,85 @@ from PyQt5.QtGui import QFont, QPixmap, QIcon, QMovie
 from PyQt5.QtWidgets import QLabel, QPushButton, QWidget, QDialog, QGridLayout,\
       QMessageBox, QTableView, QVBoxLayout, QLineEdit
 from sqlalchemy import (Table, Column, Integer, String, MetaData, create_engine, select, update, insert, func)
+import logging
+logger = logging.getLogger(__name__)
 
 def insertReq():
+    logger.debug(">>> Entering insertReq()")
     msg = QMessageBox()
+    logger.debug("insertReq(): msg → %s", msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setIcon(QMessageBox.Warning)
     msg.setText('Insert data is required!')
     msg.setWindowTitle('Insert Menu Strukturen')
+    logger.debug("<<< Exiting insertReq()")
     msg.exec_()
 
 def insertOK():
+    logger.debug(">>> Entering insertOK()")
     msg = QMessageBox()
+    logger.debug("insertOK(): msg → %s", msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setIcon(QMessageBox.Information)
     msg.setText('Inserting data was successful!')
     msg.setWindowTitle('Insert Menu Strukturen')
+    logger.debug("<<< Exiting insertOK()")
     msg.exec_()
 
 def errorInsert(message):
+    logger.debug(">>> Entering errorInsert(message=%s)", message)
     msg = QMessageBox()
+    logger.debug("errorInsert(message=%s): msg → %s", message, msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setIcon(QMessageBox.Critical)
     msg.setText('An error has occurred!\n'+message)
     msg.setWindowTitle('Insert Menu Strukturen')
+    logger.debug("<<< Exiting errorInsert(message=%s)", message)
     msg.exec_()
 
 def closeInsert(sector, m_email, self):
+    logger.debug(">>> Entering closeInsert(sector=%s,m_email=%s)", sector, m_email)
     self.close()
     hoofdMenu(m_email)
+    logger.debug("<<< Exiting closeInsert(sector=%s,m_email=%s)", sector, m_email)
 
 def noChange():
+    logger.debug(">>> Entering noChange()")
     msg = QMessageBox()
+    logger.debug("noChange(): msg → %s", msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setIcon(QMessageBox.Critical)
     msg.setText('An error has occurred, no changes are processed!')
     msg.setWindowTitle('Modify Menu Structures')
+    logger.debug("<<< Exiting noChange()")
     msg.exec_()
 
 def changeOK():
+    logger.debug(">>> Entering changeOK()")
     msg = QMessageBox()
+    logger.debug("changeOK(): msg → %s", msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setIcon(QMessageBox.Information)
     msg.setText('Changes are successful!')
     msg.setWindowTitle('Modify Menu Structures')
+    logger.debug("<<< Exiting changeOK()")
     msg.exec_()
 
 def refresh(m_email, self):
+    logger.debug(">>> Entering refresh(m_email=%s)", m_email)
     self.close()
     menuStructure(m_email, self)
+    logger.debug("<<< Exiting refresh(m_email=%s)", m_email)
 
 def selectRow(index):
+    logger.debug(">>> Entering selectRow(index=%s)", index)
     print('Recordnumber: ', index.row())
+    logger.debug("<<< Exiting selectRow(index=%s)", index)
 
 def menuStructure(sector, m_email):
+    logger.debug(">>> Entering menuStructure(sector=%s,m_email=%s)", sector, m_email)
     metadata = MetaData()
+    logger.debug("menuStructure(sector=%s,m_email=%s): metadata → %s", sector, m_email, metadata)
     cluster_structure_external = Table('cluster_structure_external', metadata,
        Column('structID', Integer(), primary_key=True),
        Column('overall_heading', String),
@@ -102,34 +127,53 @@ def menuStructure(sector, m_email):
        Column('line15', String))
 
     engine = create_engine('postgresql+psycopg2://postgres@localhost/bisystem')
+    logger.debug("menuStructure(sector=%s,m_email=%s): engine → %s", sector, m_email, engine)
     if sector == 'external':
         con = engine.connect()
+        logger.debug("menuStructure(sector=%s,m_email=%s): con → %s", sector, m_email, con)
         sel = select([cluster_structure_external]).order_by(cluster_structure_external.c.line_level0)
+        logger.debug("menuStructure(sector=%s,m_email=%s): sel → %s", sector, m_email, sel)
         rpa = con1.execute(sel)
     else:
         con = engine.connect()
         sel = select([cluster_structure_internal]).order_by(cluster_structure_internal.c.line_level0)
         rpa = con.execute(sel)
+        logger.debug("menuStructure(sector=%s,m_email=%s): rpa → %s", sector, m_email, rpa)
     class MyWindow(QDialog):
+        logger.debug("<<< Exiting menuStructure(sector=%s,m_email=%s)", sector, m_email)
         def __init__(self, data_list, header, *args):
+            logger.debug(">>> Entering __init__(data_list=%s,header=%s)", data_list, header)
             QWidget.__init__(self, *args, )
             self.setGeometry(50, 50, 1700, 900)
             self.setWindowTitle('Request account information')
+            logger.debug("__init__(data_list=%s,header=%s): font → %s", data_list, header, font)
+            logger.debug("__init__(data_list=%s,header=%s): table_view → %s", data_list, header, table_view)
             self.setWindowIcon(QIcon('./images/logos/logo.jpg'))
             self.setWindowFlags(self.windowFlags() | Qt.WindowSystemMenuHint |
                                 Qt.WindowMinMaxButtonsHint)
             table_model = MyTableModel(self, data_list, header)
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): table_model → %s", self, data_list, header, table_model)
+            logger.debug("__init__(data_list=%s,header=%s): table_model → %s", data_list, header, table_model)
             table_view = QTableView()
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): table_view → %s", self, data_list, header, table_view)
             table_view.setModel(table_model)
             font = QFont("Arial", 10)
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): font → %s", self, data_list, header, font)
             table_view.setFont(font)
             table_view.resizeColumnsToContents()
             table_view.setSelectionBehavior(QTableView.SelectRows)
             table_view.clicked.connect(showSelection)
             # table_view.clicked.connect(selectRow)
             layout = QVBoxLayout(self)
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): layout → %s", self, data_list, header, layout)
+            logger.debug("__init__(data_list=%s,header=%s): layout → %s", data_list, header, layout)
             layout.addWidget(table_view)
             self.setLayout(layout)
+            logger.debug("<<< Exiting __init__(data_list=%s,header=%s)", data_list, header)
+            logger.debug(">>> Entering __init__(parent=%s,mylist=%s,header=%s)", parent, mylist, header)
+            logger.debug("<<< Exiting __init__(parent=%s,mylist=%s,header=%s)", parent, mylist, header)
+            logger.debug("__init__(self=%s,parent=%s,mylist=%s,header=%s): self.mylist → %s", self, parent, mylist, header, self.mylist)
+            logger.debug("__init__(self=%s,parent=%s,mylist=%s,header=%s): self.header → %s", self, parent, mylist, header, self.header)
 
     class MyTableModel(QAbstractTableModel):
         def __init__(self, parent, mylist, header, *args):
@@ -138,17 +182,25 @@ def menuStructure(sector, m_email):
             self.header = header
 
         def rowCount(self, parent):
+            logger.debug(">>> Entering rowCount(parent=%s)", parent)
+            logger.debug("<<< Exiting rowCount(parent=%s)", parent)
             return len(self.mylist)
 
         def columnCount(self, parent):
+            logger.debug(">>> Entering columnCount(parent=%s)", parent)
             try:
+                logger.debug("<<< Exiting columnCount(parent=%s)", parent)
                 return len(self.mylist[0])
             except:
+                logger.error("Exception in columnCount(parent=%s)", parent, exc_info=True)
                 noRecord()
                 hoofdMenu(m_email)
 
         def data(self, index, role):
+            logger.debug(">>> Entering data(index=%s,role=%s)", index, role)
             veld = self.mylist[index.row()][index.column()]
+            logger.debug("data(index=%s,role=%s): veld → %s", index, role, veld)
+            logger.debug("data(self=%s,index=%s,role=%s): veld → %s", self, index, role, veld)
             if not index.isValid():
                 return None
             elif role == Qt.TextAlignmentRole and (type(veld) == float or type(veld) == int):
@@ -158,11 +210,14 @@ def menuStructure(sector, m_email):
             if type(veld) == float:
                 return '{:12.2f}'.format(veld)
             else:
+                logger.debug("<<< Exiting data(index=%s,role=%s)", index, role)
                 return veld
 
         def headerData(self, col, orientation, role):
+            logger.debug(">>> Entering headerData(col=%s,orientation=%s,role=%s)", col, orientation, role)
             if orientation == Qt.Horizontal and role == Qt.DisplayRole:
                 return self.header[col]
+            logger.debug("<<< Exiting headerData(col=%s,orientation=%s,role=%s)", col, orientation, role)
             return None
 
     header = ['StructureID', 'Toplevel', 'Heading Level 1', 'Line_level0', 'Line 1', 'Line 2', 'Line 3', 'Line 4', 'Line 5',\
@@ -173,17 +228,24 @@ def menuStructure(sector, m_email):
         data_list += [row]
 
     def showSelection(idx):
+        logger.debug(">>> Entering showSelection(idx=%s)", idx)
         if idx.column() == 0:
             structnr = idx.data()
+            logger.debug("showSelection(idx=%s): structnr → %s", idx, structnr)
             engine = create_engine('postgresql+psycopg2://postgres@localhost/bisystem')
+            logger.debug("showSelection(idx=%s): engine → %s", idx, engine)
             con = engine.connect()
             if sector == 'external':
+                logger.debug("showSelection(idx=%s): con → %s", idx, con)
                 selstruct = select([cluster_structure_external]).where(cluster_structure_external.c.structID == structnr)
                 rpselstruct = con.execute(selstruct).first()
+                logger.debug("showSelection(idx=%s): selstruct → %s", idx, selstruct)
+                logger.debug("showSelection(idx=%s): rpselstruct → %s", idx, rpselstruct)
             else:
                 selstruct = select([cluster_structure_internal]).where(cluster_structure_internal.c.structID == structnr)
                 rpselstruct = con.execute(selstruct).first()
             class MainWindow(QDialog):
+                logger.debug("<<< Exiting showSelection(idx=%s)", idx)
                 def __init__(self):
                     QDialog.__init__(self)
 
@@ -418,119 +480,323 @@ def menuStructure(sector, m_email):
 
                     self.setLayout(grid)
                     self.setGeometry(400, 50, 150, 150)
+                    logger.debug(">>> Entering __init__()")
+                    logger.debug("__init__(): grid → %s", grid)
+                    logger.debug("__init__(self=%s): grid → %s", self, grid)
+                    logger.debug("__init__(): q1Edit → %s", q1Edit)
+                    logger.debug("__init__(): lbl1 → %s", lbl1)
+                    logger.debug("__init__(self=%s): lbl1 → %s", self, lbl1)
+                    logger.debug("__init__(self=%s): q1Edit → %s", self, q1Edit)
+                    logger.debug("__init__(): q2Edit → %s", q2Edit)
+                    logger.debug("__init__(): lbl2 → %s", lbl2)
+                    logger.debug("__init__(): self.q2 → %s", self.q2)
+                    logger.debug("__init__(self=%s): lbl2 → %s", self, lbl2)
+                    logger.debug("__init__(self=%s): q2Edit → %s", self, q2Edit)
+                    logger.debug("__init__(): q3Edit → %s", q3Edit)
+                    logger.debug("__init__(): lbl3 → %s", lbl3)
+                    logger.debug("__init__(): self.q3 → %s", self.q3)
+                    logger.debug("__init__(self=%s): lbl3 → %s", self, lbl3)
+                    logger.debug("__init__(self=%s): q3Edit → %s", self, q3Edit)
+                    logger.debug("__init__(): q4Edit → %s", q4Edit)
+                    logger.debug("__init__(): lbl4 → %s", lbl4)
+                    logger.debug("__init__(): self.q4 → %s", self.q4)
+                    logger.debug("__init__(self=%s): lbl4 → %s", self, lbl4)
+                    logger.debug("__init__(self=%s): q4Edit → %s", self, q4Edit)
+                    logger.debug("__init__(): q5Edit → %s", q5Edit)
+                    logger.debug("__init__(): lbl5 → %s", lbl5)
+                    logger.debug("__init__(): self.q5 → %s", self.q5)
+                    logger.debug("__init__(self=%s): lbl5 → %s", self, lbl5)
+                    logger.debug("__init__(self=%s): q5Edit → %s", self, q5Edit)
+                    logger.debug("__init__(): q7Edit → %s", q7Edit)
+                    logger.debug("__init__(): lbl7 → %s", lbl7)
+                    logger.debug("__init__(): self.q7 → %s", self.q7)
+                    logger.debug("__init__(self=%s): lbl7 → %s", self, lbl7)
+                    logger.debug("__init__(self=%s): q7Edit → %s", self, q7Edit)
+                    logger.debug("__init__(): q8Edit → %s", q8Edit)
+                    logger.debug("__init__(): lbl8 → %s", lbl8)
+                    logger.debug("__init__(): self.q8 → %s", self.q8)
+                    logger.debug("__init__(self=%s): lbl8 → %s", self, lbl8)
+                    logger.debug("__init__(self=%s): q8Edit → %s", self, q8Edit)
+                    logger.debug("__init__(): q9Edit → %s", q9Edit)
+                    logger.debug("__init__(): lbl9 → %s", lbl9)
+                    logger.debug("__init__(): self.q9 → %s", self.q9)
+                    logger.debug("__init__(self=%s): lbl9 → %s", self, lbl9)
+                    logger.debug("__init__(self=%s): q9Edit → %s", self, q9Edit)
+                    logger.debug("__init__(): q10Edit → %s", q10Edit)
+                    logger.debug("__init__(): lbl10 → %s", lbl10)
+                    logger.debug("__init__(): self.q10 → %s", self.q10)
+                    logger.debug("__init__(self=%s): lbl10 → %s", self, lbl10)
+                    logger.debug("__init__(self=%s): q10Edit → %s", self, q10Edit)
+                    logger.debug("__init__(): q20Edit → %s", q20Edit)
+                    logger.debug("__init__(): lbl20 → %s", lbl20)
+                    logger.debug("__init__(): self.q20 → %s", self.q20)
+                    logger.debug("__init__(self=%s): lbl20 → %s", self, lbl20)
+                    logger.debug("__init__(self=%s): q20Edit → %s", self, q20Edit)
+                    logger.debug("__init__(): q21Edit → %s", q21Edit)
+                    logger.debug("__init__(): lbl21 → %s", lbl21)
+                    logger.debug("__init__(): self.q21 → %s", self.q21)
+                    logger.debug("__init__(self=%s): lbl21 → %s", self, lbl21)
+                    logger.debug("__init__(self=%s): q21Edit → %s", self, q21Edit)
+                    logger.debug("__init__(): q22Edit → %s", q22Edit)
+                    logger.debug("__init__(): lbl22 → %s", lbl22)
+                    logger.debug("__init__(): self.q22 → %s", self.q22)
+                    logger.debug("__init__(self=%s): lbl22 → %s", self, lbl22)
+                    logger.debug("__init__(self=%s): q22Edit → %s", self, q22Edit)
+                    logger.debug("__init__(): q23Edit → %s", q23Edit)
+                    logger.debug("__init__(): lbl23 → %s", lbl23)
+                    logger.debug("__init__(): self.q23 → %s", self.q23)
+                    logger.debug("__init__(self=%s): lbl23 → %s", self, lbl23)
+                    logger.debug("__init__(self=%s): q23Edit → %s", self, q23Edit)
+                    logger.debug("__init__(): q24Edit → %s", q24Edit)
+                    logger.debug("__init__(): lbl24 → %s", lbl24)
+                    logger.debug("__init__(): self.q24 → %s", self.q24)
+                    logger.debug("__init__(self=%s): lbl24 → %s", self, lbl24)
+                    logger.debug("__init__(self=%s): q24Edit → %s", self, q24Edit)
+                    logger.debug("__init__(): q25Edit → %s", q25Edit)
+                    logger.debug("__init__(): lbl25 → %s", lbl25)
+                    logger.debug("__init__(): self.q25 → %s", self.q25)
+                    logger.debug("__init__(self=%s): lbl25 → %s", self, lbl25)
+                    logger.debug("__init__(self=%s): q25Edit → %s", self, q25Edit)
+                    logger.debug("__init__(): q26Edit → %s", q26Edit)
+                    logger.debug("__init__(): lbl26 → %s", lbl26)
+                    logger.debug("__init__(): self.q26 → %s", self.q26)
+                    logger.debug("__init__(self=%s): lbl26 → %s", self, lbl26)
+                    logger.debug("__init__(self=%s): q26Edit → %s", self, q26Edit)
+                    logger.debug("__init__(): q27Edit → %s", q27Edit)
+                    logger.debug("__init__(): lbl27 → %s", lbl27)
+                    logger.debug("__init__(): self.q27 → %s", self.q27)
+                    logger.debug("__init__(self=%s): lbl27 → %s", self, lbl27)
+                    logger.debug("__init__(self=%s): q27Edit → %s", self, q27Edit)
+                    logger.debug("__init__(): q28Edit → %s", q28Edit)
+                    logger.debug("__init__(): lbl28 → %s", lbl28)
+                    logger.debug("__init__(): self.q28 → %s", self.q28)
+                    logger.debug("__init__(self=%s): lbl28 → %s", self, lbl28)
+                    logger.debug("__init__(self=%s): q28Edit → %s", self, q28Edit)
+                    logger.debug("__init__(): q29Edit → %s", q29Edit)
+                    logger.debug("__init__(): lbl29 → %s", lbl29)
+                    logger.debug("__init__(): self.q29 → %s", self.q29)
+                    logger.debug("__init__(self=%s): lbl29 → %s", self, lbl29)
+                    logger.debug("__init__(self=%s): q29Edit → %s", self, q29Edit)
+                    logger.debug("__init__(): movie → %s", movie)
+                    logger.debug("__init__(): pyqt → %s", pyqt)
+                    logger.debug("__init__(self=%s): pyqt → %s", self, pyqt)
+                    logger.debug("__init__(self=%s): movie → %s", self, movie)
+                    logger.debug("__init__(): pixmap → %s", pixmap)
+                    logger.debug("__init__(): logo → %s", logo)
+                    logger.debug("__init__(self=%s): logo → %s", self, logo)
+                    logger.debug("__init__(self=%s): pixmap → %s", self, pixmap)
+                    logger.info("__init__()=: save operation took %s ms", int((time.time() - __log_start) * 1000))
+                    logger.debug("__init__(): applyBtn → %s", applyBtn)
+                    logger.debug("__init__(self=%s): applyBtn → %s", self, applyBtn)
+                    logger.debug("__init__(): closeBtn → %s", closeBtn)
+                    logger.debug("__init__(self=%s): closeBtn → %s", self, closeBtn)
+                    logger.debug("<<< Exiting __init__()")
 
                 def q2Changed(self, text):
+                    logger.debug(">>> Entering q2Changed(text=%s)", text)
+                    logger.debug("q2Changed(self=%s,text=%s): q2 → %s", self, text, q2)
                     self.q2.setText(text)
+                    logger.debug("<<< Exiting q2Changed(text=%s)", text)
 
                 def q3Changed(self, text):
+                    logger.debug(">>> Entering q3Changed(text=%s)", text)
+                    logger.debug("q3Changed(self=%s,text=%s): q3 → %s", self, text, q3)
                     self.q3.setText(text)
+                    logger.debug("<<< Exiting q3Changed(text=%s)", text)
 
                 def q4Changed(self, text):
+                    logger.debug(">>> Entering q4Changed(text=%s)", text)
+                    logger.debug("q4Changed(self=%s,text=%s): q4 → %s", self, text, q4)
                     self.q4.setText(text)
+                    logger.debug("<<< Exiting q4Changed(text=%s)", text)
 
                 def q5Changed(self, text):
+                    logger.debug(">>> Entering q5Changed(text=%s)", text)
+                    logger.debug("q5Changed(self=%s,text=%s): q5 → %s", self, text, q5)
                     self.q5.setText(text)
+                    logger.debug("<<< Exiting q5Changed(text=%s)", text)
 
                 def q7Changed(self, text):
+                    logger.debug(">>> Entering q7Changed(text=%s)", text)
+                    logger.debug("q7Changed(self=%s,text=%s): q7 → %s", self, text, q7)
                     self.q7.setText(text)
+                    logger.debug("<<< Exiting q7Changed(text=%s)", text)
 
                 def q8Changed(self, text):
+                    logger.debug(">>> Entering q8Changed(text=%s)", text)
+                    logger.debug("q8Changed(self=%s,text=%s): q8 → %s", self, text, q8)
                     self.q8.setText(text)
+                    logger.debug("<<< Exiting q8Changed(text=%s)", text)
 
                 def q9Changed(self, text):
+                    logger.debug(">>> Entering q9Changed(text=%s)", text)
+                    logger.debug("q9Changed(self=%s,text=%s): q9 → %s", self, text, q9)
                     self.q9.setText(text)
+                    logger.debug("<<< Exiting q9Changed(text=%s)", text)
 
                 def q10Changed(self, text):
+                    logger.debug(">>> Entering q10Changed(text=%s)", text)
+                    logger.debug("q10Changed(self=%s,text=%s): q10 → %s", self, text, q10)
                     self.q10.setText(text)
+                    logger.debug("<<< Exiting q10Changed(text=%s)", text)
 
                 def q20Changed(self, text):
+                    logger.debug(">>> Entering q20Changed(text=%s)", text)
+                    logger.debug("q20Changed(self=%s,text=%s): q20 → %s", self, text, q20)
                     self.q20.setText(text)
+                    logger.debug("<<< Exiting q20Changed(text=%s)", text)
 
                 def q21Changed(self, text):
+                    logger.debug(">>> Entering q21Changed(text=%s)", text)
+                    logger.debug("q21Changed(self=%s,text=%s): q21 → %s", self, text, q21)
                     self.q21.setText(text)
+                    logger.debug("<<< Exiting q21Changed(text=%s)", text)
 
                 def q22Changed(self, text):
+                    logger.debug(">>> Entering q22Changed(text=%s)", text)
+                    logger.debug("q22Changed(self=%s,text=%s): q22 → %s", self, text, q22)
                     self.q22.setText(text)
+                    logger.debug("<<< Exiting q22Changed(text=%s)", text)
 
                 def q23Changed(self, text):
+                    logger.debug(">>> Entering q23Changed(text=%s)", text)
+                    logger.debug("q23Changed(self=%s,text=%s): q23 → %s", self, text, q23)
                     self.q23.setText(text)
+                    logger.debug("<<< Exiting q23Changed(text=%s)", text)
 
                 def q24Changed(self, text):
+                    logger.debug(">>> Entering q24Changed(text=%s)", text)
+                    logger.debug("q24Changed(self=%s,text=%s): q24 → %s", self, text, q24)
                     self.q24.setText(text)
+                    logger.debug("<<< Exiting q24Changed(text=%s)", text)
 
                 def q25Changed(self, text):
+                    logger.debug(">>> Entering q25Changed(text=%s)", text)
+                    logger.debug("q25Changed(self=%s,text=%s): q25 → %s", self, text, q25)
                     self.q25.setText(text)
+                    logger.debug("<<< Exiting q25Changed(text=%s)", text)
 
                 def q26Changed(self, text):
+                    logger.debug(">>> Entering q26Changed(text=%s)", text)
+                    logger.debug("q26Changed(self=%s,text=%s): q26 → %s", self, text, q26)
                     self.q26.setText(text)
+                    logger.debug("<<< Exiting q26Changed(text=%s)", text)
 
                 def q27Changed(self, text):
+                    logger.debug(">>> Entering q27Changed(text=%s)", text)
+                    logger.debug("q27Changed(self=%s,text=%s): q27 → %s", self, text, q27)
                     self.q27.setText(text)
+                    logger.debug("<<< Exiting q27Changed(text=%s)", text)
 
                 def q28Changed(self, text):
+                    logger.debug(">>> Entering q28Changed(text=%s)", text)
+                    logger.debug("q28Changed(self=%s,text=%s): q28 → %s", self, text, q28)
                     self.q28.setText(text)
+                    logger.debug("<<< Exiting q28Changed(text=%s)", text)
 
                 def q29Changed(self, text):
+                    logger.debug(">>> Entering q29Changed(text=%s)", text)
+                    logger.debug("q29Changed(self=%s,text=%s): q29 → %s", self, text, q29)
                     self.q29.setText(text)
+                    logger.debug("<<< Exiting q29Changed(text=%s)", text)
 
                 def returnq2(self):
+                    logger.debug(">>> Entering returnq2()")
+                    logger.debug("<<< Exiting returnq2()")
                     return self.q2.text()
 
                 def returnq3(self):
+                    logger.debug(">>> Entering returnq3()")
+                    logger.debug("<<< Exiting returnq3()")
                     return self.q3.text()
 
                 def returnq4(self):
+                    logger.debug(">>> Entering returnq4()")
+                    logger.debug("<<< Exiting returnq4()")
                     return self.q4.text()
 
                 def returnq5(self):
+                    logger.debug(">>> Entering returnq5()")
+                    logger.debug("<<< Exiting returnq5()")
                     return self.q5.text()
 
                 def returnq7(self):
+                    logger.debug(">>> Entering returnq7()")
+                    logger.debug("<<< Exiting returnq7()")
                     return self.q7.text()
 
                 def returnq8(self):
+                    logger.debug(">>> Entering returnq8()")
+                    logger.debug("<<< Exiting returnq8()")
                     return self.q8.text()
 
                 def returnq9(self):
+                    logger.debug(">>> Entering returnq9()")
+                    logger.debug("<<< Exiting returnq9()")
                     return self.q9.text()
 
                 def returnq10(self):
+                    logger.debug(">>> Entering returnq10()")
+                    logger.debug("<<< Exiting returnq10()")
                     return self.q10.text()
 
                 def returnq20(self):
+                    logger.debug(">>> Entering returnq20()")
+                    logger.debug("<<< Exiting returnq20()")
                     return self.q20.text()
 
                 def returnq21(self):
+                    logger.debug(">>> Entering returnq21()")
+                    logger.debug("<<< Exiting returnq21()")
                     return self.q21.text()
 
                 def returnq22(self):
+                    logger.debug(">>> Entering returnq22()")
+                    logger.debug("<<< Exiting returnq22()")
                     return self.q22.text()
 
                 def returnq23(self):
+                    logger.debug(">>> Entering returnq23()")
+                    logger.debug("<<< Exiting returnq23()")
                     return self.q23.text()
 
                 def returnq24(self):
+                    logger.debug(">>> Entering returnq24()")
+                    logger.debug("<<< Exiting returnq24()")
                     return self.q24.text()
 
                 def returnq25(self):
+                    logger.debug(">>> Entering returnq25()")
+                    logger.debug("<<< Exiting returnq25()")
                     return self.q25.text()
 
                 def returnq26(self):
+                    logger.debug(">>> Entering returnq26()")
+                    logger.debug("<<< Exiting returnq26()")
                     return self.q26.text()
 
                 def returnq27(self):
+                    logger.debug(">>> Entering returnq27()")
+                    logger.debug("<<< Exiting returnq27()")
                     return self.q27.text()
 
                 def returnq28(self):
+                    logger.debug(">>> Entering returnq28()")
+                    logger.debug("<<< Exiting returnq28()")
                     return self.q28.text()
 
                 def returnq29(self):
+                    logger.debug(">>> Entering returnq29()")
+                    logger.debug("<<< Exiting returnq29()")
                     return self.q29.text()
 
                 @staticmethod
                 def getData(parent=None):
+                    logger.debug(">>> Entering getData(parent=%s)", parent)
                     dialog = MainWindow()
+                    logger.debug("getData(parent=%s): dialog → %s", parent, dialog)
                     dialog.exec_()
+                    logger.debug("<<< Exiting getData(parent=%s)", parent)
                     return [dialog.returnq2(), dialog.returnq3(), dialog.returnq4(), dialog.returnq5(), dialog.returnq7(),\
                             dialog.returnq8(), dialog.returnq9(), dialog.returnq10(), dialog.returnq20(), dialog.returnq21(),\
                             dialog.returnq22(), dialog.returnq23(), dialog.returnq24(), dialog.returnq25(), dialog.returnq26(),\
@@ -641,7 +907,9 @@ def menuStructure(sector, m_email):
     hoofdMenu(m_email)
 
 def insertStruct(sector, m_email):
+    logger.debug(">>> Entering insertStruct(sector=%s,m_email=%s)", sector, m_email)
     metadata = MetaData()
+    logger.debug("insertStruct(sector=%s,m_email=%s): metadata → %s", sector, m_email, metadata)
     cluster_structure_external = Table('cluster_structure_external', metadata,
            Column('structID', Integer(), primary_key=True),
            Column('overall_heading', String),
@@ -685,14 +953,18 @@ def insertStruct(sector, m_email):
            Column('line15', String))
 
     engine = create_engine('postgresql+psycopg2://postgres@localhost/bisystem')
+    logger.debug("insertStruct(sector=%s,m_email=%s): engine → %s", sector, m_email, engine)
     con = engine.connect()
+    logger.debug("insertStruct(sector=%s,m_email=%s): con → %s", sector, m_email, con)
 
     if sector == 'external':
         try:
             structnr = (con.execute(select([func.max(cluster_structure_external.c.structID, \
                                                        type_=Integer)])).scalar())
+            logger.debug("insertStruct(sector=%s,m_email=%s): type_ → %s", sector, m_email, type_)
             structnr += 1
         except:
+            logger.error("Exception in insertStruct(sector=%s,m_email=%s)", sector, m_email, exc_info=True)
             structnr = 1
     if sector == 'internal':
         try:
@@ -702,7 +974,9 @@ def insertStruct(sector, m_email):
         except:
             structnr = 1
     class insWindow(QDialog):
+        logger.debug("<<< Exiting insertStruct(sector=%s,m_email=%s)", sector, m_email)
         def __init__(self, *args):
+            logger.debug(">>> Entering __init__()")
             QWidget.__init__(self, *args, )
             self.setGeometry(50, 50, 1700, 900)
             self.setWindowTitle('Request account information')
@@ -920,6 +1194,7 @@ def insertStruct(sector, m_email):
             grid.addWidget(logo, 0, 3, 1, 1, Qt.AlignRight)
 
             grid.addWidget(QLabel('Insert Structure Menus of Clusters from '+sector+' Works'), 0, 1, 1, 4, Qt.AlignCenter)
+            logger.info("__init__()=: save operation took %s ms", int((time.time() - __log_start) * 1000))
 
             applyBtn = QPushButton('Insert')
             applyBtn.clicked.connect(self.accept)
@@ -941,6 +1216,7 @@ def insertStruct(sector, m_email):
 
             self.setLayout(grid)
             self.setGeometry(400, 50, 150, 150)
+            logger.debug("<<< Exiting __init__()")
 
 
         def q2Changed(self, text):

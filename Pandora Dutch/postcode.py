@@ -1,4 +1,7 @@
+import logging
+logger = logging.getLogger(__name__)
 def checkpostcode(mpostcode,mhuisnr): 
+      logger.debug(">>> Entering checkpostcode(mpostcode=%s,mhuisnr=%s)", mpostcode, mhuisnr)
       from sqlalchemy import create_engine, Table, Column, ForeignKey
       from sqlalchemy import Integer, String, Boolean, MetaData, and_
       from sqlalchemy.sql import select 
@@ -16,6 +19,7 @@ def checkpostcode(mpostcode,mhuisnr):
              Column('c_straat', String),
              Column('plaatsID', None, ForeignKey('plaats.plaatsID')))
       engine = create_engine('postgresql+psycopg2://postgres@localhost/bisystem')
+      logger.debug("checkpostcode(mpostcode=%s,mhuisnr=%s): engine → %s", mpostcode, mhuisnr, engine)
       con = engine.connect()
       s = select(['*']).\
                 where(and_(postcodes.c.straatID == straat.c.straatID,
@@ -24,12 +28,15 @@ def checkpostcode(mpostcode,mhuisnr):
                 (postcodes.c.van <= mhuisnr) & (postcodes.c.tem >= mhuisnr),
                 postcodes.c.soort != mhuisnr%2))
       result = con.execute(s).first()
+      logger.debug("checkpostcode(mpostcode=%s,mhuisnr=%s): result → %s", mpostcode, mhuisnr, result)
       if result:
            mstraat = str(result[6])
            mplaats = str(result[8])
            con.close()
+           logger.debug("checkpostcode(mpostcode=%s,mhuisnr=%s): mplaats → %s", mpostcode, mhuisnr, mplaats)
            return (mstraat, mplaats)
       else:
            con.close()
+           logger.debug("<<< Exiting checkpostcode(mpostcode=%s,mhuisnr=%s)", mpostcode, mhuisnr)
            return('','')
 

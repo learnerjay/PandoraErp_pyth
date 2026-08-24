@@ -4,39 +4,52 @@ from PyQt5.QtGui import QFont, QPixmap, QIcon
 from PyQt5.QtWidgets import QDialog, QLabel,\
          QGridLayout, QPushButton, QMessageBox, QComboBox
 from sqlalchemy import (Table, Column, String, Integer, MetaData, create_engine, insert, select)
+import logging
+logger = logging.getLogger(__name__)
 
 def windowSluit(self, m_email):
+    logger.debug(">>> Entering windowSluit(m_email=%s)", m_email)
     self.close()
     hoofdMenu(m_email)
+    logger.debug("<<< Exiting windowSluit(m_email=%s)", m_email)
     
 def insGelukt(mclusternr, momschr, m_email):
+    logger.debug(">>> Entering insGelukt(mclusternr=%s,momschr=%s,m_email=%s)", mclusternr, momschr, m_email)
     msg = QMessageBox()
+    logger.debug("insGelukt(mclusternr=%s,momschr=%s,m_email=%s): msg → %s", mclusternr, momschr, m_email, msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     msg.setIcon(QMessageBox.Information)
     msg.setText('Cluster number: '+mclusternr+'\n"'+momschr+'" is created')
     msg.setFont(QFont("Arial",10))
     msg.setWindowTitle('Create clusters')
+    logger.debug("<<< Exiting insGelukt(mclusternr=%s,momschr=%s,m_email=%s)", mclusternr, momschr, m_email)
     msg.exec_()
 
 def insMislukt(mclusternr, momschr, m_email):
+    logger.debug(">>> Entering insMislukt(mclusternr=%s,momschr=%s,m_email=%s)", mclusternr, momschr, m_email)
     msg = QMessageBox()
+    logger.debug("insMislukt(mclusternr=%s,momschr=%s,m_email=%s): msg → %s", mclusternr, momschr, m_email, msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     msg.setIcon(QMessageBox.Critical)
     msg.setText('Creation of cluster '+mclusternr+'\n"'+momschr+'" has failed!\nCluster number already exist!')
     msg.setFont(QFont("Arial",10))
     msg.setWindowTitle('Create clusters')
+    logger.debug("<<< Exiting insMislukt(mclusternr=%s,momschr=%s,m_email=%s)", mclusternr, momschr, m_email)
     msg.exec_()
 
 def ongKeuze():
+    logger.debug(">>> Entering ongKeuze()")
     msg = QMessageBox()
+    logger.debug("ongKeuze(): msg → %s", msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     msg.setIcon(QMessageBox.Warning)
     msg.setText('Invalid choice')
     msg.setFont(QFont("Arial",10))
     msg.setWindowTitle('Insert clusters')
+    logger.debug("<<< Exiting ongKeuze()")
     msg.exec_()
 
 metadata = MetaData()
@@ -67,6 +80,7 @@ sel = select([cluster_structure_internal]).order_by(cluster_structure_internal.c
 rpa = con.execute(sel).fetchall()
 
 def kiesCluster(m_email):
+    logger.debug(">>> Entering kiesCluster(m_email=%s)", m_email)
     class Widget(QDialog):
         def __init__(self, parent=None):
             super(Widget, self).__init__(parent)
@@ -126,17 +140,42 @@ def kiesCluster(m_email):
             cancelBtn.setFont(QFont("Arial",10))
             cancelBtn.setFixedWidth(100)
             cancelBtn.setStyleSheet("color: black;  background-color: gainsboro")
+            logger.debug(">>> Entering __init__(parent=%s)", parent)
+            logger.debug("__init__(parent=%s): k0Edit → %s", parent, k0Edit)
+            logger.debug("__init__(parent=%s): self.Keuze → %s", parent, self.Keuze)
+            logger.debug("__init__(self=%s,parent=%s): k0Edit → %s", self, parent, k0Edit)
+            logger.debug("__init__(parent=%s): pixmap → %s", parent, pixmap)
+            logger.debug("__init__(parent=%s): grid → %s", parent, grid)
+            logger.debug("__init__(self=%s,parent=%s): grid → %s", self, parent, grid)
+            logger.debug("__init__(parent=%s): lbl → %s", parent, lbl)
+            logger.debug("__init__(self=%s,parent=%s): lbl → %s", self, parent, lbl)
+            logger.debug("__init__(self=%s,parent=%s): pixmap → %s", self, parent, pixmap)
+            logger.debug("__init__(parent=%s): logo → %s", parent, logo)
+            logger.debug("__init__(self=%s,parent=%s): logo → %s", self, parent, logo)
+            logger.debug("__init__(parent=%s): applyBtn → %s", parent, applyBtn)
+            logger.debug("__init__(self=%s,parent=%s): applyBtn → %s", self, parent, applyBtn)
+            logger.debug("__init__(parent=%s): cancelBtn → %s", parent, cancelBtn)
+            logger.debug("__init__(self=%s,parent=%s): cancelBtn → %s", self, parent, cancelBtn)
+            logger.debug("<<< Exiting __init__(parent=%s)", parent)
            
         def k0Changed(self, text):
+            logger.debug(">>> Entering k0Changed(text=%s)", text)
+            logger.debug("k0Changed(self=%s,text=%s): Keuze → %s", self, text, Keuze)
             self.Keuze.setText(text)
+            logger.debug("<<< Exiting k0Changed(text=%s)", text)
             
         def returnk0(self):
+            logger.debug(">>> Entering returnk0()")
+            logger.debug("<<< Exiting returnk0()")
             return self.Keuze.text()
                  
         @staticmethod
         def getData(parent=None):
+            logger.debug(">>> Entering getData(parent=%s)", parent)
             dialog = Widget(parent)
+            logger.debug("getData(parent=%s): dialog → %s", parent, dialog)
             dialog.exec_()
+            logger.debug("<<< Exiting getData(parent=%s)", parent)
             return [dialog.returnk0()]       
 
     window = Widget()
@@ -167,6 +206,7 @@ def kiesCluster(m_email):
             kiesSubClusterT(keuze, m_email) 
   
 def kiesSubClusterL(keuze, m_email):
+    logger.debug(">>> Entering kiesSubClusterL(keuze=%s,m_email=%s)", keuze, m_email)
     class Widget(QDialog):
         def __init__(self, parent=None):
             super(Widget, self).__init__(parent)
@@ -259,6 +299,7 @@ def kiesSubClusterL(keuze, m_email):
     maakCluster(keuze, momschr, m_email)
     
 def kiesSubClusterM(keuze, m_email):
+    logger.debug(">>> Entering kiesSubClusterM(keuze=%s,m_email=%s)", keuze, m_email)
     class Widget(QDialog):
         def __init__(self, parent=None):
             super(Widget, self).__init__(parent)
@@ -350,6 +391,7 @@ def kiesSubClusterM(keuze, m_email):
     maakCluster(keuze, momschr, m_email)
 
 def kiesSubClusterN(keuze, m_email):
+    logger.debug(">>> Entering kiesSubClusterN(keuze=%s,m_email=%s)", keuze, m_email)
     class Widget(QDialog):
         def __init__(self, parent=None):
             super(Widget, self).__init__(parent)
@@ -441,6 +483,7 @@ def kiesSubClusterN(keuze, m_email):
     maakCluster(keuze, momschr, m_email)
 
 def kiesSubClusterO(keuze, m_email):
+    logger.debug(">>> Entering kiesSubClusterO(keuze=%s,m_email=%s)", keuze, m_email)
     class Widget(QDialog):
         def __init__(self, parent=None):
             super(Widget, self).__init__(parent)
@@ -532,6 +575,7 @@ def kiesSubClusterO(keuze, m_email):
     maakCluster(keuze, momschr, m_email)
 
 def kiesSubClusterP(keuze, m_email):
+    logger.debug(">>> Entering kiesSubClusterP(keuze=%s,m_email=%s)", keuze, m_email)
     class Widget(QDialog):
         def __init__(self, parent=None):
             super(Widget, self).__init__(parent)
@@ -623,6 +667,7 @@ def kiesSubClusterP(keuze, m_email):
     maakCluster(keuze, momschr, m_email)
 
 def kiesSubClusterR(keuze, m_email):
+    logger.debug(">>> Entering kiesSubClusterR(keuze=%s,m_email=%s)", keuze, m_email)
     class Widget(QDialog):
         def __init__(self, parent=None):
             super(Widget, self).__init__(parent)
@@ -714,6 +759,7 @@ def kiesSubClusterR(keuze, m_email):
     maakCluster(keuze, momschr, m_email)
 
 def kiesSubClusterS(keuze, m_email):
+    logger.debug(">>> Entering kiesSubClusterS(keuze=%s,m_email=%s)", keuze, m_email)
     class Widget(QDialog):
         def __init__(self, parent=None):
             super(Widget, self).__init__(parent)
@@ -805,6 +851,7 @@ def kiesSubClusterS(keuze, m_email):
     maakCluster(keuze, momschr, m_email)
 
 def kiesSubClusterT(keuze, m_email):
+    logger.debug(">>> Entering kiesSubClusterT(keuze=%s,m_email=%s)", keuze, m_email)
     class Widget(QDialog):
         def __init__(self, parent=None):
             super(Widget, self).__init__(parent)
@@ -896,26 +943,36 @@ def kiesSubClusterT(keuze, m_email):
     maakCluster(keuze, momschr, m_email)
 
 def maakCluster(keuze, momschr, m_email):
+    logger.debug(">>> Entering maakCluster(keuze=%s,momschr=%s,m_email=%s)", keuze, momschr, m_email)
     metadata = MetaData()
+    logger.debug("maakCluster(keuze=%s,momschr=%s,m_email=%s): metadata → %s", keuze, momschr, m_email, metadata)
     iclusters = Table('iclusters', metadata,
         Column('iclusterID', String, primary_key=True),
         Column('omschrijving', String))
  
     engine = create_engine('postgresql+psycopg2://postgres@localhost/bisystem')
+    logger.debug("maakCluster(keuze=%s,momschr=%s,m_email=%s): engine → %s", keuze, momschr, m_email, engine)
     con = engine.connect()
 
+    logger.debug("maakCluster(keuze=%s,momschr=%s,m_email=%s): con → %s", keuze, momschr, m_email, con)
     try:
         selcllast = select([iclusters]).where(iclusters.c.iclusterID.like(keuze+'%')).order_by(iclusters.c.iclusterID.desc())
+        logger.debug("maakCluster(keuze=%s,momschr=%s,m_email=%s): selcllast → %s", keuze, momschr, m_email, selcllast)
         rpcllast = con.execute(selcllast).first()
         mclusternr = keuze+('00000'+str(int(rpcllast[0][2:7])+1))[-5:]
+        logger.debug("maakCluster(keuze=%s,momschr=%s,m_email=%s): rpcllast → %s", keuze, momschr, m_email, rpcllast)
     except Exception:
         mclusternr = keuze+'00001'
+        logger.debug("maakCluster(keuze=%s,momschr=%s,m_email=%s): mclusternr → %s", keuze, momschr, m_email, mclusternr)
   
     try:
+        logger.error("Exception in maakCluster(keuze=%s,momschr=%s,m_email=%s)", keuze, momschr, m_email, exc_info=True)
         inscl = insert(iclusters).values(iclusterID=mclusternr, omschrijving=momschr)
         con.execute(inscl)
         insGelukt(mclusternr, momschr, m_email)
+        logger.debug("maakCluster(keuze=%s,momschr=%s,m_email=%s): inscl → %s", keuze, momschr, m_email, inscl)
         kiesCluster(m_email)
     except Exception:
         insMislukt(mclusternr, momschr, m_email)
+        logger.debug("<<< Exiting maakCluster(keuze=%s,momschr=%s,m_email=%s)", keuze, momschr, m_email)
         kiesCluster(m_email)

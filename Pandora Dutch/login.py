@@ -6,17 +6,25 @@ from PyQt5.QtCore import Qt, QRegExp
 from PyQt5.QtGui import QFont, QPixmap, QIcon, QMovie, QColor, QRegExpValidator
 from PyQt5.QtWidgets import (QDialog, QGridLayout, QMessageBox, QLabel, QLineEdit, QPushButton, QComboBox)
 from sqlalchemy import (Table, Column, Integer, String, MetaData, create_engine, select)
+import logging
+logger = logging.getLogger(__name__)
 
 def password_check(hashed_password, password):
+    logger.debug(">>> Entering password_check(hashed_password=<redacted>,password=<redacted>)")
     ph = PasswordHasher()
+    logger.debug("password_check(hashed_password=<redacted>,password=<redacted>): ph → %s", ph)
     try:
         if ph.verify(hashed_password, password) and (len(password) > 7):  # True
            return(True)
     except Exception:
+        logger.error("Exception in password_check(hashed_password=<redacted>,password=<redacted>)", exc_info=True)
+        logger.debug("<<< Exiting password_check(hashed_password=<redacted>,password=<redacted>)")
         return(False)
 
 def totZiens():
+    logger.debug(">>> Entering totZiens()")
     msg = QMessageBox()
+    logger.debug("totZiens(): msg → %s", msg)
     msg.setStyleSheet("font: 10pt Arial; color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg')) 
     msg.setIcon(QMessageBox.Information)
@@ -25,12 +33,15 @@ def totZiens():
     home = os.path.expanduser("~")
     os.remove(str(home)+'/.pandora_lock')
     '''
+    logger.debug("totZiens(): home → %s", home)
     msg.setText('Tot ziens!       ')
     msg.setWindowTitle('Loginscherm')
     msg.exec_()
     sys.exit()
+    logger.debug("<<< Exiting totZiens()")
      
 def info():
+    logger.debug(">>> Entering info()")
     class Widget(QDialog):
         def __init__(self, parent=None):
             super(Widget, self).__init__(parent)

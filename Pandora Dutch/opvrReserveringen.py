@@ -7,57 +7,77 @@ from PyQt5.QtWidgets import QDialog, QLabel, QGridLayout, QTableView, QVBoxLayou
 from sqlalchemy import (Table, Column, Integer, String, Float,\
                         MetaData, create_engine, ForeignKey)
 from sqlalchemy.sql import select, and_
+import logging
+logger = logging.getLogger(__name__)
 
 def windowSluit(self, m_email):
+    logger.debug(">>> Entering windowSluit(m_email=%s)", m_email)
     self.close()
     hoofdMenu(m_email)
+    logger.debug("<<< Exiting windowSluit(m_email=%s)", m_email)
     
 def ongInvoer():
+    logger.debug(">>> Entering ongInvoer()")
     msg = QMessageBox()
+    logger.debug("ongInvoer(): msg → %s", msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     msg.setIcon(QMessageBox.Warning)
     msg.setText('Foutieve invoer\nzoekterm opnieuw invoeren s.v.p.!')
     msg.setWindowTitle('Reserveringen opvragen')               
+    logger.debug("<<< Exiting ongInvoer()")
     msg.exec_()
     
 def foutBestel():
+    logger.debug(">>> Entering foutBestel()")
     msg = QMessageBox()
+    logger.debug("foutBestel(): msg → %s", msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     msg.setIcon(QMessageBox.Warning)
     msg.setText('Bestelling is al eerder uitgevoerd!')
     msg.setWindowTitle('Reserveringen opvragen')               
+    logger.debug("<<< Exiting foutBestel()")
     msg.exec_()
     
 def foutOrder():
+    logger.debug(">>> Entering foutOrder()")
     msg = QMessageBox()
+    logger.debug("foutOrder(): msg → %s", msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     msg.setIcon(QMessageBox.Warning)
     msg.setText('Ongeldig inkoopordernummer!')
     msg.setWindowTitle('Reserveringen opvragen')               
+    logger.debug("<<< Exiting foutOrder()")
     msg.exec_()
    
 def geenRecord():
+    logger.debug(">>> Entering geenRecord()")
     msg = QMessageBox()
+    logger.debug("geenRecord(): msg → %s", msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     msg.setIcon(QMessageBox.Warning)
     msg.setText('Geen record gevonden\nmaak een andere selektie s.v.p.!')
     msg.setWindowTitle('Reserveringen opvragen')               
+    logger.debug("<<< Exiting geenRecord()")
     msg.exec_() 
     
 def updateOk():
+    logger.debug(">>> Entering updateOk()")
     msg = QMessageBox()
+    logger.debug("updateOk(): msg → %s", msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg')) 
     msg.setIcon(QMessageBox.Information)
     msg.setText('Wijzigen zijn uitgevoerd')
     msg.setWindowTitle('Reserveringen opvragen')
+    logger.debug("<<< Exiting updateOk()")
     msg.exec_()
 
 def resKeuze(m_email):
+    logger.debug(">>> Entering resKeuze(m_email=%s)", m_email)
     class Widget(QDialog):
         def __init__(self, parent=None):
             super(Widget, self).__init__(parent)
@@ -127,23 +147,46 @@ def resKeuze(m_email):
             cancelBtn.setFont(QFont("Arial",10))
             cancelBtn.setFixedWidth(100)
             cancelBtn.setStyleSheet("color: black;  background-color: gainsboro")
+            logger.debug(">>> Entering __init__(data_list=%s,header=%s)", data_list, header)
+            logger.debug("__init__(data_list=%s,header=%s): font → %s", data_list, header, font)
+            logger.debug("__init__(data_list=%s,header=%s): table_view → %s", data_list, header, table_view)
+            logger.debug("__init__(data_list=%s,header=%s): table_model → %s", data_list, header, table_model)
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): table_model → %s", self, data_list, header, table_model)
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): table_view → %s", self, data_list, header, table_view)
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): font → %s", self, data_list, header, font)
+            logger.debug("__init__(data_list=%s,header=%s): layout → %s", data_list, header, layout)
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): layout → %s", self, data_list, header, layout)
+            logger.debug("<<< Exiting __init__(data_list=%s,header=%s)", data_list, header)
         
         def k0Changed(self, text):
+            logger.debug(">>> Entering k0Changed(text=%s)", text)
+            logger.debug("k0Changed(self=%s,text=%s): Keuze → %s", self, text, Keuze)
             self.Keuze.setText(text)
+            logger.debug("<<< Exiting k0Changed(text=%s)", text)
             
         def zktermChanged(self, text):
+            logger.debug(">>> Entering zktermChanged(text=%s)", text)
+            logger.debug("zktermChanged(self=%s,text=%s): Zoekterm → %s", self, text, Zoekterm)
             self.Zoekterm.setText(text)
+            logger.debug("<<< Exiting zktermChanged(text=%s)", text)
  
         def returnk0(self):
+            logger.debug(">>> Entering returnk0()")
+            logger.debug("<<< Exiting returnk0()")
             return self.Keuze.text()
         
         def returnzkterm(self):
+            logger.debug(">>> Entering returnzkterm()")
+            logger.debug("<<< Exiting returnzkterm()")
             return self.Zoekterm.text()
         
         @staticmethod
         def getData(parent=None):
+            logger.debug(">>> Entering getData(parent=%s)", parent)
             dialog = Widget(parent)
+            logger.debug("getData(parent=%s): dialog → %s", parent, dialog)
             dialog.exec_()
+            logger.debug("<<< Exiting getData(parent=%s)", parent)
             return [dialog.returnk0(), dialog.returnzkterm()] 
 
     window = Widget()
@@ -161,7 +204,9 @@ def resKeuze(m_email):
     toonReserveringen(keuze,zoekterm, m_email)
 
 def toonReserveringen(keuze, zoekterm, m_email):
+    logger.debug(">>> Entering toonReserveringen(keuze=%s,zoekterm=%s,m_email=%s)", keuze, zoekterm, m_email)
     metadata = MetaData()
+    logger.debug("toonReserveringen(keuze=%s,zoekterm=%s,m_email=%s): metadata → %s", keuze, zoekterm, m_email, metadata)
     materiaallijsten = Table('materiaallijsten', metadata,
         Column('matlijstID', Integer, primary_key=True),
         Column('artikelID', None, ForeignKey('artikelen.artikelID')),
@@ -184,11 +229,14 @@ def toonReserveringen(keuze, zoekterm, m_email):
         Column('reserveringsaldo', Float))
         
     engine = create_engine('postgresql+psycopg2://postgres@localhost/bisystem')
+    logger.debug("toonReserveringen(keuze=%s,zoekterm=%s,m_email=%s): engine → %s", keuze, zoekterm, m_email, engine)
     con = engine.connect()
     
+    logger.debug("toonReserveringen(keuze=%s,zoekterm=%s,m_email=%s): con → %s", keuze, zoekterm, m_email, con)
     if keuze == 1:
         sel = select([materiaallijsten, artikelen]).where(materiaallijsten.c.artikelID == \
           artikelen.c.artikelID).order_by(materiaallijsten.c.artikelID)
+        logger.debug("toonReserveringen(keuze=%s,zoekterm=%s,m_email=%s): sel → %s", keuze, zoekterm, m_email, sel)
     elif keuze == 2:
         sel = select([materiaallijsten, artikelen]).where(materiaallijsten.c.artikelID ==\
           artikelen.c.artikelID).order_by(materiaallijsten.c.reserverings_datum)
@@ -216,11 +264,13 @@ def toonReserveringen(keuze, zoekterm, m_email):
     
     if con.execute(sel).fetchone():    
         rpres = con.execute(sel)
+        logger.debug("toonReserveringen(keuze=%s,zoekterm=%s,m_email=%s): rpres → %s", keuze, zoekterm, m_email, rpres)
     else:
         geenRecord()
         resKeuze(m_email)
     
     class MyWindow(QDialog):
+        logger.debug("<<< Exiting toonReserveringen(keuze=%s,zoekterm=%s,m_email=%s)", keuze, zoekterm, m_email)
         def __init__(self, data_list, header, *args):
             QDialog.__init__(self, *args,)
             self.setGeometry(100, 50, 1600, 900)
@@ -242,18 +292,87 @@ def toonReserveringen(keuze, zoekterm, m_email):
             layout = QVBoxLayout(self)
             layout.addWidget(table_view)
             self.setLayout(layout)
+            logger.debug(">>> Entering __init__(parent=%s,mylist=%s,header=%s)", parent, mylist, header)
+            logger.debug("<<< Exiting __init__(parent=%s,mylist=%s,header=%s)", parent, mylist, header)
+            logger.debug("__init__(self=%s,parent=%s,mylist=%s,header=%s): self.mylist → %s", self, parent, mylist, header, self.mylist)
     
     class MyTableModel(QAbstractTableModel):
         def __init__(self, parent, mylist, header, *args):
+            logger.debug("__init__(self=%s,parent=%s,mylist=%s,header=%s): self.header → %s", self, parent, mylist, header, self.header)
             QAbstractTableModel.__init__(self, parent, *args)
             self.mylist = mylist
+            logger.debug(">>> Entering __init__(parent=%s)", parent)
+            logger.debug("__init__(parent=%s): pixmap → %s", parent, pixmap)
+            logger.debug("__init__(parent=%s): q1Edit → %s", parent, q1Edit)
+            logger.debug("__init__(parent=%s): self.ResID → %s", parent, self.ResID)
+            logger.debug("__init__(self=%s,parent=%s): q1Edit → %s", self, parent, q1Edit)
+            logger.debug("__init__(parent=%s): q2Edit → %s", parent, q2Edit)
+            logger.debug("__init__(parent=%s): self.Artikelnummer → %s", parent, self.Artikelnummer)
+            logger.debug("__init__(self=%s,parent=%s): q2Edit → %s", self, parent, q2Edit)
+            logger.debug("__init__(parent=%s): q3Edit → %s", parent, q3Edit)
+            logger.debug("__init__(parent=%s): self.Artikelomschrijving → %s", parent, self.Artikelomschrijving)
+            logger.debug("__init__(self=%s,parent=%s): q3Edit → %s", self, parent, q3Edit)
+            logger.debug("__init__(parent=%s): q18Edit → %s", parent, q18Edit)
+            logger.debug("__init__(parent=%s): self.Artikelvoorraad → %s", parent, self.Artikelvoorraad)
+            logger.debug("__init__(self=%s,parent=%s): q18Edit → %s", self, parent, q18Edit)
+            logger.debug("__init__(parent=%s): q4Edit → %s", parent, q4Edit)
+            logger.debug("__init__(parent=%s): self.Werknummer → %s", parent, self.Werknummer)
+            logger.debug("__init__(self=%s,parent=%s): q4Edit → %s", self, parent, q4Edit)
+            logger.debug("__init__(parent=%s): q5Edit → %s", parent, q5Edit)
+            logger.debug("__init__(parent=%s): self.Calculatie → %s", parent, self.Calculatie)
+            logger.debug("__init__(self=%s,parent=%s): q5Edit → %s", self, parent, q5Edit)
+            logger.debug("__init__(parent=%s): q10Edit → %s", parent, q10Edit)
+            logger.debug("__init__(parent=%s): self.Icalculatie → %s", parent, self.Icalculatie)
+            logger.debug("__init__(self=%s,parent=%s): q10Edit → %s", self, parent, q10Edit)
+            logger.debug("__init__(parent=%s): q6Edit → %s", parent, q6Edit)
+            logger.debug("__init__(parent=%s): self.Inkooporder → %s", parent, self.Inkooporder)
+            logger.debug("__init__(self=%s,parent=%s): q6Edit → %s", self, parent, q6Edit)
+            logger.debug("__init__(parent=%s): q17Edit → %s", parent, q17Edit)
+            logger.debug("__init__(parent=%s): self.Hoeveelheid → %s", parent, self.Hoeveelheid)
+            logger.debug("__init__(self=%s,parent=%s): q17Edit → %s", self, parent, q17Edit)
+            logger.debug("__init__(parent=%s): q7Edit → %s", parent, q7Edit)
+            logger.debug("__init__(parent=%s): self.Reserveringsaldo → %s", parent, self.Reserveringsaldo)
+            logger.debug("__init__(self=%s,parent=%s): q7Edit → %s", self, parent, q7Edit)
+            logger.debug("__init__(parent=%s): q8Edit → %s", parent, q8Edit)
+            logger.debug("__init__(parent=%s): self.Reserveringdatum → %s", parent, self.Reserveringdatum)
+            logger.debug("__init__(self=%s,parent=%s): q8Edit → %s", self, parent, q8Edit)
+            logger.debug("__init__(parent=%s): q9Edit → %s", parent, q9Edit)
+            logger.debug("__init__(parent=%s): self.Levering_start → %s", parent, self.Levering_start)
+            logger.debug("__init__(self=%s,parent=%s): q9Edit → %s", self, parent, q9Edit)
+            logger.debug("__init__(parent=%s): q11Edit → %s", parent, q11Edit)
+            logger.debug("__init__(parent=%s): self.Levering_eind → %s", parent, self.Levering_eind)
+            logger.debug("__init__(self=%s,parent=%s): q11Edit → %s", self, parent, q11Edit)
+            logger.debug("__init__(parent=%s): q13Edit → %s", parent, q13Edit)
+            logger.debug("__init__(parent=%s): self.Categorie → %s", parent, self.Categorie)
+            logger.debug("__init__(self=%s,parent=%s): q13Edit → %s", self, parent, q13Edit)
+            logger.debug("__init__(parent=%s): q14Edit → %s", parent, q14Edit)
+            logger.debug("__init__(parent=%s): self.Artikelprijs → %s", parent, self.Artikelprijs)
+            logger.debug("__init__(self=%s,parent=%s): q14Edit → %s", self, parent, q14Edit)
+            logger.debug("__init__(parent=%s): q16Edit → %s", parent, q16Edit)
+            logger.debug("__init__(parent=%s): self.Bestelsaldo → %s", parent, self.Bestelsaldo)
+            logger.debug("__init__(self=%s,parent=%s): q16Edit → %s", self, parent, q16Edit)
+            logger.debug("__init__(parent=%s): grid → %s", parent, grid)
+            logger.debug("__init__(self=%s,parent=%s): grid → %s", self, parent, grid)
+            logger.debug("__init__(parent=%s): lbl → %s", parent, lbl)
+            logger.debug("__init__(self=%s,parent=%s): lbl → %s", self, parent, lbl)
+            logger.debug("__init__(self=%s,parent=%s): pixmap → %s", self, parent, pixmap)
+            logger.debug("__init__(parent=%s): logo → %s", parent, logo)
+            logger.debug("__init__(self=%s,parent=%s): logo → %s", self, parent, logo)
+            logger.debug("__init__(parent=%s): cancelBtn → %s", parent, cancelBtn)
+            logger.debug("__init__(self=%s,parent=%s): cancelBtn → %s", self, parent, cancelBtn)
+            logger.debug("<<< Exiting __init__(parent=%s)", parent)
             self.header = header
         def rowCount(self, parent):
+            logger.debug(">>> Entering rowCount(parent=%s)", parent)
             return len(self.mylist)
         def columnCount(self, parent):
+            logger.debug(">>> Entering columnCount(parent=%s)", parent)
             return len(self.mylist[0])
         def data(self, index, role):
+            logger.debug(">>> Entering data(index=%s,role=%s)", index, role)
             veld = self.mylist[index.row()][index.column()]
+            logger.debug("data(index=%s,role=%s): veld → %s", index, role, veld)
+            logger.debug("data(self=%s,index=%s,role=%s): veld → %s", self, index, role, veld)
             if not index.isValid():
                 return None
             elif role == Qt.TextAlignmentRole and (type(veld) == float or type(veld) == int):
@@ -263,10 +382,13 @@ def toonReserveringen(keuze, zoekterm, m_email):
             if type(veld) == float:
                 return '{:12.2f}'.format(veld)
             else:
+                logger.debug("<<< Exiting data(index=%s,role=%s)", index, role)
                 return veld
         def headerData(self, col, orientation, role):
+            logger.debug(">>> Entering headerData(col=%s,orientation=%s,role=%s)", col, orientation, role)
             if orientation == Qt.Horizontal and role == Qt.DisplayRole:
                 return self.header[col]
+            logger.debug("<<< Exiting headerData(col=%s,orientation=%s,role=%s)", col, orientation, role)
             return None
        
     header = ['MatlijstID','Artikelnummer','Werknummer','Calculatie','Icalculatie',\
@@ -279,16 +401,22 @@ def toonReserveringen(keuze, zoekterm, m_email):
         data_list += [(row)]
         
     def showReservering(idx):
+        logger.debug(">>> Entering showReservering(idx=%s)", idx)
         mresnr = idx.data()
+        logger.debug("showReservering(idx=%s): mresnr → %s", idx, mresnr)
         if idx.column() == 0:
             engine = create_engine('postgresql+psycopg2://postgres@localhost/bisystem')
+            logger.debug("showReservering(idx=%s): engine → %s", idx, engine)
             con = engine.connect()
             sel = select([materiaallijsten, artikelen]).where(and_(materiaallijsten.c.artikelID ==\
                 artikelen.c.artikelID, materiaallijsten.c.matlijstID == mresnr))
+            logger.debug("showReservering(idx=%s): con → %s", idx, con)
             rpres = con.execute(sel).first()
             class Widget(QDialog):
+                logger.debug("showReservering(idx=%s): sel → %s", idx, sel)
                 def __init__(self, parent=None):
                     super(Widget, self).__init__(parent)
+                    logger.debug("<<< Exiting showReservering(idx=%s)", idx)
                 
                     self.setWindowTitle("Reserveringen opvragen")
                     self.setWindowIcon(QIcon('./images/logos/logo.jpg'))
@@ -476,6 +604,7 @@ def toonReserveringen(keuze, zoekterm, m_email):
                                                   
                     self.setLayout(grid)
                     self.setGeometry(500, 100, 350, 300)
+                    logger.debug("<<< Exiting __init__(parent=%s)", parent)
                     
             window = Widget()
             window.exec_()

@@ -10,41 +10,60 @@ from sqlalchemy import (Table, Column, Integer, String, MetaData,\
                         create_engine, Float)
 from sqlalchemy.sql import select
 import datetime
+import logging
+logger = logging.getLogger(__name__)
 
 def windowSluit(self, m_email):
+    logger.debug(">>> Entering windowSluit(m_email=%s)", m_email)
     self.close()
     hoofdMenu(m_email)
+    logger.debug("<<< Exiting windowSluit(m_email=%s)", m_email)
     
 def sluit(self, m_email):
+    logger.debug(">>> Entering sluit(m_email=%s)", m_email)
     self.close()
     zoekwk(m_email)   
+    logger.debug("<<< Exiting sluit(m_email=%s)", m_email)
     
 def ongInvoer():
+    logger.debug(">>> Entering ongInvoer()")
     msg = QMessageBox()
+    logger.debug("ongInvoer(): msg → %s", msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     msg.setIcon(QMessageBox.Warning)
     msg.setText('Please re-enter incorrect input\nsearch term!')
     msg.setWindowTitle('Progress charts')
+    logger.debug("<<< Exiting ongInvoer()")
     msg.exec_()
 
 def jaarweek():
+    logger.debug(">>> Entering jaarweek()")
     dt = datetime.datetime.now()
+    logger.debug("jaarweek(): dt → %s", dt)
     week = str('0'+str(dt.isocalendar()[1]))[-2:]
+    logger.debug("jaarweek(): week → %s", week)
     jaar = str(dt.isocalendar()[0])
     jrwk = jaar+week
+    logger.debug("jaarweek(): jrwk → %s", jrwk)
+    logger.debug("jaarweek(): jaar → %s", jaar)
+    logger.debug("<<< Exiting jaarweek()")
     return(jrwk)
     
 def geenWeek():
+    logger.debug(">>> Entering geenWeek()")
     msg = QMessageBox()
+    logger.debug("geenWeek(): msg → %s", msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     msg.setIcon(QMessageBox.Information)
     msg.setText('Week number is not present')
     msg.setWindowTitle('Progress charts')
+    logger.debug("<<< Exiting geenWeek()")
     msg.exec_() 
     
 def info(self):
+    logger.debug(">>> Entering info()")
     class Widget(QDialog):
         def __init__(self, parent=None):
             super(Widget, self).__init__(parent)

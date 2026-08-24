@@ -6,71 +6,101 @@ from PyQt5.QtWidgets import QLabel, QPushButton,QGridLayout,\
      QMessageBox, QDialog, QLineEdit, QCheckBox
 from sqlalchemy import (Table, Column, Integer, String, MetaData, create_engine, Float)
 from sqlalchemy.sql import select, update
+import logging
+logger = logging.getLogger(__name__)
 
 def _11check(mwerknr):
+    logger.debug(">>> Entering _11check(mwerknr=%s)", mwerknr)
     number = str(mwerknr)
+    logger.debug("_11check(mwerknr=%s): number → %s", mwerknr, number)
     total = 0       
     fullnumber = number                       
+    logger.debug("_11check(mwerknr=%s): total → %s", mwerknr, total)
     for i in range(8):
         total += int(fullnumber[i])*(9-i)
+        logger.debug("_11check(mwerknr=%s): fullnumber → %s", mwerknr, fullnumber)
         checkdigit = total % 11 % 10
     if checkdigit == int(fullnumber[8]):
         return True
     else:
+        logger.debug("<<< Exiting _11check(mwerknr=%s)", mwerknr)
         return False
     
 def jaarweek():
+    logger.debug(">>> Entering jaarweek()")
     dt = datetime.datetime.now()
+    logger.debug("jaarweek(): dt → %s", dt)
     week = str('0'+str(dt.isocalendar()[1]))[-2:]
+    logger.debug("jaarweek(): week → %s", week)
     jaar = str(dt.isocalendar()[0])
     jrwk = jaar+week
+    logger.debug("jaarweek(): jrwk → %s", jrwk)
+    logger.debug("jaarweek(): jaar → %s", jaar)
+    logger.debug("<<< Exiting jaarweek()")
     return(jrwk)
     
 def foutInvoer():
+        logger.debug(">>> Entering foutInvoer()")
         msg = QMessageBox()
+        logger.debug("foutInvoer(): msg → %s", msg)
         msg.setStyleSheet("color: black;  background-color: gainsboro")
         msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
         msg.setIcon(QMessageBox.Critical)
         msg.setText('Vereiste velden\nniet allen ingevoerd!')
         msg.setWindowTitle('Onjuiste invoer')
+        logger.debug("<<< Exiting foutInvoer()")
         msg.exec_()
       
 def foutWerknr():
+    logger.debug(">>> Entering foutWerknr()")
     msg = QMessageBox()
+    logger.debug("foutWerknr(): msg → %s", msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     msg.setIcon(QMessageBox.Critical)
     msg.setText('Werknummer niet gevonden\nWerknummer bestaat niet!')
     msg.setWindowTitle('Wijzi werken!')
+    logger.debug("<<< Exiting foutWerknr()")
     msg.exec_()
     
 def werkGereed():
+    logger.debug(">>> Entering werkGereed()")
     msg = QMessageBox()
+    logger.debug("werkGereed(): msg → %s", msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     msg.setIcon(QMessageBox.Warning)
     msg.setText('Werk is gereed\nboeken is niet meer mogelijk!')
     msg.setWindowTitle('Wijzig werken!')
+    logger.debug("<<< Exiting werkGereed()")
     msg.exec_()
     
 def updateOK():
+    logger.debug(">>> Entering updateOK()")
     msg = QMessageBox()
+    logger.debug("updateOK(): msg → %s", msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     msg.setIcon(QMessageBox.Information)
     msg.setText('De gegevens zijn aangepast!')
     msg.setWindowTitle('Wijzig werken!')
+    logger.debug("<<< Exiting updateOK()")
     msg.exec_()
        
 def winSluit(self, m_email):
+    logger.debug(">>> Entering winSluit(m_email=%s)", m_email)
     self.close()
     zoekWerk(m_email)
+    logger.debug("<<< Exiting winSluit(m_email=%s)", m_email)
     
 def windowSluit(self, m_email):
+    logger.debug(">>> Entering windowSluit(m_email=%s)", m_email)
     self.close()
     hoofdMenu(m_email)
+    logger.debug("<<< Exiting windowSluit(m_email=%s)", m_email)
              
 def zoekWerk(m_email):
+    logger.debug(">>> Entering zoekWerk(m_email=%s)", m_email)
     class Widget(QDialog):
         def __init__(self, parent=None):
             super(Widget, self).__init__(parent)
@@ -130,17 +160,153 @@ def zoekWerk(m_email):
                         
             self.setLayout(grid)
             self.setGeometry(600, 300, 150, 150)
+            logger.debug(">>> Entering __init__(parent=%s)", parent)
+            logger.debug("__init__(parent=%s): input_validator → %s", parent, input_validator)
+            logger.debug("__init__(parent=%s): q1Edit → %s", parent, q1Edit)
+            logger.debug("__init__(parent=%s): self.Omschrijving → %s", parent, self.Omschrijving)
+            logger.debug("__init__(self=%s,parent=%s): q1Edit → %s", self, parent, q1Edit)
+            logger.debug("__init__(parent=%s): reg_ex → %s", parent, reg_ex)
+            logger.debug("__init__(self=%s,parent=%s): reg_ex → %s", self, parent, reg_ex)
+            logger.debug("__init__(self=%s,parent=%s): input_validator → %s", self, parent, input_validator)
+            logger.debug("__init__(parent=%s): q2Edit → %s", parent, q2Edit)
+            logger.debug("__init__(parent=%s): self.Aanneemsom → %s", parent, self.Aanneemsom)
+            logger.debug("__init__(self=%s,parent=%s): q2Edit → %s", self, parent, q2Edit)
+            logger.debug("__init__(parent=%s): q3Edit → %s", parent, q3Edit)
+            logger.debug("__init__(self=%s,parent=%s): q3Edit → %s", self, parent, q3Edit)
+            logger.debug("__init__(parent=%s): q4Edit → %s", parent, q4Edit)
+            logger.debug("__init__(parent=%s): self.mutPaid → %s", parent, self.mutPaid)
+            logger.debug("__init__(self=%s,parent=%s): q4Edit → %s", self, parent, q4Edit)
+            logger.debug("__init__(parent=%s): q5Edit → %s", parent, q5Edit)
+            logger.debug("__init__(parent=%s): self.Huisvesting → %s", parent, self.Huisvesting)
+            logger.debug("__init__(self=%s,parent=%s): q5Edit → %s", self, parent, q5Edit)
+            logger.debug("__init__(parent=%s): q5aEdit → %s", parent, q5aEdit)
+            logger.debug("__init__(self=%s,parent=%s): q5aEdit → %s", self, parent, q5aEdit)
+            logger.debug("__init__(parent=%s): q5bEdit → %s", parent, q5bEdit)
+            logger.debug("__init__(parent=%s): self.housing → %s", parent, self.housing)
+            logger.debug("__init__(self=%s,parent=%s): q5bEdit → %s", self, parent, q5bEdit)
+            logger.debug("__init__(parent=%s): q6Edit → %s", parent, q6Edit)
+            logger.debug("__init__(parent=%s): self.Leiding → %s", parent, self.Leiding)
+            logger.debug("__init__(self=%s,parent=%s): q6Edit → %s", self, parent, q6Edit)
+            logger.debug("__init__(parent=%s): q6aEdit → %s", parent, q6aEdit)
+            logger.debug("__init__(self=%s,parent=%s): q6aEdit → %s", self, parent, q6aEdit)
+            logger.debug("__init__(parent=%s): q6bEdit → %s", parent, q6bEdit)
+            logger.debug("__init__(parent=%s): self.direction → %s", parent, self.direction)
+            logger.debug("__init__(self=%s,parent=%s): q6bEdit → %s", self, parent, q6bEdit)
+            logger.debug("__init__(parent=%s): q7Edit → %s", parent, q7Edit)
+            logger.debug("__init__(parent=%s): self.Inhuur → %s", parent, self.Inhuur)
+            logger.debug("__init__(self=%s,parent=%s): q7Edit → %s", self, parent, q7Edit)
+            logger.debug("__init__(parent=%s): q7aEdit → %s", parent, q7aEdit)
+            logger.debug("__init__(self=%s,parent=%s): q7aEdit → %s", self, parent, q7aEdit)
+            logger.debug("__init__(parent=%s): q7bEdit → %s", parent, q7bEdit)
+            logger.debug("__init__(parent=%s): self.hiring → %s", parent, self.hiring)
+            logger.debug("__init__(self=%s,parent=%s): q7bEdit → %s", self, parent, q7bEdit)
+            logger.debug("__init__(parent=%s): q8Edit → %s", parent, q8Edit)
+            logger.debug("__init__(parent=%s): self.Vervoer → %s", parent, self.Vervoer)
+            logger.debug("__init__(self=%s,parent=%s): q8Edit → %s", self, parent, q8Edit)
+            logger.debug("__init__(parent=%s): q8aEdit → %s", parent, q8aEdit)
+            logger.debug("__init__(self=%s,parent=%s): q8aEdit → %s", self, parent, q8aEdit)
+            logger.debug("__init__(parent=%s): q8bEdit → %s", parent, q8bEdit)
+            logger.debug("__init__(parent=%s): self.transport → %s", parent, self.transport)
+            logger.debug("__init__(self=%s,parent=%s): q8bEdit → %s", self, parent, q8bEdit)
+            logger.debug("__init__(parent=%s): q11Edit → %s", parent, q11Edit)
+            logger.debug("__init__(parent=%s): self.Grondverzet → %s", parent, self.Grondverzet)
+            logger.debug("__init__(self=%s,parent=%s): q11Edit → %s", self, parent, q11Edit)
+            logger.debug("__init__(parent=%s): q11aEdit → %s", parent, q11aEdit)
+            logger.debug("__init__(self=%s,parent=%s): q11aEdit → %s", self, parent, q11aEdit)
+            logger.debug("__init__(parent=%s): q11bEdit → %s", parent, q11bEdit)
+            logger.debug("__init__(parent=%s): self.earthmoving → %s", parent, self.earthmoving)
+            logger.debug("__init__(self=%s,parent=%s): q11bEdit → %s", self, parent, q11bEdit)
+            logger.debug("__init__(parent=%s): self.Overig → %s", parent, self.Overig)
+            logger.debug("__init__(self=%s,parent=%s): q12Edit → %s", self, parent, q12Edit)
+            logger.debug("__init__(parent=%s): q12Edit → %s", parent, q12Edit)
+            logger.debug("__init__(self=%s,parent=%s): q12aEdit → %s", self, parent, q12aEdit)
+            logger.debug("__init__(parent=%s): q12aEdit → %s", parent, q12aEdit)
+            logger.debug("__init__(parent=%s): self.remaining → %s", parent, self.remaining)
+            logger.debug("__init__(self=%s,parent=%s): q12bEdit → %s", self, parent, q12bEdit)
+            logger.debug("__init__(parent=%s): q12bEdit → %s", parent, q12bEdit)
+            logger.debug("__init__(parent=%s): self.StartWerk → %s", parent, self.StartWerk)
+            logger.debug("__init__(self=%s,parent=%s): q23Edit → %s", self, parent, q23Edit)
+            logger.debug("__init__(parent=%s): q23Edit → %s", parent, q23Edit)
+            logger.debug("__init__(self=%s,parent=%s): grid → %s", self, parent, grid)
+            logger.debug("__init__(parent=%s): grid → %s", parent, grid)
+            logger.debug("__init__(self=%s,parent=%s): lbl1 → %s", self, parent, lbl1)
+            logger.debug("__init__(parent=%s): lbl1 → %s", parent, lbl1)
+            logger.debug("__init__(self=%s,parent=%s): lbl2 → %s", self, parent, lbl2)
+            logger.debug("__init__(parent=%s): lbl2 → %s", parent, lbl2)
+            logger.debug("__init__(self=%s,parent=%s): lbl3 → %s", self, parent, lbl3)
+            logger.debug("__init__(parent=%s): lbl3 → %s", parent, lbl3)
+            logger.debug("__init__(parent=%s): lbl4 → %s", parent, lbl4)
+            logger.debug("__init__(self=%s,parent=%s): lbl4 → %s", self, parent, lbl4)
+            logger.debug("__init__(parent=%s): lbl5 → %s", parent, lbl5)
+            logger.debug("__init__(self=%s,parent=%s): lbl5 → %s", self, parent, lbl5)
+            logger.debug("__init__(parent=%s): lbl6 → %s", parent, lbl6)
+            logger.debug("__init__(self=%s,parent=%s): lbl6 → %s", self, parent, lbl6)
+            logger.debug("__init__(parent=%s): lbl7a → %s", parent, lbl7a)
+            logger.debug("__init__(self=%s,parent=%s): lbl7a → %s", self, parent, lbl7a)
+            logger.debug("__init__(parent=%s): lbl7b → %s", parent, lbl7b)
+            logger.debug("__init__(self=%s,parent=%s): lbl7b → %s", self, parent, lbl7b)
+            logger.debug("__init__(parent=%s): lbl7c → %s", parent, lbl7c)
+            logger.debug("__init__(self=%s,parent=%s): lbl7c → %s", self, parent, lbl7c)
+            logger.debug("__init__(parent=%s): lbl7 → %s", parent, lbl7)
+            logger.debug("__init__(self=%s,parent=%s): lbl7 → %s", self, parent, lbl7)
+            logger.debug("__init__(parent=%s): lbl8 → %s", parent, lbl8)
+            logger.debug("__init__(self=%s,parent=%s): lbl8 → %s", self, parent, lbl8)
+            logger.debug("__init__(parent=%s): lbl9 → %s", parent, lbl9)
+            logger.debug("__init__(self=%s,parent=%s): lbl9 → %s", self, parent, lbl9)
+            logger.debug("__init__(parent=%s): lbl10 → %s", parent, lbl10)
+            logger.debug("__init__(self=%s,parent=%s): lbl10 → %s", self, parent, lbl10)
+            logger.debug("__init__(parent=%s): lbl13 → %s", parent, lbl13)
+            logger.debug("__init__(self=%s,parent=%s): lbl13 → %s", self, parent, lbl13)
+            logger.debug("__init__(parent=%s): lbl14 → %s", parent, lbl14)
+            logger.debug("__init__(self=%s,parent=%s): lbl14 → %s", self, parent, lbl14)
+            logger.debug("__init__(parent=%s): lblwk → %s", parent, lblwk)
+            logger.debug("__init__(self=%s,parent=%s): lblwk → %s", self, parent, lblwk)
+            logger.debug("__init__(parent=%s): lblst → %s", parent, lblst)
+            logger.debug("__init__(self=%s,parent=%s): lblst → %s", self, parent, lblst)
+            logger.debug("__init__(parent=%s): lbl25 → %s", parent, lbl25)
+            logger.debug("__init__(self=%s,parent=%s): lbl25 → %s", self, parent, lbl25)
+            logger.debug("__init__(parent=%s): lbl27 → %s", parent, lbl27)
+            logger.debug("__init__(self=%s,parent=%s): lbl27 → %s", self, parent, lbl27)
+            logger.debug("__init__(parent=%s): lbl28 → %s", parent, lbl28)
+            logger.debug("__init__(self=%s,parent=%s): lbl28 → %s", self, parent, lbl28)
+            logger.debug("__init__(parent=%s): cBox2 → %s", parent, cBox2)
+            logger.debug("__init__(self=%s,parent=%s): cBox2 → %s", self, parent, cBox2)
+            logger.debug("__init__(parent=%s): cBox1 → %s", parent, cBox1)
+            logger.debug("__init__(self=%s,parent=%s): cBox1 → %s", self, parent, cBox1)
+            logger.debug("__init__(parent=%s): cBox → %s", parent, cBox)
+            logger.debug("__init__(self=%s,parent=%s): cBox → %s", self, parent, cBox)
+            logger.debug("__init__(parent=%s): movie → %s", parent, movie)
+            logger.debug("__init__(parent=%s): pyqt → %s", parent, pyqt)
+            logger.debug("__init__(self=%s,parent=%s): pyqt → %s", self, parent, pyqt)
+            logger.debug("__init__(self=%s,parent=%s): movie → %s", self, parent, movie)
+            logger.debug("__init__(parent=%s): pixmap → %s", parent, pixmap)
+            logger.debug("__init__(parent=%s): logo → %s", parent, logo)
+            logger.debug("__init__(self=%s,parent=%s): logo → %s", self, parent, logo)
+            logger.debug("__init__(self=%s,parent=%s): pixmap → %s", self, parent, pixmap)
+            logger.debug("__init__(parent=%s): applyBtn → %s", parent, applyBtn)
+            logger.debug("__init__(self=%s,parent=%s): applyBtn → %s", self, parent, applyBtn)
+            logger.debug("__init__(parent=%s): cancelBtn → %s", parent, cancelBtn)
+            logger.debug("__init__(self=%s,parent=%s): cancelBtn → %s", self, parent, cancelBtn)
+            logger.debug("<<< Exiting __init__(parent=%s)", parent)
     
         def werknChanged(self, text):
+            logger.debug(">>> Entering werknChanged(text=%s)", text)
+            logger.debug("werknChanged(self=%s,text=%s): Werknummer → %s", self, text, Werknummer)
             self.Werknummer.setText(text)
+            logger.debug("<<< Exiting werknChanged(text=%s)", text)
     
         def returnwerkn(self):
+            logger.debug(">>> Entering returnwerkn()")
+            logger.debug("<<< Exiting returnwerkn()")
             return self.Werknummer.text()
     
         @staticmethod
         def getData(parent=None):
             dialog = Widget(parent)
             dialog.exec_()
+            logger.debug(">>> Entering getData(parent=%s)", parent)
+            logger.debug("getData(parent=%s): dialog → %s", parent, dialog)
+            logger.debug("<<< Exiting getData(parent=%s)", parent)
             return [dialog.returnwerkn()]
     
     window = Widget()
@@ -170,7 +336,9 @@ def zoekWerk(m_email):
         wijzWerk(mwerknr, m_email)
  
 def wijzWerk(mwerknr, m_email):
+    logger.debug(">>> Entering wijzWerk(mwerknr=%s,m_email=%s)", mwerknr, m_email)
     metadata = MetaData()
+    logger.debug("wijzWerk(mwerknr=%s,m_email=%s): metadata → %s", mwerknr, m_email, metadata)
     werken = Table('werken', metadata,
         Column('werknummerID', Integer(), primary_key=True),
         Column('werkomschrijving', String(50)),
@@ -214,13 +382,18 @@ def wijzWerk(mwerknr, m_email):
         Column('opdracht_datum', String))
                
     engine = create_engine('postgresql+psycopg2://postgres@localhost/bisystem')
+    logger.debug("wijzWerk(mwerknr=%s,m_email=%s): engine → %s", mwerknr, m_email, engine)
     conn = engine.connect()
     selwerk = select([werken]).where(werken.c.werknummerID == mwerknr)
+    logger.debug("wijzWerk(mwerknr=%s,m_email=%s): conn → %s", mwerknr, m_email, conn)
     rpwerk = conn.execute(selwerk).first()
                                           
+    logger.debug("wijzWerk(mwerknr=%s,m_email=%s): selwerk → %s", mwerknr, m_email, selwerk)
+    logger.debug("wijzWerk(mwerknr=%s,m_email=%s): rpwerk → %s", mwerknr, m_email, rpwerk)
     class Widget(QDialog):
         def __init__(self, parent=None):
             super(Widget, self).__init__(parent)
+            logger.debug("<<< Exiting wijzWerk(mwerknr=%s,m_email=%s)", mwerknr, m_email)
             self.setWindowTitle("Wijzig begroting werk")
             self.setWindowFlags(self.windowFlags() | Qt.WindowSystemMenuHint |
                                 Qt.WindowMinMaxButtonsHint)
@@ -586,123 +759,219 @@ def wijzWerk(mwerknr, m_email):
             cancelBtn.setStyleSheet("color: black;  background-color: gainsboro")
                                        
         def q1Changed(self,text):
+            logger.debug(">>> Entering q1Changed(text=%s)", text)
+            logger.debug("q1Changed(self=%s,text=%s): Omschrijving → %s", self, text, Omschrijving)
             self.Omschrijving.setText(text)
+            logger.debug("<<< Exiting q1Changed(text=%s)", text)
     
         def q2Changed(self,text):
+            logger.debug(">>> Entering q2Changed(text=%s)", text)
+            logger.debug("q2Changed(self=%s,text=%s): Aanneemsom → %s", self, text, Aanneemsom)
             self.Aanneemsom.setText(text)
+            logger.debug("<<< Exiting q2Changed(text=%s)", text)
 
         def q4Changed(self, text):
+            logger.debug(">>> Entering q4Changed(text=%s)", text)
+            logger.debug("q4Changed(self=%s,text=%s): mutPaid → %s", self, text, mutPaid)
             self.mutPaid.setText(text)
+            logger.debug("<<< Exiting q4Changed(text=%s)", text)
 
         def q5Changed(self,text):
+            logger.debug(">>> Entering q5Changed(text=%s)", text)
+            logger.debug("q5Changed(self=%s,text=%s): Huisvesting → %s", self, text, Huisvesting)
             self.Huisvesting.setText(text)
+            logger.debug("<<< Exiting q5Changed(text=%s)", text)
 
         def q5bChanged(self,text):
+            logger.debug(">>> Entering q5bChanged(text=%s)", text)
+            logger.debug("q5bChanged(self=%s,text=%s): housing → %s", self, text, housing)
             self.housing.setText(text)
+            logger.debug("<<< Exiting q5bChanged(text=%s)", text)
 
         def q6Changed(self,text):
+            logger.debug(">>> Entering q6Changed(text=%s)", text)
+            logger.debug("q6Changed(self=%s,text=%s): Leiding → %s", self, text, Leiding)
             self.Leiding.setText(text)
+            logger.debug("<<< Exiting q6Changed(text=%s)", text)
 
         def q6bChanged(self,text):
+            logger.debug(">>> Entering q6bChanged(text=%s)", text)
+            logger.debug("q6bChanged(self=%s,text=%s): direction → %s", self, text, direction)
             self.direction.setText(text)
+            logger.debug("<<< Exiting q6bChanged(text=%s)", text)
             
         def q7Changed(self,text):
+            logger.debug(">>> Entering q7Changed(text=%s)", text)
+            logger.debug("q7Changed(self=%s,text=%s): Inhuur → %s", self, text, Inhuur)
             self.Inhuur.setText(text)
+            logger.debug("<<< Exiting q7Changed(text=%s)", text)
 
         def q7bChanged(self,text):
+            logger.debug(">>> Entering q7bChanged(text=%s)", text)
+            logger.debug("q7bChanged(self=%s,text=%s): hiring → %s", self, text, hiring)
             self.hiring.setText(text)
+            logger.debug("<<< Exiting q7bChanged(text=%s)", text)
             
         def q8Changed(self,text):
+            logger.debug(">>> Entering q8Changed(text=%s)", text)
+            logger.debug("q8Changed(self=%s,text=%s): Vervoer → %s", self, text, Vervoer)
             self.Vervoer.setText(text)
+            logger.debug("<<< Exiting q8Changed(text=%s)", text)
 
         def q8bChanged(self,text):
+            logger.debug(">>> Entering q8bChanged(text=%s)", text)
+            logger.debug("q8bChanged(self=%s,text=%s): transport → %s", self, text, transport)
             self.transport.setText(text)
+            logger.debug("<<< Exiting q8bChanged(text=%s)", text)
         
         def q11Changed(self,text):
+            logger.debug(">>> Entering q11Changed(text=%s)", text)
+            logger.debug("q11Changed(self=%s,text=%s): Grondverzet → %s", self, text, Grondverzet)
             self.Grondverzet.setText(text)
+            logger.debug("<<< Exiting q11Changed(text=%s)", text)
 
         def q11bChanged(self,text):
+            logger.debug(">>> Entering q11bChanged(text=%s)", text)
+            logger.debug("q11bChanged(self=%s,text=%s): earthmoving → %s", self, text, earthmoving)
             self.earthmoving.setText(text)
+            logger.debug("<<< Exiting q11bChanged(text=%s)", text)
             
         def q12Changed(self,text):
+            logger.debug(">>> Entering q12Changed(text=%s)", text)
+            logger.debug("q12Changed(self=%s,text=%s): Overig → %s", self, text, Overig)
             self.Overig.setText(text)
+            logger.debug("<<< Exiting q12Changed(text=%s)", text)
 
         def q12bChanged(self,text):
+            logger.debug(">>> Entering q12bChanged(text=%s)", text)
+            logger.debug("q12bChanged(self=%s,text=%s): remaining → %s", self, text, remaining)
             self.remaining.setText(text)
+            logger.debug("<<< Exiting q12bChanged(text=%s)", text)
 
         def q23Changed(self,text):
+            logger.debug(">>> Entering q23Changed(text=%s)", text)
+            logger.debug("q23Changed(self=%s,text=%s): Startwerk → %s", self, text, Startwerk)
             self.Startwerk.setText(text)
+            logger.debug("<<< Exiting q23Changed(text=%s)", text)
 
         state = False
         def cBoxChanged(self, state):
+            logger.debug(">>> Entering cBoxChanged(state=%s)", state)
+            logger.debug("cBoxChanged(state=%s): self.state → %s", state, self.state)
+            logger.debug("cBoxChanged(self=%s,state=%s): self.state → %s", self, state, self.state)
             if state == Qt.Checked:
                 self.state = True
+                logger.debug("<<< Exiting cBoxChanged(state=%s)", state)
 
         state1 = False  
         def cBox1Changed(self, state1):
+            logger.debug(">>> Entering cBox1Changed(state1=%s)", state1)
+            logger.debug("cBox1Changed(self=%s,state1=%s): self.state1 → %s", self, state1, self.state1)
             if state1 == Qt.Checked:
+                logger.debug("<<< Exiting cBox1Changed(state1=%s)", state1)
                 self.state1 = True
 
         state2 = False  
         def cBox2Changed(self, state2):
+            logger.debug(">>> Entering cBox2Changed(state2=%s)", state2)
+            logger.debug("cBox2Changed(self=%s,state2=%s): self.state2 → %s", self, state2, self.state2)
             if state2 == Qt.Checked:
+                logger.debug("<<< Exiting cBox2Changed(state2=%s)", state2)
                 self.state2 = True
 
         def returnq1(self):
+            logger.debug(">>> Entering returnq1()")
+            logger.debug("<<< Exiting returnq1()")
             return self.Omschrijving.text()
         
         def returnq2(self):
+            logger.debug(">>> Entering returnq2()")
+            logger.debug("<<< Exiting returnq2()")
             return self.Aanneemsom.text()
 
         def returnq4(self):
+            logger.debug(">>> Entering returnq4()")
+            logger.debug("<<< Exiting returnq4()")
             return  self.mutPaid.text()
         
         def returnq5(self):
+            logger.debug(">>> Entering returnq5()")
+            logger.debug("<<< Exiting returnq5()")
             return self.Huisvesting.text()
 
         def returnq5b(self):
+            logger.debug(">>> Entering returnq5b()")
+            logger.debug("<<< Exiting returnq5b()")
             return self.housing.text()
     
         def returnq6(self):
+            logger.debug(">>> Entering returnq6()")
+            logger.debug("<<< Exiting returnq6()")
             return self.Leiding.text()
 
         def returnq6b(self):
+            logger.debug(">>> Entering returnq6b()")
+            logger.debug("<<< Exiting returnq6b()")
             return self.direction.text()
         
         def returnq7(self):
+            logger.debug(">>> Entering returnq7()")
+            logger.debug("<<< Exiting returnq7()")
             return self.Inhuur.text()
 
         def returnq7b(self):
+            logger.debug(">>> Entering returnq7b()")
+            logger.debug("<<< Exiting returnq7b()")
             return self.hiring.text()
               
         def returnq8(self):
+            logger.debug(">>> Entering returnq8()")
+            logger.debug("<<< Exiting returnq8()")
             return self.Vervoer.text()
 
         def returnq8b(self):
+            logger.debug(">>> Entering returnq8b()")
+            logger.debug("<<< Exiting returnq8b()")
             return self.transport.text()
 
         def returnq11(self):
+            logger.debug(">>> Entering returnq11()")
+            logger.debug("<<< Exiting returnq11()")
             return self.Grondverzet.text()
 
         def returnq11b(self):
+            logger.debug(">>> Entering returnq11b()")
+            logger.debug("<<< Exiting returnq11b()")
             return self.earthmoving.text()
         
         def returnq12(self):
+            logger.debug(">>> Entering returnq12()")
+            logger.debug("<<< Exiting returnq12()")
             return self.Overig.text()
 
         def returnq12b(self):
+            logger.debug(">>> Entering returnq12b()")
+            logger.debug("<<< Exiting returnq12b()")
             return self.remaining.text()
         
         def returnq23(self):
+            logger.debug(">>> Entering returnq23()")
+            logger.debug("<<< Exiting returnq23()")
             return self.StartWerk.text()
 
         def returncBox(self):
+            logger.debug(">>> Entering returncBox()")
+            logger.debug("<<< Exiting returncBox()")
             return self.state
         
         def returncBox1(self):
+            logger.debug(">>> Entering returncBox1()")
+            logger.debug("<<< Exiting returncBox1()")
             return self.state1
         
         def returncBox2(self):
+            logger.debug(">>> Entering returncBox2()")
+            logger.debug("<<< Exiting returncBox2()")
             return self.state2
         
         @staticmethod
