@@ -8,41 +8,64 @@ from PyQt5.QtCore import Qt, QRegExp, QAbstractTableModel
 from sqlalchemy import (Table, Column, Integer, String, Float, Boolean,\
                         ForeignKey,  MetaData, create_engine)
 from sqlalchemy.sql import select, and_
+import logging
+logger = logging.getLogger(__name__)
 
 def windowSluit(self, m_email):
+    logger.debug(">>> Entering windowSluit(m_email=%s)", m_email)
     self.close()
     hoofdMenu(m_email)
+    logger.debug("<<< Exiting windowSluit(m_email=%s)", m_email)
     
 def winSluit(self, m_email):
+    logger.debug(">>> Entering winSluit(m_email=%s)", m_email)
     self.close()
     maandPeriode(m_email)
+    logger.debug("<<< Exiting winSluit(m_email=%s)", m_email)
 
 def ongPeriode():
+    logger.debug(">>> Entering ongPeriode()")
     msg = QMessageBox()
+    logger.debug("ongPeriode(): msg → %s", msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setIcon(QMessageBox.Warning)
     msg.setText('Geen geldige betaalperiode opgegeven!')
     msg.setWindowTitle('Controle werkuren')
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
+    logger.debug("<<< Exiting ongPeriode()")
     msg.exec_()
        
 def printGeg(mjrmnd):
+    logger.debug(">>> Entering printGeg(mjrmnd=%s)", mjrmnd)
     if platform == 'win32':
         filename = '.\\forms\\Uren\\'+str(mjrmnd)+'.txt'
         os.startfile(filename, "print")
+        logger.debug("printGeg(mjrmnd=%s): filename → %s", mjrmnd, filename)
     else:
         filename = './forms/Uren/'+str(mjrmnd)+'.txt'
         os.system('lpr '+filename)
+        logger.debug("<<< Exiting printGeg(mjrmnd=%s)", mjrmnd)
         
 def selectRow(index):
+    logger.debug(">>> Entering selectRow(index=%s)", index)
     #print('Recordnummer is: ', index.row())
     pass
+    logger.debug("<<< Exiting selectRow(index=%s)", index)
                
 def toonGeg(mjrmnd):
+    logger.debug(">>> Entering toonGeg(mjrmnd=%s)", mjrmnd)
     class MyWindow(QDialog):
+        logger.error("Exception in toonGeg(mjrmnd=%s)", mjrmnd, exc_info=True)
         def __init__(self, data_list, header, *args):
+            logger.debug(">>> Entering __init__(data_list=%s,header=%s)", data_list, header)
             QWidget.__init__(self, *args,)
             self.setGeometry(100, 50, 800, 600)
+            logger.debug("__init__(data_list=%s,header=%s): font → %s", data_list, header, font)
+            logger.debug("__init__(data_list=%s,header=%s): table_view → %s", data_list, header, table_view)
+            logger.debug("__init__(data_list=%s,header=%s): table_model → %s", data_list, header, table_model)
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): table_model → %s", self, data_list, header, table_model)
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): table_view → %s", self, data_list, header, table_view)
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): font → %s", self, data_list, header, font)
             self.setWindowTitle('Cluster Calculatie')
             self.setWindowIcon(QIcon('./images/logos/logo.jpg'))
             table_model = MyTableModel(self, data_list, header)
@@ -54,20 +77,53 @@ def toonGeg(mjrmnd):
             table_view.setSelectionBehavior(QTableView.SelectRows)
             table_view.clicked.connect(selectRow)
             layout = QVBoxLayout(self)
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): layout → %s", self, data_list, header, layout)
+            logger.debug("__init__(data_list=%s,header=%s): layout → %s", data_list, header, layout)
             layout.addWidget(table_view)
             self.setLayout(layout)
+            logger.debug("<<< Exiting __init__(data_list=%s,header=%s)", data_list, header)
+            logger.debug(">>> Entering __init__(parent=%s,mylist=%s,header=%s)", parent, mylist, header)
+            logger.debug("<<< Exiting __init__(parent=%s,mylist=%s,header=%s)", parent, mylist, header)
+            logger.debug("__init__(self=%s,parent=%s,mylist=%s,header=%s): self.mylist → %s", self, parent, mylist, header, self.mylist)
 
     class MyTableModel(QAbstractTableModel):
         def __init__(self, parent, mylist, header, *args):
+            logger.debug("__init__(self=%s,parent=%s,mylist=%s,header=%s): self.header → %s", self, parent, mylist, header, self.header)
             QAbstractTableModel.__init__(self, parent, *args)
             self.mylist = mylist
+            logger.debug(">>> Entering __init__(parent=%s)", parent)
+            logger.debug("__init__(parent=%s): pixmap → %s", parent, pixmap)
+            logger.debug("__init__(parent=%s): input_validator → %s", parent, input_validator)
+            logger.debug("__init__(parent=%s): betEdit → %s", parent, betEdit)
+            logger.debug("__init__(parent=%s): self.Betaalperiode → %s", parent, self.Betaalperiode)
+            logger.debug("__init__(self=%s,parent=%s): betEdit → %s", self, parent, betEdit)
+            logger.debug("__init__(parent=%s): reg_ex → %s", parent, reg_ex)
+            logger.debug("__init__(self=%s,parent=%s): reg_ex → %s", self, parent, reg_ex)
+            logger.debug("__init__(self=%s,parent=%s): input_validator → %s", self, parent, input_validator)
+            logger.debug("__init__(parent=%s): grid → %s", parent, grid)
+            logger.debug("__init__(self=%s,parent=%s): grid → %s", self, parent, grid)
+            logger.debug("__init__(parent=%s): lbl → %s", parent, lbl)
+            logger.debug("__init__(self=%s,parent=%s): lbl → %s", self, parent, lbl)
+            logger.debug("__init__(self=%s,parent=%s): pixmap → %s", self, parent, pixmap)
+            logger.debug("__init__(parent=%s): logo → %s", parent, logo)
+            logger.debug("__init__(self=%s,parent=%s): logo → %s", self, parent, logo)
+            logger.debug("__init__(parent=%s): cancelBtn → %s", parent, cancelBtn)
+            logger.debug("__init__(self=%s,parent=%s): cancelBtn → %s", self, parent, cancelBtn)
+            logger.debug("__init__(parent=%s): applyBtn → %s", parent, applyBtn)
+            logger.debug("__init__(self=%s,parent=%s): applyBtn → %s", self, parent, applyBtn)
+            logger.debug("<<< Exiting __init__(parent=%s)", parent)
             self.header = header
         def rowCount(self, parent):
+            logger.debug(">>> Entering rowCount(parent=%s)", parent)
             return len(self.mylist)
         def columnCount(self, parent):
+            logger.debug(">>> Entering columnCount(parent=%s)", parent)
             return len(self.mylist[0])
         def data(self, index, role):
+            logger.debug(">>> Entering data(index=%s,role=%s)", index, role)
             veld = self.mylist[index.row()][index.column()]
+            logger.debug("data(index=%s,role=%s): veld → %s", index, role, veld)
+            logger.debug("data(self=%s,index=%s,role=%s): veld → %s", self, index, role, veld)
             if not index.isValid():
                 return None
             elif role == Qt.TextAlignmentRole and (type(veld) == float or type(veld) == int):
@@ -77,11 +133,15 @@ def toonGeg(mjrmnd):
             if type(veld) == float:
                 return '{:12.2f}'.format(veld)
             else:
+                logger.debug("<<< Exiting data(index=%s,role=%s)", index, role)
                 return veld
         def headerData(self, col, orientation, role):
+            logger.debug(">>> Entering headerData(col=%s,orientation=%s,role=%s)", col, orientation, role)
             self.font = QFont('Arial', 10)
+            logger.debug("headerData(col=%s,orientation=%s,role=%s): self.font → %s", col, orientation, role, self.font)
             if orientation == Qt.Horizontal and role == Qt.DisplayRole:
                 return self.header[col]
+            logger.debug("<<< Exiting headerData(col=%s,orientation=%s,role=%s)", col, orientation, role)
             return None
                  
     header = ['Accountnr', 'Voornaam', 'Tussenvoegsel', 'Achternaam', 'Uren', 'Geboekt']
@@ -104,8 +164,10 @@ def toonGeg(mjrmnd):
     win.exec_()
   
 def maandPeriode(m_email):
+    logger.debug(">>> Entering maandPeriode(m_email=%s)", m_email)
     import validZt
     class Widget(QDialog):
+        logger.debug("<<< Exiting maandPeriode(m_email=%s)", m_email)
         def __init__(self, parent=None):
             super(Widget, self).__init__(parent)
             self.setWindowTitle("Periode opgeven tbv loonspecificaties")
@@ -160,15 +222,23 @@ def maandPeriode(m_email):
             self.setGeometry(400, 300, 150, 150)
                  
         def betChanged(self, text):
+            logger.debug(">>> Entering betChanged(text=%s)", text)
+            logger.debug("betChanged(self=%s,text=%s): Betaalperiode → %s", self, text, Betaalperiode)
             self.Betaalperiode.setText(text)
+            logger.debug("<<< Exiting betChanged(text=%s)", text)
     
         def returnBetaalperiode(self):
+            logger.debug(">>> Entering returnBetaalperiode()")
+            logger.debug("<<< Exiting returnBetaalperiode()")
             return self.Betaalperiode.text()
     
         @staticmethod
         def getData(parent=None):
+            logger.debug(">>> Entering getData(parent=%s)", parent)
             dialog = Widget(parent)
+            logger.debug("getData(parent=%s): dialog → %s", parent, dialog)
             dialog.exec_()
+            logger.debug("<<< Exiting getData(parent=%s)", parent)
             return [dialog.returnBetaalperiode()]
      
     window = Widget()
@@ -181,9 +251,12 @@ def maandPeriode(m_email):
         maandPeriode(m_email)
   
 def controleUren(mjrmnd, m_email):
+    logger.debug(">>> Entering controleUren(mjrmnd=%s,m_email=%s)", mjrmnd, m_email)
     mblad = 1
+    logger.debug("controleUren(mjrmnd=%s,m_email=%s): mblad → %s", mjrmnd, m_email, mblad)
     rgl = 0
     metadata = MetaData()   
+    logger.debug("controleUren(mjrmnd=%s,m_email=%s): metadata → %s", mjrmnd, m_email, metadata)
     werknemers = Table('werknemers', metadata,
         Column('werknemerID', Integer(), primary_key=True),
         Column('accountID', None, ForeignKey('accounts.accountID')))
@@ -206,14 +279,20 @@ def controleUren(mjrmnd, m_email):
         Column('lock', Boolean))
     
     engine = create_engine('postgresql+psycopg2://postgres@localhost/bisystem')
+    logger.debug("controleUren(mjrmnd=%s,m_email=%s): engine → %s", mjrmnd, m_email, engine)
     conn = engine.connect()
+    logger.debug("controleUren(mjrmnd=%s,m_email=%s): conn → %s", mjrmnd, m_email, conn)
     selwerkn = select([werknemers, accounts]).where(werknemers.c\
         .accountID == accounts.c.accountID).order_by(werknemers.c.werknemerID)
     rpwerkn = conn.execute(selwerkn)
+    logger.debug("controleUren(mjrmnd=%s,m_email=%s): selwerkn → %s", mjrmnd, m_email, selwerkn)
     selpar = select([params]).where(params.c.item == mjrmnd)
     rppar = conn.execute(selpar).first()
+    logger.debug("controleUren(mjrmnd=%s,m_email=%s): rpwerkn → %s", mjrmnd, m_email, rpwerkn)
     if not rppar:
           ongPeriode()
+          logger.debug("controleUren(mjrmnd=%s,m_email=%s): selpar → %s", mjrmnd, m_email, selpar)
+          logger.debug("controleUren(mjrmnd=%s,m_email=%s): rppar → %s", mjrmnd, m_email, rppar)
           maandPeriode(m_email)
     for record in rpwerkn:
         if rgl == 0 or rgl%57 == 0: 
@@ -222,7 +301,9 @@ def controleUren(mjrmnd, m_email):
                 csvfilename = './/forms//Uren//'+str(mjrmnd)+'.csv'
             else:
                 filename = './forms/Uren/'+str(mjrmnd)+'.txt'
+                logger.debug("controleUren(mjrmnd=%s,m_email=%s): filename → %s", mjrmnd, m_email, filename)
                 csvfilename = './forms/Uren/'+str(mjrmnd)+'.csv' 
+                logger.debug("controleUren(mjrmnd=%s,m_email=%s): csvfilename → %s", mjrmnd, m_email, csvfilename)
             open (csvfilename, "w").write("")
             kop = \
     ("Controle uren tbv loonbetalingen van periode "+str(mjrmnd)+" Pagina "+str(mblad)+"\n"+
@@ -234,7 +315,15 @@ def controleUren(mjrmnd, m_email):
             open(filename, 'a').write(kop)
             mblad += 1
         
+            logger.debug("controleUren(mjrmnd=%s,m_email=%s): selwrkwnrln → %s", mjrmnd, m_email, selwrkwnrln)
+            logger.debug("controleUren(mjrmnd=%s,m_email=%s): verlof → %s", mjrmnd, m_email, verlof)
+            logger.debug("controleUren(mjrmnd=%s,m_email=%s): feestdag → %s", mjrmnd, m_email, feestdag)
+            logger.debug("controleUren(mjrmnd=%s,m_email=%s): dokter → %s", mjrmnd, m_email, dokter)
+            logger.debug("controleUren(mjrmnd=%s,m_email=%s): ziek → %s", mjrmnd, m_email, ziek)
+            logger.debug("controleUren(mjrmnd=%s,m_email=%s): geoorlverz → %s", mjrmnd, m_email, geoorlverz)
+            logger.debug("controleUren(mjrmnd=%s,m_email=%s): extraverl → %s", mjrmnd, m_email, extraverl)
         uren100 = 0
+        logger.debug("controleUren(mjrmnd=%s,m_email=%s): uren100 → %s", mjrmnd, m_email, uren100)
         verlof = 0
         feestdag = 0
         dokter = 0
@@ -245,6 +334,7 @@ def controleUren(mjrmnd, m_email):
                 wrkwnrln.c.boekdatum.like(mjrmnd+'%')))\
             .order_by(wrkwnrln.c.werknemerID)
         rpwrkwnrln = conn.execute(selwrkwnrln)  
+        logger.debug("controleUren(mjrmnd=%s,m_email=%s): rpwrkwnrln → %s", mjrmnd, m_email, rpwrkwnrln)
         for rec in rpwrkwnrln:
             if rec[5] == '100%':
                 uren100 = uren100+rec[4]
@@ -263,18 +353,22 @@ def controleUren(mjrmnd, m_email):
                                                  
         if uren100+verlof+extraverl+feestdag+geoorlverz+ziek+dokter < int(rppar[1]):
             urengemaakt = uren100+verlof+extraverl+feestdag+geoorlverz+ziek+dokter
+            logger.debug("controleUren(mjrmnd=%s,m_email=%s): urengemaakt → %s", mjrmnd, m_email, urengemaakt)
             gegevens = str(record[2])+' '+"{:8.8}".format(record[3])+' '+"{:16.16}"\
                           .format(record[4])+"{:>12.0f}".format(rppar[1])+\
                           "{:>12.2f}".format(urengemaakt)+'\n'
             open (filename,'a').write(gegevens)
+            logger.debug("controleUren(mjrmnd=%s,m_email=%s): gegevens → %s", mjrmnd, m_email, gegevens)
             csvgegevens = str(record[2])+'|'+record[3]+'|'+record[5]\
                +'|'+record[4]+'|'+"{:>12.0f}".format(rppar[1])+'|'+\
                "{:>12.2f}".format(urengemaakt)
+            logger.debug("controleUren(mjrmnd=%s,m_email=%s): csvgegevens → %s", mjrmnd, m_email, csvgegevens)
             open (csvfilename,'a').write(str(csvgegevens))
             open (csvfilename,'a').write('\n')
             rgl += 1
                             
     class Widget(QDialog):
+        logger.debug("<<< Exiting controleUren(mjrmnd=%s,m_email=%s)", mjrmnd, m_email)
         def __init__(self, parent=None):
             super(Widget, self).__init__(parent)
             self.setWindowTitle("Controle uren per periode")

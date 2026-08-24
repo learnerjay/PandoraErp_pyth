@@ -1,23 +1,32 @@
 import re
+import logging
+logger = logging.getLogger(__name__)
 
 def _11check(zoekterm):
+    logger.debug(">>> Entering _11check(zoekterm=%s)", zoekterm)
     number = str(zoekterm)
+    logger.debug("_11check(zoekterm=%s): number → %s", zoekterm, number)
     total = 0       
     fullnumber = number                       
+    logger.debug("_11check(zoekterm=%s): total → %s", zoekterm, total)
     for i in range(8):
         total += int(fullnumber[i])*(9-i)
+        logger.debug("_11check(zoekterm=%s): fullnumber → %s", zoekterm, fullnumber)
         checkdigit = total % 11
     if checkdigit == 10:
         checkdigit = 0
     if checkdigit == int(fullnumber[8]):
         return True
     else:
+        logger.debug("<<< Exiting _11check(zoekterm=%s)", zoekterm)
         return False
 
 def zt(zoekterm, valnr):
+    logger.debug(">>> Entering zt(zoekterm=%s,valnr=%s)", zoekterm, valnr)
     if valnr == 1:
         #accountnr
         ab = re.compile("^([1]{1}[0-9]{8})+$")
+        logger.debug("zt(zoekterm=%s,valnr=%s): ab → %s", zoekterm, valnr, ab)
         if ab.match(zoekterm) and _11check(zoekterm):
             return(True)
         else:
@@ -188,6 +197,7 @@ def zt(zoekterm, valnr):
     elif valnr == 24:
         #categorie loonuren 
         item = False
+        logger.debug("zt(zoekterm=%s,valnr=%s): item → %s", zoekterm, valnr, item)
         if zoekterm.upper().startswith(('10','12','15','2','F','D','Z','V','E','R','G','O')):
             item = True
         return(item)
@@ -204,4 +214,5 @@ def zt(zoekterm, valnr):
         if ab.match(zoekterm):
             return(True)
         else:
+            logger.debug("<<< Exiting zt(zoekterm=%s,valnr=%s)", zoekterm, valnr)
             return(False)       

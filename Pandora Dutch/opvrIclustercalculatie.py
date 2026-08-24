@@ -7,45 +7,65 @@ from PyQt5.QtWidgets import  QDialog, QLabel, QGridLayout,\
 from sqlalchemy import (Table, Column, Integer, String, Float,\
                         MetaData, create_engine, ForeignKey)
 from sqlalchemy.sql import select, update, insert, and_, func
+import logging
+logger = logging.getLogger(__name__)
 
 def windowSluit(self, m_email):
+    logger.debug(">>> Entering windowSluit(m_email=%s)", m_email)
     self.close()
     hoofdMenu(m_email)
+    logger.debug("<<< Exiting windowSluit(m_email=%s)", m_email)
 
 def calcBestaatniet():
+    logger.debug(">>> Entering calcBestaatniet()")
     msg = QMessageBox()
+    logger.debug("calcBestaatniet(): msg → %s", msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg')) 
     msg.setIcon(QMessageBox.Warning)
     msg.setText('Calculatie is niet aanwezig!')
     msg.setWindowTitle('INVOEREN')
+    logger.debug("<<< Exiting calcBestaatniet()")
     msg.exec_()
 
 def noRecord(message):
+    logger.debug(">>> Entering noRecord(message=%s)", message)
     msg = QMessageBox()
+    logger.debug("noRecord(message=%s): msg → %s", message, msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     msg.setIcon(QMessageBox.Warning)
     msg.setText(message)
     msg.setWindowTitle('Geen Record')
+    logger.debug("<<< Exiting noRecord(message=%s)", message)
     msg.exec_()
     
 def printing():
+    logger.debug(">>> Entering printing()")
     msg = QMessageBox()
+    logger.debug("printing(): msg → %s", msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg')) 
     msg.setIcon(QMessageBox.Information)
     msg.setText('Ogenblik afdrukken wordt gestart!')
     msg.setWindowTitle('AFDRUKKEN')
+    logger.debug("<<< Exiting printing()")
     msg.exec_()
      
 def zoekCalculatie(m_email):
+    logger.debug(">>> Entering zoekCalculatie(m_email=%s)", m_email)
     class Widget(QDialog):
         def __init__(self, parent=None):
             super(Widget, self).__init__(parent)
+            logger.debug(">>> Entering __init__(parent=%s)", parent)
             self.setWindowTitle("Calculeren / Opvragen / Printen")
             self.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     
+            logger.debug("__init__(parent=%s): pixmap → %s", parent, pixmap)
+            logger.debug("__init__(parent=%s): input_validator → %s", parent, input_validator)
+            logger.debug("__init__(parent=%s): zkcalcEdit → %s", parent, zkcalcEdit)
+            logger.debug("__init__(parent=%s): self.Calculatie → %s", parent, self.Calculatie)
+            logger.debug("__init__(self=%s,parent=%s): zkcalcEdit → %s", self, parent, zkcalcEdit)
             self.setFont(QFont('Arial', 10))
   
             self.Calculatie = QLabel()
@@ -54,18 +74,28 @@ def zoekCalculatie(m_email):
             zkcalcEdit.setFont(QFont("Arial",10))
             zkcalcEdit.textChanged.connect(self.zkcalcChanged)
             reg_ex = QRegExp('^[1-9]{1}[0-9]{0,8}$')
+            logger.debug("__init__(self=%s,parent=%s): reg_ex → %s", self, parent, reg_ex)
+            logger.debug("__init__(parent=%s): reg_ex → %s", parent, reg_ex)
             input_validator = QRegExpValidator(reg_ex, zkcalcEdit)
+            logger.debug("__init__(self=%s,parent=%s): input_validator → %s", self, parent, input_validator)
             zkcalcEdit.setValidator(input_validator)  
             
             grid = QGridLayout()
+            logger.debug("__init__(self=%s,parent=%s): grid → %s", self, parent, grid)
+            logger.debug("__init__(parent=%s): grid → %s", parent, grid)
             grid.setSpacing(20)
                           
             lbl = QLabel()
+            logger.debug("__init__(self=%s,parent=%s): lbl → %s", self, parent, lbl)
+            logger.debug("__init__(parent=%s): lbl → %s", parent, lbl)
             pixmap = QPixmap('./images/logos/verbinding.jpg')
+            logger.debug("__init__(self=%s,parent=%s): pixmap → %s", self, parent, pixmap)
             lbl.setPixmap(pixmap)
             grid.addWidget(lbl , 0, 0, 1, 2)
             
             lbl1 = QLabel('Calculatienummer\nof werkorder.')  
+            logger.debug("__init__(self=%s,parent=%s): lbl1 → %s", self, parent, lbl1)
+            logger.debug("__init__(parent=%s): lbl1 → %s", parent, lbl1)
             lbl1.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
             grid.addWidget(lbl1, 1, 0)
             grid.addWidget(zkcalcEdit, 1, 1)
@@ -76,11 +106,15 @@ def zoekCalculatie(m_email):
             grid.addWidget(QLabel('\u00A9 2017 all rights reserved dj.jansen@casema.nl'), 4, 0, 1, 2, Qt.AlignCenter)
              
             logo = QLabel()
+            logger.debug("__init__(self=%s,parent=%s): logo → %s", self, parent, logo)
+            logger.debug("__init__(parent=%s): logo → %s", parent, logo)
             pixmap = QPixmap('./images/logos/logo.jpg')
             logo.setPixmap(pixmap)
             grid.addWidget(logo , 0, 1, 1, 1, Qt.AlignRight)
    
             applyBtn = QPushButton('Zoeken')
+            logger.debug("__init__(self=%s,parent=%s): applyBtn → %s", self, parent, applyBtn)
+            logger.debug("__init__(parent=%s): applyBtn → %s", parent, applyBtn)
             applyBtn.clicked.connect(self.accept)
     
             grid.addWidget(applyBtn, 3, 1)
@@ -89,23 +123,34 @@ def zoekCalculatie(m_email):
             applyBtn.setStyleSheet("color: black;  background-color: gainsboro")
             
             cancelBtn = QPushButton('Sluiten')
+            logger.debug("__init__(self=%s,parent=%s): cancelBtn → %s", self, parent, cancelBtn)
+            logger.debug("__init__(parent=%s): cancelBtn → %s", parent, cancelBtn)
             cancelBtn.clicked.connect(lambda: windowSluit(self, m_email))
     
             grid.addWidget(cancelBtn, 3, 0, 1, 1,Qt.AlignRight)
+            logger.debug("<<< Exiting __init__(parent=%s)", parent)
             cancelBtn.setFont(QFont("Arial",10))
             cancelBtn.setFixedWidth(100)
             cancelBtn.setStyleSheet("color: black;  background-color: gainsboro")
              
         def zkcalcChanged(self, text):
+            logger.debug(">>> Entering zkcalcChanged(text=%s)", text)
+            logger.debug("zkcalcChanged(self=%s,text=%s): Calculatie → %s", self, text, Calculatie)
             self.Calculatie.setText(text)
+            logger.debug("<<< Exiting zkcalcChanged(text=%s)", text)
              
         def returnCalculatie(self):
+            logger.debug(">>> Entering returnCalculatie()")
+            logger.debug("<<< Exiting returnCalculatie()")
             return self.Calculatie.text()
         
         @staticmethod
         def getData(parent=None):
+            logger.debug(">>> Entering getData(parent=%s)", parent)
             dialog = Widget(parent)
+            logger.debug("getData(parent=%s): dialog → %s", parent, dialog)
             dialog.exec_()
+            logger.debug("<<< Exiting getData(parent=%s)", parent)
             return [dialog.returnCalculatie()]       
 
     window = Widget()
@@ -142,6 +187,7 @@ def zoekCalculatie(m_email):
         opvragenCalc(rpcl[0], rpcl[1], rpcl[2], rpcl[3], m_email)
            
 def opvragenCalc(mcalnr, mwerkomschr,mverw, mwerknr, m_email):
+    logger.debug(">>> Entering opvragenCalc(mcalnr=%s,mwerkomschr=%s,mverw=%s,mwerknr=%s,m_email=%s)", mcalnr, mwerkomschr, mverw, mwerknr, m_email)
     class MainWindow(QDialog):
         def __init__(self):
             QDialog.__init__(self)
@@ -212,7 +258,9 @@ def opvragenCalc(mcalnr, mwerkomschr,mverw, mwerknr, m_email):
     zoekCalculatie(m_email)
    
 def opbouwRp(mcalnr, mwerkomschr, mverw, mwerknr, m_email):
+    logger.debug(">>> Entering opbouwRp(mcalnr=%s,mwerkomschr=%s,mverw=%s,mwerknr=%s,m_email=%s)", mcalnr, mwerkomschr, mverw, mwerknr, m_email)
     metadata = MetaData()
+    logger.debug("opbouwRp(mcalnr=%s,mwerkomschr=%s,mverw=%s,mwerknr=%s,m_email=%s): metadata → %s", mcalnr, mwerkomschr, mverw, mwerknr, m_email, metadata)
     icalculaties = Table('icalculaties', metadata,
         Column('icalcID', Integer(), primary_key=True),
         Column('iclusterID', None, ForeignKey('iclusters.iclusterID')),
@@ -241,12 +289,18 @@ def opbouwRp(mcalnr, mwerkomschr, mverw, mwerknr, m_email):
     engine = create_engine('postgresql+psycopg2://postgres@localhost/bisystem')
     con = engine.connect()
     selpar = select([params_finance]).order_by(params_finance.c.financeID)
+    logger.debug("opbouwRp(mcalnr=%s,mwerkomschr=%s,mverw=%s,mwerknr=%s,m_email=%s): selpar → %s", mcalnr, mwerkomschr, mverw, mwerknr, m_email, selpar)
     rppar = con.execute(selpar).fetchall()
     selpar1 = select([params_hours]).order_by(params_hours.c.rateID)
+    logger.debug("opbouwRp(mcalnr=%s,mwerkomschr=%s,mverw=%s,mwerknr=%s,m_email=%s): rppar → %s", mcalnr, mwerkomschr, mverw, mwerknr, m_email, rppar)
     rppar1 = con.execute(selpar1).fetchall()
     
+    logger.debug("opbouwRp(mcalnr=%s,mwerkomschr=%s,mverw=%s,mwerknr=%s,m_email=%s): selpar1 → %s", mcalnr, mwerkomschr, mverw, mwerknr, m_email, selpar1)
     engine = create_engine('postgresql+psycopg2://postgres@localhost/bisystem')
+    logger.debug("opbouwRp(mcalnr=%s,mwerkomschr=%s,mverw=%s,mwerknr=%s,m_email=%s): engine → %s", mcalnr, mwerkomschr, mverw, mwerknr, m_email, engine)
     con = engine.connect()
+    logger.debug("opbouwRp(mcalnr=%s,mwerkomschr=%s,mverw=%s,mwerknr=%s,m_email=%s): con → %s", mcalnr, mwerkomschr, mverw, mwerknr, m_email, con)
+    logger.debug("opbouwRp(mcalnr=%s,mwerkomschr=%s,mverw=%s,mwerknr=%s,m_email=%s): rppar1 → %s", mcalnr, mwerkomschr, mverw, mwerknr, m_email, rppar1)
     selmat=select([icalculaties, icluster_artikelen, artikelen]).where(and_(\
             icalculaties.c.icalculatie == mcalnr,\
             icalculaties.c.iclusterID == icluster_artikelen.c.iclusterID,\
@@ -259,6 +313,7 @@ def opbouwRp(mcalnr, mwerkomschr, mverw, mwerknr, m_email):
            materialen = icalculaties.c.materialen+rij[2]*rij[8]*rij[10]*(1+rppar[6][1]))
         con.execute(updcalmat)
    
+        logger.debug("opbouwRp(mcalnr=%s,mwerkomschr=%s,mverw=%s,mwerknr=%s,m_email=%s): selmat → %s", mcalnr, mwerkomschr, mverw, mwerknr, m_email, selmat)
     metadata = MetaData()
     icalculaties = Table('icalculaties', metadata,
         Column('icalcID', Integer(), primary_key=True),
@@ -398,12 +453,14 @@ def opbouwRp(mcalnr, mwerkomschr, mverw, mwerknr, m_email):
     engine = create_engine('postgresql+psycopg2://postgres@localhost/bisystem')
     con = engine.connect()
     
+    logger.debug("opbouwRp(mcalnr=%s,mwerkomschr=%s,mverw=%s,mwerknr=%s,m_email=%s): iclusters → %s", mcalnr, mwerkomschr, mverw, mwerknr, m_email, iclusters)
     selcalc = select([icalculaties]).where(icalculaties.c.icalculatie == int(mcalnr))
     rpcalc = con.execute(selcalc)
     selclart = select([icluster_artikelen,artikelen]).where(and_(icluster_artikelen.c.\
       artikelID == artikelen.c.artikelID, icalculaties.c.iclusterID ==\
       icluster_artikelen.c.iclusterID, icalculaties.c.icalculatie == (int(mcalnr))))\
       .order_by(icluster_artikelen.c.iclusterID, icluster_artikelen.c.artikelID)
+    logger.debug("opbouwRp(mcalnr=%s,mwerkomschr=%s,mverw=%s,mwerknr=%s,m_email=%s): materiaallijsten → %s", mcalnr, mwerkomschr, mverw, mwerknr, m_email, materiaallijsten)
     rpclart = con.execute(selclart)
     for record in rpcalc:
         updcalc = update(icalculaties).where(and_(icalculaties.c.icalculatie == record[3],\
@@ -505,40 +562,57 @@ def opbouwRp(mcalnr, mwerkomschr, mverw, mwerknr, m_email):
            (icalculaties.c.montage+iclusters.c.montage)*rppar1[34][1]*icalculaties.c.hoeveelheid+\
            (icalculaties.c.smontage+iclusters.c.smontage)*rppar1[34][1])
         con.execute(updcalc)
+        logger.debug("opbouwRp(mcalnr=%s,mwerkomschr=%s,mverw=%s,mwerknr=%s,m_email=%s): selcalc → %s", mcalnr, mwerkomschr, mverw, mwerknr, m_email, selcalc)
+        logger.debug("opbouwRp(mcalnr=%s,mwerkomschr=%s,mverw=%s,mwerknr=%s,m_email=%s): rpcalc → %s", mcalnr, mwerkomschr, mverw, mwerknr, m_email, rpcalc)
         for row in rpclart:
             selart = select([materiaallijsten.c.artikelID, materiaallijsten.c.icalculatie]).where(and_(materiaallijsten.\
                 c.artikelID == row[1], materiaallijsten.c.icalculatie == record[3]))
             rpart = con.execute(selart).first()
+            logger.debug("opbouwRp(mcalnr=%s,mwerkomschr=%s,mverw=%s,mwerknr=%s,m_email=%s): selclart → %s", mcalnr, mwerkomschr, mverw, mwerknr, m_email, selclart)
             if rpart:
                 updmatlijst = update(materiaallijsten).where(and_(materiaallijsten.c.\
                   artikelID == row[1], materiaallijsten.c.icalculatie == record[3]))\
                  .values(hoeveelheid = materiaallijsten.c.hoeveelheid+(record[5]*row[3]),\
                 artikelprijs = row[6]*(1+rppar[6][1]), subtotaal = materiaallijsten.\
                 c.subtotaal+record[5]*row[3]*row[6]*(1+rppar[6][1]))
+                logger.debug("opbouwRp(mcalnr=%s,mwerkomschr=%s,mverw=%s,mwerknr=%s,m_email=%s): rpclart → %s", mcalnr, mwerkomschr, mverw, mwerknr, m_email, rpclart)
+                logger.debug("opbouwRp(mcalnr=%s,mwerkomschr=%s,mverw=%s,mwerknr=%s,m_email=%s): updcalc → %s", mcalnr, mwerkomschr, mverw, mwerknr, m_email, updcalc)
+                logger.debug("opbouwRp(mcalnr=%s,mwerkomschr=%s,mverw=%s,mwerknr=%s,m_email=%s): zagen → %s", mcalnr, mwerkomschr, mverw, mwerknr, m_email, zagen)
                 con.execute(updmatlijst)
             elif not rpart:
                 mmatlijstnr = (con.execute(select([func.max(materiaallijsten.c.matlijstID,\
                         type_=Integer).label('mmatlijstnr')])).scalar())
                 mmatlijstnr += 1
+                logger.debug("opbouwRp(mcalnr=%s,mwerkomschr=%s,mverw=%s,mwerknr=%s,m_email=%s): szagen → %s", mcalnr, mwerkomschr, mverw, mwerknr, m_email, szagen)
                 insmatlijst = insert(materiaallijsten).values(matlijstID = mmatlijstnr,\
                     icalculatie = record[3], artikelID = row[1],\
                     hoeveelheid = record[5]*row[3], resterend = record[5]*row[3],\
                     artikelprijs = row[6]*(1+rppar[6][1]),\
                     subtotaal = record[5]*row[3]*row[6]*(1+rppar[6][1]))
+                logger.debug("opbouwRp(mcalnr=%s,mwerkomschr=%s,mverw=%s,mwerknr=%s,m_email=%s): schaven → %s", mcalnr, mwerkomschr, mverw, mwerknr, m_email, schaven)
                 con.execute(insmatlijst)
         selber = select([icalculaties.c.icalcID, icalculaties.c.icalculatie])\
                            .where(icalculaties.c.icalculatie == mcalnr)
+        logger.debug("opbouwRp(mcalnr=%s,mwerkomschr=%s,mverw=%s,mwerknr=%s,m_email=%s): steken → %s", mcalnr, mwerkomschr, mverw, mwerknr, m_email, steken)
+        logger.debug("opbouwRp(mcalnr=%s,mwerkomschr=%s,mverw=%s,mwerknr=%s,m_email=%s): sschaven → %s", mcalnr, mwerkomschr, mverw, mwerknr, m_email, sschaven)
+        logger.debug("opbouwRp(mcalnr=%s,mwerkomschr=%s,mverw=%s,mwerknr=%s,m_email=%s): ssteken → %s", mcalnr, mwerkomschr, mverw, mwerknr, m_email, ssteken)
         rpselber = con.execute(selber)
         for regel in rpselber:
             updber = update(icalculaties).where(icalculaties.c.icalculatie==mcalnr)\
              .values(prijs=icalculaties.c.materialen+icalculaties.c.lonen,\
               werkomschrijving = mwerkomschr)
+            logger.debug("opbouwRp(mcalnr=%s,mwerkomschr=%s,mverw=%s,mwerknr=%s,m_email=%s): boren → %s", mcalnr, mwerkomschr, mverw, mwerknr, m_email, boren)
+            logger.debug("opbouwRp(mcalnr=%s,mwerkomschr=%s,mverw=%s,mwerknr=%s,m_email=%s): sboren → %s", mcalnr, mwerkomschr, mverw, mwerknr, m_email, sboren)
+            logger.debug("opbouwRp(mcalnr=%s,mwerkomschr=%s,mverw=%s,mwerknr=%s,m_email=%s): frezen → %s", mcalnr, mwerkomschr, mverw, mwerknr, m_email, frezen)
             con.execute(updber)
     opvragenCalc(mcalnr, mwerkomschr, mverw, mwerknr, m_email)
+    logger.debug("<<< Exiting opbouwRp(mcalnr=%s,mwerkomschr=%s,mverw=%s,mwerknr=%s,m_email=%s)", mcalnr, mwerkomschr, mverw, mwerknr, m_email)
                         
 def printCalculatie(mcalnr, mwerknr):
+    logger.debug(">>> Entering printCalculatie(mcalnr=%s,mwerknr=%s)", mcalnr, mwerknr)
     from sys import platform
     metadata = MetaData()
+    logger.debug("printCalculatie(mcalnr=%s,mwerknr=%s): metadata → %s", mcalnr, mwerknr, metadata)
     icalculaties = Table('icalculaties', metadata,
         Column('icalcID', Integer(), primary_key=True),
         Column('iclusterID', None, ForeignKey('iclusters.iclusterID')),
@@ -553,22 +627,31 @@ def printCalculatie(mcalnr, mwerknr):
         Column('werkomschrijving', String))
     
     engine = create_engine('postgresql+psycopg2://postgres@localhost/bisystem')
+    logger.debug("printCalculatie(mcalnr=%s,mwerknr=%s): engine → %s", mcalnr, mwerknr, engine)
     con = engine.connect()
+    logger.debug("printCalculatie(mcalnr=%s,mwerknr=%s): con → %s", mcalnr, mwerknr, con)
     
     selcal = select([icalculaties]).where(icalculaties.c.icalculatie == mcalnr)
+    logger.debug("printCalculatie(mcalnr=%s,mwerknr=%s): selcal → %s", mcalnr, mwerknr, selcal)
     rpcal = con.execute(selcal)
+    logger.debug("printCalculatie(mcalnr=%s,mwerknr=%s): rpcal → %s", mcalnr, mwerknr, rpcal)
     
     mblad = 1
+    logger.debug("printCalculatie(mcalnr=%s,mwerknr=%s): mblad → %s", mcalnr, mwerknr, mblad)
     rgl = 0
     mmat = 0
+    logger.debug("printCalculatie(mcalnr=%s,mwerknr=%s): mmat → %s", mcalnr, mwerknr, mmat)
     mlon = 0
+    logger.debug("printCalculatie(mcalnr=%s,mwerknr=%s): mlon → %s", mcalnr, mwerknr, mlon)
     mtotaal = 0
+    logger.debug("printCalculatie(mcalnr=%s,mwerknr=%s): mtotaal → %s", mcalnr, mwerknr, mtotaal)
     for row in rpcal:
         if rgl == 0 or rgl%55 == 0:
             if platform == 'win32':
                 filename = '.\\forms\\Intern_Clustercalculaties\\clustercalculatie-'+str(row[3])+'-'+str(mwerknr)+'.txt'
             else:
                 filename = './forms/Intern_Clustercalculaties/clustercalculatie-'+str(row[3])+'-'+str(mwerknr)+'.txt' 
+                logger.debug("printCalculatie(mcalnr=%s,mwerknr=%s): filename → %s", mcalnr, mwerknr, filename)
             kop=\
     ('Werkorder: '+ str(mwerknr)+' '+'{:<24.24s}'.format(str(row[10]))+'  Calculatie: '+str(row[3])+'  Datum: '+str(datetime.datetime.now())[0:10]+'  Blad : '+str(mblad)+'\n'+
     '================================================================================================\n'+
@@ -595,10 +678,13 @@ def printCalculatie(mcalnr, mwerknr):
     else:
         os.system("lpr "+filename)
     printing()
+    logger.debug("<<< Exiting printCalculatie(mcalnr=%s,mwerknr=%s)", mcalnr, mwerknr)
                      
 def printArtikellijst(mcalnr, mwerknr):
+    logger.debug(">>> Entering printArtikellijst(mcalnr=%s,mwerknr=%s)", mcalnr, mwerknr)
     from sys import platform
     metadata = MetaData()
+    logger.debug("printArtikellijst(mcalnr=%s,mwerknr=%s): metadata → %s", mcalnr, mwerknr, metadata)
     materiaallijsten = Table('materiaallijsten', metadata,
          Column('matlijstID', Integer, primary_key=True),
          Column('icalculatie', Integer),
@@ -616,23 +702,31 @@ def printArtikellijst(mcalnr, mwerknr):
         Column('koppelnummer', Integer))
                                     
     engine = create_engine('postgresql+psycopg2://postgres@localhost/bisystem')
+    logger.debug("printArtikellijst(mcalnr=%s,mwerknr=%s): engine → %s", mcalnr, mwerknr, engine)
     con = engine.connect()
+    logger.debug("printArtikellijst(mcalnr=%s,mwerknr=%s): con → %s", mcalnr, mwerknr, con)
     
     selmat = select([materiaallijsten, artikelen])\
       .where(and_(materiaallijsten.c.artikelID == artikelen.c.artikelID,\
       materiaallijsten.c.artikelID == artikelen.c.artikelID,\
       materiaallijsten.c.icalculatie == mcalnr)).order_by(materiaallijsten.c.artikelID)
+    logger.debug("printArtikellijst(mcalnr=%s,mwerknr=%s): selmat → %s", mcalnr, mwerknr, selmat)
     rpmat = con.execute(selmat)
+    logger.debug("printArtikellijst(mcalnr=%s,mwerknr=%s): rpmat → %s", mcalnr, mwerknr, rpmat)
     selkop = select([icalculaties]).where(icalculaties.c.icalculatie == mcalnr)
     rpkop = con.execute(selkop).first()
+    logger.debug("printArtikellijst(mcalnr=%s,mwerknr=%s): selkop → %s", mcalnr, mwerknr, selkop)
+    logger.debug("printArtikellijst(mcalnr=%s,mwerknr=%s): rpkop → %s", mcalnr, mwerknr, rpkop)
     mblad = 1
     rgl = 0
     for row in rpmat:
+        logger.debug("printArtikellijst(mcalnr=%s,mwerknr=%s): mblad → %s", mcalnr, mwerknr, mblad)
         if rgl == 0 or rgl%55 == 0:
             if platform == 'win32':
                filename = '.\\forms\\Intern_Clustercalculaties\\materiaallijst-'+str(rpkop[0])+'-'+str(mwerknr)+'.txt'
             else:
                filename = './forms/Intern_Clustercalculaties/materiaallijst-'+str(rpkop[0])+'-'+str(mwerknr)+'.txt'
+               logger.debug("printArtikellijst(mcalnr=%s,mwerknr=%s): filename → %s", mcalnr, mwerknr, filename)
             kop=\
     ('Werkorder:   '+ str(mwerknr)+'  Calculatie: '+str(rpkop[0])+'   Datum: '+str(datetime.datetime.now())[0:10]+'  Blad :  '+str(mblad)+'\n'+
     '=============================================================================================\n'+
@@ -651,8 +745,10 @@ def printArtikellijst(mcalnr, mwerknr):
     else:
         os.system("lpr "+filename)
     printing()
+    logger.debug("<<< Exiting printArtikellijst(mcalnr=%s,mwerknr=%s)", mcalnr, mwerknr)
         
 def toonCalculatie(mcalnr, mwerknr):
+    logger.debug(">>> Entering toonCalculatie(mcalnr=%s,mwerknr=%s)", mcalnr, mwerknr)
     class MyWindow(QDialog):
         def __init__(self, data_list, header, *args):
             QWidget.__init__(self, *args,)
@@ -673,18 +769,27 @@ def toonCalculatie(mcalnr, mwerknr):
             layout = QVBoxLayout(self)
             layout.addWidget(table_view)
             self.setLayout(layout)
+            logger.debug(">>> Entering __init__(parent=%s,mylist=%s,header=%s)", parent, mylist, header)
+            logger.debug("<<< Exiting __init__(parent=%s,mylist=%s,header=%s)", parent, mylist, header)
+            logger.debug("__init__(self=%s,parent=%s,mylist=%s,header=%s): self.mylist → %s", self, parent, mylist, header, self.mylist)
     
     class MyTableModel(QAbstractTableModel):
         def __init__(self, parent, mylist, header, *args):
+            logger.debug("__init__(self=%s,parent=%s,mylist=%s,header=%s): self.header → %s", self, parent, mylist, header, self.header)
             QAbstractTableModel.__init__(self, parent, *args)
             self.mylist = mylist
             self.header = header
         def rowCount(self, parent):
+            logger.debug(">>> Entering rowCount(parent=%s)", parent)
             return len(self.mylist)
         def columnCount(self, parent):
+            logger.debug(">>> Entering columnCount(parent=%s)", parent)
             return len(self.mylist[0])
         def data(self, index, role):
+            logger.debug(">>> Entering data(index=%s,role=%s)", index, role)
             veld = self.mylist[index.row()][index.column()]
+            logger.debug("data(index=%s,role=%s): veld → %s", index, role, veld)
+            logger.debug("data(self=%s,index=%s,role=%s): veld → %s", self, index, role, veld)
             if not index.isValid():
                 return None
             elif role == Qt.TextAlignmentRole and (type(veld) == float or type(veld) == int):
@@ -694,10 +799,13 @@ def toonCalculatie(mcalnr, mwerknr):
             if type(veld) == float:
                 return '{:12.2f}'.format(veld)
             else:
+                logger.debug("<<< Exiting data(index=%s,role=%s)", index, role)
                 return veld
         def headerData(self, col, orientation, role):
+            logger.debug(">>> Entering headerData(col=%s,orientation=%s,role=%s)", col, orientation, role)
             if orientation == Qt.Horizontal and role == Qt.DisplayRole:
                 return self.header[col]
+            logger.debug("<<< Exiting headerData(col=%s,orientation=%s,role=%s)", col, orientation, role)
             return None
              
     header = ['ID','Calculatie','Clusternr', 'Omschrijving','Werkomschrijving','Verwerkt',
@@ -790,13 +898,19 @@ def toonCalculatie(mcalnr, mwerknr):
         data_list += [(row)]
         
     def ShowSelection(idx):
+        logger.debug(">>> Entering ShowSelection(idx=%s)", idx)
         mcalnr = idx.data()
+        logger.debug("ShowSelection(idx=%s): mcalnr → %s", idx, mcalnr)
         if  idx.column() == 0:
                      
             engine = create_engine('postgresql+psycopg2://postgres@localhost/bisystem')
+            logger.debug("ShowSelection(idx=%s): engine → %s", idx, engine)
             con = engine.connect()
+            logger.debug("ShowSelection(idx=%s): con → %s", idx, con)
             selcal = select([icalculaties]).where(icalculaties.c.icalcID == mcalnr)
             rpcal = con.execute(selcal).first()
+            logger.debug("ShowSelection(idx=%s): selcal → %s", idx, selcal)
+            logger.debug("ShowSelection(idx=%s): rpcal → %s", idx, rpcal)
             
             header = ['ID','Calculatie','Clusternr', 'Omschrijving','Werkomschrijving',\
               'Verwerkt','Hoeveelheid','Eenheid', 'Koppelnr', 'Totaalprijs','Materialen',\
@@ -810,7 +924,9 @@ def toonCalculatie(mcalnr, mwerknr):
               'Moffelen','St.schilderen','Schilderen','St.spuiten','Spuiten','St.ponsen',\
               'Ponsen','St.persen','Persen','St.gritstralen','Gritstralen','St.montage','Montage']
                               
+            logger.debug("ShowSelection(idx=%s): header → %s", idx, header)
             class MainWindow(QDialog):
+                logger.debug("<<< Exiting ShowSelection(idx=%s)", idx)
                 def __init__(self):
                     QDialog.__init__(self)
                     
@@ -877,6 +993,16 @@ def toonCalculatie(mcalnr, mwerknr):
                                                                             
                     self.setLayout(grid)
                     self.setGeometry(100, 100, 150, 150)
+                    logger.debug(">>> Entering __init__(data_list=%s,header=%s)", data_list, header)
+                    logger.debug("__init__(data_list=%s,header=%s): font → %s", data_list, header, font)
+                    logger.debug("__init__(data_list=%s,header=%s): table_view → %s", data_list, header, table_view)
+                    logger.debug("__init__(data_list=%s,header=%s): table_model → %s", data_list, header, table_model)
+                    logger.debug("__init__(self=%s,data_list=%s,header=%s): table_model → %s", self, data_list, header, table_model)
+                    logger.debug("__init__(self=%s,data_list=%s,header=%s): table_view → %s", self, data_list, header, table_view)
+                    logger.debug("__init__(self=%s,data_list=%s,header=%s): font → %s", self, data_list, header, font)
+                    logger.debug("__init__(data_list=%s,header=%s): layout → %s", data_list, header, layout)
+                    logger.debug("__init__(self=%s,data_list=%s,header=%s): layout → %s", self, data_list, header, layout)
+                    logger.debug("<<< Exiting __init__(data_list=%s,header=%s)", data_list, header)
                             
             mainWin = MainWindow()
             mainWin.exec_()
@@ -885,8 +1011,10 @@ def toonCalculatie(mcalnr, mwerknr):
     win.exec_()
             
 def toonArtikellijst(mcalnr, mwerknr):
+    logger.debug(">>> Entering toonArtikellijst(mcalnr=%s,mwerknr=%s)", mcalnr, mwerknr)
     class MyWindow(QDialog):
         def __init__(self, data_list, header, *args):
+            logger.debug(">>> Entering __init__(data_list=%s,header=%s)", data_list, header)
             QWidget.__init__(self, *args,)
             self.setGeometry(100, 50, 1700, 900)
             self.setWindowTitle('Materiaallijst')
@@ -906,11 +1034,26 @@ def toonArtikellijst(mcalnr, mwerknr):
             layout = QVBoxLayout(self)
             layout.addWidget(table_view)
             self.setLayout(layout)
+            logger.debug("<<< Exiting __init__(data_list=%s,header=%s)", data_list, header)
     
     class MyTableModel(QAbstractTableModel):
         def __init__(self, parent, mylist, header, *args):
             QAbstractTableModel.__init__(self, parent, *args)
             self.mylist = mylist
+            logger.debug(">>> Entering __init__()")
+            logger.debug("__init__(): grid → %s", grid)
+            logger.debug("__init__(self=%s): grid → %s", self, grid)
+            logger.debug("__init__(): self.lbl → %s", self.lbl)
+            logger.debug("__init__(): self.pixmap → %s", self.pixmap)
+            logger.debug("__init__(self=%s): lbl → %s", self, lbl)
+            logger.debug("__init__(): self.logo → %s", self.logo)
+            logger.debug("__init__(self=%s): logo → %s", self, logo)
+            logger.debug("__init__(): self.Gegevens → %s", self.Gegevens)
+            logger.debug("__init__(): q1Edit → %s", q1Edit)
+            logger.debug("__init__(self=%s): q1Edit → %s", self, q1Edit)
+            logger.debug("__init__(): terugBtn → %s", terugBtn)
+            logger.debug("__init__(self=%s): terugBtn → %s", self, terugBtn)
+            logger.debug("<<< Exiting __init__()")
             self.header = header
         def rowCount(self, parent):
             return len(self.mylist)
@@ -973,25 +1116,34 @@ def toonArtikellijst(mcalnr, mwerknr):
         data_list += [(row)]
         
     def showSelart(idx):
+        logger.debug(">>> Entering showSelart(idx=%s)", idx)
         martnr = idx.data()
+        logger.debug("showSelart(idx=%s): martnr → %s", idx, martnr)
         if idx.column() == 0:
             engine = create_engine('postgresql+psycopg2://postgres@localhost/bisystem')
+            logger.debug("showSelart(idx=%s): engine → %s", idx, engine)
             con = engine.connect()
                 
+            logger.debug("showSelart(idx=%s): con → %s", idx, con)
             selmat = select([artikelen, materiaallijsten]).where(and_(\
                  materiaallijsten.c.artikelID == artikelen.c.artikelID,\
                  materiaallijsten.c.artikelID == int(martnr),\
                  materiaallijsten.c.icalculatie == mcalnr))\
                  .order_by(materiaallijsten.c.artikelID)
+            logger.debug("showSelart(idx=%s): selmat → %s", idx, selmat)
             rpmat = con.execute(selmat).first()
              
+            logger.debug("showSelart(idx=%s): rpmat → %s", idx, rpmat)
             header = ['Artikelnr','Omschrijving','Reserveringsaldo','LijstID',\
                'Calculatie','Werknummer','Orderinkoopnummer', 'Artikelnr',\
                'ArtikelPrijs','Hoeveelheid','Afroep','Resterend','Subtotaal',\
                'Reserveringdatum','Levering eind','Levering begin', 'Categorie']
 
+            logger.debug("showSelart(idx=%s): header → %s", idx, header)
             class MainWindow(QDialog):
+                logger.debug("<<< Exiting showSelart(idx=%s)", idx)
                 def __init__(self):
+                    logger.debug(">>> Entering __init__()")
                     QDialog.__init__(self)
 
                     grid = QGridLayout()
@@ -1081,6 +1233,7 @@ def toonArtikellijst(mcalnr, mwerknr):
 
                     self.setLayout(grid)
                     self.setGeometry(400, 200, 150, 150)
+                    logger.debug("<<< Exiting __init__()")
 
             mainWin = MainWindow()
             mainWin.exec_()

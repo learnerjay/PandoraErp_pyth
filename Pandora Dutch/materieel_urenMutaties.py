@@ -5,56 +5,82 @@ from PyQt5.QtWidgets import QLineEdit, QGridLayout, QDialog, QLabel,\
             QPushButton, QComboBox, QCheckBox, QMessageBox
 from sqlalchemy import (Table, Column, Integer, String, MetaData, create_engine,\
                         ForeignKey, Float, select, update, insert, func, and_, Boolean)
+import logging
+logger = logging.getLogger(__name__)
 
 def _11check(mcontr):
+    logger.debug(">>> Entering _11check(mcontr=%s)", mcontr)
     try:
         number = str(mcontr)
+        logger.debug("_11check(mcontr=%s): number → %s", mcontr, number)
         total = 0
+        logger.debug("_11check(mcontr=%s): total → %s", mcontr, total)
         fullnumber = number
         for i in range(8):
+            logger.debug("_11check(mcontr=%s): fullnumber → %s", mcontr, fullnumber)
             total += int(fullnumber[i])*(9-i)
             checkdigit = total %11 %10
         if checkdigit == int(fullnumber[8]):
             return True
     except:
+        logger.error("Exception in _11check(mcontr=%s)", mcontr, exc_info=True)
+        logger.debug("<<< Exiting _11check(mcontr=%s)", mcontr)
         return False
 
 def Alert(e):
+    logger.debug(">>> Entering Alert(e=%s)", e)
     msg = QMessageBox()
+    logger.debug("Alert(e=%s): msg → %s", e, msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     msg.setIcon(QMessageBox.Critical)
     msg.setText('Fout melding '+str(e))
     msg.setWindowTitle('Fout melding')
+    logger.debug("<<< Exiting Alert(e=%s)", e)
     msg.exec_()
 
 def windowSluit(self, m_email):
+    logger.debug(">>> Entering windowSluit(m_email=%s)", m_email)
     self.close()
     hoofdMenu(m_email)
+    logger.debug("<<< Exiting windowSluit(m_email=%s)", m_email)
     
 def info():
+    logger.debug(">>> Entering info()")
     class Widget(QDialog):
         def __init__(self, parent=None):
             super(Widget, self).__init__(parent)
+            logger.debug(">>> Entering __init__(parent=%s)", parent)
             self.setWindowTitle("Informatiie ERP Systeem Pandora")
             self.setWindowIcon(QIcon('./images/logos/logo.jpg'))
             self.setFont(QFont('Arial', 10))
             grid = QGridLayout()
+            logger.debug("__init__(self=%s,parent=%s): grid → %s", self, parent, grid)
+            logger.debug("__init__(parent=%s): grid → %s", parent, grid)
             grid.setSpacing(20)
             
+            logger.debug("__init__(parent=%s): pixmap → %s", parent, pixmap)
             lblinfo = QLabel('Boeking uren Materieel')
+            logger.debug("__init__(self=%s,parent=%s): lblinfo → %s", self, parent, lblinfo)
+            logger.debug("__init__(parent=%s): lblinfo → %s", parent, lblinfo)
             grid.addWidget(lblinfo, 0, 0, 1, 2, Qt.AlignCenter)
             lblinfo.setStyleSheet("color:rgba(45, 83, 115, 255); font: 25pt Comic Sans MS")
             
             logo = QLabel()
+            logger.debug("__init__(self=%s,parent=%s): logo → %s", self, parent, logo)
+            logger.debug("__init__(parent=%s): logo → %s", parent, logo)
             pixmap = QPixmap('./images/logos/logo.jpg')
+            logger.debug("__init__(self=%s,parent=%s): pixmap → %s", self, parent, pixmap)
             logo.setPixmap(pixmap)
             grid.addWidget(logo , 0, 0, 1, 1, Qt.AlignRight)
         
             lbl = QLabel()
+            logger.debug("__init__(self=%s,parent=%s): lbl → %s", self, parent, lbl)
+            logger.debug("__init__(parent=%s): lbl → %s", parent, lbl)
             pixmap = QPixmap('./images/logos/verbinding.jpg')
             lbl.setPixmap(pixmap)
             grid.addWidget(lbl, 0, 0)
+            logger.debug("<<< Exiting __init__(parent=%s)", parent)
             
             infolbl = QLabel(
       '''

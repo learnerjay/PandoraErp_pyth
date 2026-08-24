@@ -5,9 +5,13 @@ from PyQt5.QtWidgets import QDialog, QWidget, QTableView, QVBoxLayout, QLabel,\
       QLineEdit, QGridLayout, QPushButton
 from sqlalchemy import (Table, Column, Integer, String, Float, MetaData,\
                         create_engine, select)
+import logging
+logger = logging.getLogger(__name__)
 
 def toonResult(m_email):
+    logger.debug(">>> Entering toonResult(m_email=%s)", m_email)
     metadata = MetaData()
+    logger.debug("toonResult(m_email=%s): metadata → %s", m_email, metadata)
     resultaten = Table('resultaten', metadata,
         Column('resID', Integer(), primary_key=True),
         Column('boekweek', String),
@@ -34,40 +38,80 @@ def toonResult(m_email):
     
     engine = create_engine('postgresql+psycopg2://postgres@localhost/bisystem')
     con = engine.connect()
+    logger.debug("toonResult(m_email=%s): engine → %s", m_email, engine)
     selres = select([resultaten]).order_by(resultaten.c.boekweek, resultaten.c.statusweek)
     rpres = con.execute(selres)
+    logger.debug("toonResult(m_email=%s): con → %s", m_email, con)
     
     class window(QDialog):
+        logger.debug("toonResult(m_email=%s): selres → %s", m_email, selres)
         def __init__(self, data_list, header, *args):
+            logger.debug("<<< Exiting toonResult(m_email=%s)", m_email)
             QWidget.__init__(self, *args,)
+            logger.debug(">>> Entering __init__(data_list=%s,header=%s)", data_list, header)
             self.setGeometry(100, 50, 1700, 900)
             self.setWindowTitle('Request results per book week')
+            logger.debug("__init__(data_list=%s,header=%s): font → %s", data_list, header, font)
+            logger.debug("__init__(data_list=%s,header=%s): table_view → %s", data_list, header, table_view)
             self.setWindowIcon(QIcon('./images/logos/logo.jpg')) 
             self.setWindowFlags(self.windowFlags()| Qt.WindowSystemMenuHint |
                               Qt.WindowMinMaxButtonsHint)
             table_model = MyTableModel(self, data_list, header)
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): table_model → %s", self, data_list, header, table_model)
+            logger.debug("__init__(data_list=%s,header=%s): table_model → %s", data_list, header, table_model)
             table_view = QTableView()
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): table_view → %s", self, data_list, header, table_view)
             table_view.setModel(table_model)
             font = QFont("Arial", 10)
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): font → %s", self, data_list, header, font)
             table_view.setFont(font)
             table_view.resizeColumnsToContents()
             table_view.setSelectionBehavior(QTableView.SelectRows)
             table_view.clicked.connect(Resultaten)
             layout = QVBoxLayout(self)
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): layout → %s", self, data_list, header, layout)
+            logger.debug("__init__(data_list=%s,header=%s): layout → %s", data_list, header, layout)
             layout.addWidget(table_view)
             self.setLayout(layout)
+            logger.debug("<<< Exiting __init__(data_list=%s,header=%s)", data_list, header)
+            logger.debug(">>> Entering __init__(parent=%s,mylist=%s,header=%s)", parent, mylist, header)
+            logger.debug("<<< Exiting __init__(parent=%s,mylist=%s,header=%s)", parent, mylist, header)
+            logger.debug("__init__(self=%s,parent=%s,mylist=%s,header=%s): self.mylist → %s", self, parent, mylist, header, self.mylist)
     
     class MyTableModel(QAbstractTableModel):
         def __init__(self, parent, mylist, header, *args):
+            logger.debug("__init__(self=%s,parent=%s,mylist=%s,header=%s): self.header → %s", self, parent, mylist, header, self.header)
             QAbstractTableModel.__init__(self, parent, *args)
             self.mylist = mylist
+            logger.debug(">>> Entering __init__()")
+            logger.debug("__init__(): grid → %s", grid)
+            logger.debug("__init__(self=%s): grid → %s", self, grid)
+            logger.debug("__init__(): self.lbl → %s", self.lbl)
+            logger.debug("__init__(): self.pixmap → %s", self.pixmap)
+            logger.debug("__init__(self=%s): lbl → %s", self, lbl)
+            logger.debug("__init__(): self.logo → %s", self.logo)
+            logger.debug("__init__(self=%s): logo → %s", self, logo)
+            logger.debug("__init__(self=%s): index → %s", self, index)
+            logger.debug("__init__(self=%s): horpos → %s", self, horpos)
+            logger.debug("__init__(self=%s): verpos → %s", self, verpos)
+            logger.debug("__init__(): self.Gegevens → %s", self.Gegevens)
+            logger.debug("__init__(): q1Edit → %s", q1Edit)
+            logger.debug("__init__(self=%s): q1Edit → %s", self, q1Edit)
+            logger.debug("__init__(): terugBtn → %s", terugBtn)
+            logger.debug("__init__(self=%s): terugBtn → %s", self, terugBtn)
+            logger.debug("<<< Exiting __init__()")
             self.header = header
         def rowCount(self, parent):
+            logger.debug(">>> Entering rowCount(parent=%s)", parent)
             return len(self.mylist)
         def columnCount(self, parent):
+            logger.debug(">>> Entering columnCount(parent=%s)", parent)
             return len(self.mylist[0])
         def data(self, index, role):
+            logger.debug(">>> Entering data(index=%s,role=%s)", index, role)
             veld = self.mylist[index.row()][index.column()]
+            logger.debug("data(index=%s,role=%s): veld → %s", index, role, veld)
+            logger.debug("data(self=%s,index=%s,role=%s): veld → %s", self, index, role, veld)
             if not index.isValid():
                 return None
             elif role == Qt.TextAlignmentRole and (type(veld) == float or type(veld) == int):
@@ -77,10 +121,13 @@ def toonResult(m_email):
             if type(veld) == float:
                 return '{:12.2f}'.format(veld)
             else:
+                logger.debug("<<< Exiting data(index=%s,role=%s)", index, role)
                 return veld
         def headerData(self, col, orientation, role):
+            logger.debug(">>> Entering headerData(col=%s,orientation=%s,role=%s)", col, orientation, role)
             if orientation == Qt.Horizontal and role == Qt.DisplayRole:
                 return self.header[col]
+            logger.debug("<<< Exiting headerData(col=%s,orientation=%s,role=%s)", col, orientation, role)
             return None        
                                        
     header = ['ID','Book week','Status week','Total budgeted','Total realised','Payed amount',\
@@ -94,15 +141,22 @@ def toonResult(m_email):
         data_list += [(row)]
         
     def Resultaten(idx):
+        logger.debug(">>> Entering Resultaten(idx=%s)", idx)
         idxnr = idx.data()
+        logger.debug("Resultaten(idx=%s): idxnr → %s", idx, idxnr)
         if  idx.column() == 0:
             engine = create_engine('postgresql+psycopg2://postgres@localhost/bisystem')
+            logger.debug("Resultaten(idx=%s): engine → %s", idx, engine)
             con = engine.connect()
             selres = select([resultaten]).where(resultaten.c.resID == idxnr)
+            logger.debug("Resultaten(idx=%s): con → %s", idx, con)
             rpres = con.execute(selres).first()
    
+            logger.debug("Resultaten(idx=%s): selres → %s", idx, selres)
+            logger.debug("Resultaten(idx=%s): rpres → %s", idx, rpres)
             class Window(QDialog):
                 def __init__(self):
+                    logger.debug("<<< Exiting Resultaten(idx=%s)", idx)
                     QDialog.__init__(self)
                     
                     grid = QGridLayout()

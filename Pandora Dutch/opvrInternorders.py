@@ -7,48 +7,69 @@ from PyQt5.QtWidgets import QWidget, QTableView, QVBoxLayout, QComboBox,\
 from sqlalchemy import (Table, Column, Integer, String, Float, ForeignKey,\
                         MetaData, create_engine)
 from sqlalchemy.sql import select, and_, update
+import logging
+logger = logging.getLogger(__name__)
 
 def jaarweek():
+    logger.debug(">>> Entering jaarweek()")
     dt = datetime.datetime.now()
+    logger.debug("jaarweek(): dt → %s", dt)
     week = ('0'+str(dt.isocalendar()[1]))[-2:]
+    logger.debug("jaarweek(): week → %s", week)
     jaar = str(dt.isocalendar()[0])
     jrwk = jaar+week
+    logger.debug("jaarweek(): jrwk → %s", jrwk)
+    logger.debug("jaarweek(): jaar → %s", jaar)
+    logger.debug("<<< Exiting jaarweek()")
     return(jrwk)
     
 def ongInvoer():
+    logger.debug(">>> Entering ongInvoer()")
     msg = QMessageBox()
+    logger.debug("ongInvoer(): msg → %s", msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     msg.setIcon(QMessageBox.Warning)
     msg.setText('Foutieve invoer\nzoekterm opnieuw invoeren s.v.p.!')
     msg.setWindowTitle('Artikelen opvragen')               
+    logger.debug("<<< Exiting ongInvoer()")
     msg.exec_()
     
 def geenRecord():
+    logger.debug(">>> Entering geenRecord()")
     msg = QMessageBox()
+    logger.debug("geenRecord(): msg → %s", msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     msg.setIcon(QMessageBox.Warning)
     msg.setText('Geen record gevonden\nmaak een andere selektie s.v.p.!')
     msg.setWindowTitle('Artikelen opvragen')               
+    logger.debug("<<< Exiting geenRecord()")
     msg.exec_() 
  
 def windowSluit(self, m_email):
+    logger.debug(">>> Entering windowSluit(m_email=%s)", m_email)
     self.close()
     hoofdMenu(m_email)
+    logger.debug("<<< Exiting windowSluit(m_email=%s)", m_email)
     
 def printing():
+    logger.debug(">>> Entering printing()")
     msg = QMessageBox()
+    logger.debug("printing(): msg → %s", msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg')) 
     msg.setIcon(QMessageBox.Information)
     msg.setText('Ogenblik afdrukken wordt gestart!')
     msg.setWindowTitle('Werkgeleidebrief printen')
+    logger.debug("<<< Exiting printing()")
     msg.exec_()
     
 def printWerkbrief(mwerkorder, rpord, header):
+    logger.debug(">>> Entering printWerkbrief(mwerkorder=%s,rpord=%s,header=%s)", mwerkorder, rpord, header)
     from sys import platform
     metadata = MetaData()
+    logger.debug("printWerkbrief(mwerkorder=%s,rpord=%s,header=%s): metadata → %s", mwerkorder, rpord, header, metadata)
     materiaallijsten = Table('materiaallijsten', metadata,
          Column('matlijstID', Integer, primary_key=True),
          Column('werknummerID', Integer),
@@ -64,23 +85,30 @@ def printWerkbrief(mwerkorder, rpord, header):
          Column('locatie_magazijn', String))
                                     
     engine = create_engine('postgresql+psycopg2://postgres@localhost/bisystem')
+    logger.debug("printWerkbrief(mwerkorder=%s,rpord=%s,header=%s): engine → %s", mwerkorder, rpord, header, engine)
     con = engine.connect()
+    logger.debug("printWerkbrief(mwerkorder=%s,rpord=%s,header=%s): con → %s", mwerkorder, rpord, header, con)
     
     selmat = select([materiaallijsten, artikelen])\
       .where(and_(materiaallijsten.c.artikelID == artikelen.c.artikelID,\
       materiaallijsten.c.werknummerID == mwerkorder)).order_by(materiaallijsten.c.artikelID)
+    logger.debug("printWerkbrief(mwerkorder=%s,rpord=%s,header=%s): selmat → %s", mwerkorder, rpord, header, selmat)
     rpmat = con.execute(selmat)
+    logger.debug("printWerkbrief(mwerkorder=%s,rpord=%s,header=%s): rpmat → %s", mwerkorder, rpord, header, rpmat)
     mblad = 1
     rgl = 0
+    logger.debug("printWerkbrief(mwerkorder=%s,rpord=%s,header=%s): mblad → %s", mwerkorder, rpord, header, mblad)
     if platform == 'win32':
         filename = '.\\forms\\Werkbrieven\\materiaallijst_werkgeleidebrief_'+str(mwerkorder)+'.txt'
     else:
         filename = './forms/Werkbrieven/materiaallijst_werkgeleidebrief_'+str(mwerkorder)+'.txt'
+        logger.debug("printWerkbrief(mwerkorder=%s,rpord=%s,header=%s): filename → %s", mwerkorder, rpord, header, filename)
     kop=\
     ('Materiaallijst van Werkorder:   '+ str(mwerkorder)+'   Datum: '+str(datetime.datetime.now())[0:10]+'  Blad :  '+str(mblad)+'\n'+
     '=====================================================================================================\n'+
     'Regel Artikelnr    Omschrijving                       Eenheid       Aantal      Ontvangen            \n'+
     '=====================================================================================================\n')
+    logger.debug("printWerkbrief(mwerkorder=%s,rpord=%s,header=%s): kop → %s", mwerkorder, rpord, header, kop)
     for row in rpmat:
         if rgl == 0 or rgl%57 == 0:
             if rgl == 0:
@@ -100,6 +128,7 @@ def printWerkbrief(mwerkorder, rpord, header):
         filename1 = '.\\forms\\Werkbrieven\\werkgeleidebrief_'+str(mwerkorder)+'.txt' 
     else:
         filename1 = './forms/Werkbrieven/werkgeleidebrief_'+str(mwerkorder)+'.txt'
+        logger.debug("printWerkbrief(mwerkorder=%s,rpord=%s,header=%s): filename1 → %s", mwerkorder, rpord, header, filename1)
     kop1=\
      ('Werkorder: '+str(mwerkorder)+' Werkgeleidebrief  Datum: '+str(datetime.datetime.now())[0:10]+' Blad : '+str(mblad)+'\n'\
      '=====================================================================================================\n'+
@@ -114,15 +143,21 @@ def printWerkbrief(mwerkorder, rpord, header):
             mblad += 1
         if k == 3 and column:
             mhoev = column
+            logger.debug("printWerkbrief(mwerkorder=%s,rpord=%s,header=%s): mhoev → %s", mwerkorder, rpord, header, mhoev)
         if k>17 and k<90 and column:
             if header[k][0] == 'S':
                 mstel = column
+                logger.debug("printWerkbrief(mwerkorder=%s,rpord=%s,header=%s): mstel → %s", mwerkorder, rpord, header, mstel)
             elif header[k][0] == 'B':
                 rgl += 1
                 mstuk = column
+                logger.debug("printWerkbrief(mwerkorder=%s,rpord=%s,header=%s): mstuk → %s", mwerkorder, rpord, header, mstuk)
                 mgemaakt = rpord[k+1]
+                logger.debug("printWerkbrief(mwerkorder=%s,rpord=%s,header=%s): mgemaakt → %s", mwerkorder, rpord, header, mgemaakt)
                 msubtot=mstuk*mhoev+mstel
+                logger.debug("printWerkbrief(mwerkorder=%s,rpord=%s,header=%s): msubtot → %s", mwerkorder, rpord, header, msubtot)
                 mbewerking = header[k][1:].title()
+                logger.debug("printWerkbrief(mwerkorder=%s,rpord=%s,header=%s): mbewerking → %s", mwerkorder, rpord, header, mbewerking)
                 open(filename1,'a').write('{:>5s}'.format(str(rgl))+' '+'{:<23.23s}'\
                   .format(mbewerking)+'{:>8.2f}'.format(mhoev)+'  '+'{:>8.2f}'.format(mstel)+\
                    '  '+'{:>8.2f}'.format(mstuk)+'    '+'{:>8.2f}'.format(msubtot)+'{:>15.2f}'\
@@ -137,31 +172,45 @@ def printWerkbrief(mwerkorder, rpord, header):
         os.system("lpr "+filename1)
  
     printing()
+    logger.debug("<<< Exiting printWerkbrief(mwerkorder=%s,rpord=%s,header=%s)", mwerkorder, rpord, header)
             
 def zoeken(m_email):
+    logger.debug(">>> Entering zoeken(m_email=%s)", m_email)
     class Widget(QDialog):
         def __init__(self, parent=None):
             super(Widget, self).__init__(parent)
+            logger.debug(">>> Entering __init__(parent=%s)", parent)
             self.setWindowTitle("Orders_ Intern")
             self.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     
             self.setFont(QFont('Arial', 10))
+            logger.debug("__init__(parent=%s): pixmap → %s", parent, pixmap)
    
             grid = QGridLayout()
+            logger.debug("__init__(self=%s,parent=%s): grid → %s", self, parent, grid)
+            logger.debug("__init__(parent=%s): grid → %s", parent, grid)
             grid.setSpacing(20)
                           
             lbl = QLabel()
+            logger.debug("__init__(self=%s,parent=%s): lbl → %s", self, parent, lbl)
+            logger.debug("__init__(parent=%s): lbl → %s", parent, lbl)
             pixmap = QPixmap('./images/logos/verbinding.jpg')
+            logger.debug("__init__(self=%s,parent=%s): pixmap → %s", self, parent, pixmap)
             lbl.setPixmap(pixmap)
             grid.addWidget(lbl , 1, 0, 1, 2)
             
             logo = QLabel()
+            logger.debug("__init__(self=%s,parent=%s): logo → %s", self, parent, logo)
+            logger.debug("__init__(parent=%s): logo → %s", parent, logo)
             pixmap = QPixmap('./images/logos/logo.jpg')
             logo.setPixmap(pixmap)
             grid.addWidget(logo , 1, 1, 1, 1, Qt.AlignRight)
             
             self.Keuze = QLabel()
+            logger.debug("__init__(parent=%s): self.Keuze → %s", parent, self.Keuze)
             k0Edit = QComboBox()
+            logger.debug("__init__(self=%s,parent=%s): k0Edit → %s", self, parent, k0Edit)
+            logger.debug("__init__(parent=%s): k0Edit → %s", parent, k0Edit)
             k0Edit.setFixedWidth(280)
             k0Edit.setFont(QFont("Arial", 10))
             k0Edit.setStyleSheet("color: black;  background-color: #F8F7EE")
@@ -173,17 +222,26 @@ def zoeken(m_email):
             k0Edit.addItem('5. Gefilterd op (deel) datum afgemeld')
             k0Edit.addItem('6. Gefilterd op voorgangstatus A-H')
             k0Edit.addItem('7. Gefilterd op (deel) omschrijving')
+            logger.debug("__init__(parent=%s): input_validator → %s", parent, input_validator)
+            logger.debug("__init__(parent=%s): reg_ex → %s", parent, reg_ex)
+            logger.debug("__init__(parent=%s): zktermEdit → %s", parent, zktermEdit)
+            logger.debug("__init__(parent=%s): self.Zoekterm → %s", parent, self.Zoekterm)
+            logger.debug("__init__(self=%s,parent=%s): zktermEdit → %s", self, parent, zktermEdit)
             k0Edit.activated[str].connect(self.k0Changed)
             
             self.Zoekterm = QLabel()
             zktermEdit = QLineEdit()
             zktermEdit.setFont(QFont("Arial",10))
             reg_ex = QRegExp('^.{0,40}$')
+            logger.debug("__init__(self=%s,parent=%s): reg_ex → %s", self, parent, reg_ex)
             input_validator = QRegExpValidator(reg_ex, zktermEdit)
+            logger.debug("__init__(self=%s,parent=%s): input_validator → %s", self, parent, input_validator)
             zktermEdit.setValidator(input_validator)
             zktermEdit.textChanged.connect(self.zktermChanged)
          
             lbl1 = QLabel('Zoekterm')  
+            logger.debug("__init__(self=%s,parent=%s): lbl1 → %s", self, parent, lbl1)
+            logger.debug("__init__(parent=%s): lbl1 → %s", parent, lbl1)
             lbl1.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
                            
             grid.addWidget(k0Edit, 2, 1)   
@@ -196,6 +254,8 @@ def zoeken(m_email):
             grid.addWidget(QLabel('\u00A9 2017 all rights reserved dj.jansen@casema.nl'), 5, 0, 1, 3, Qt.AlignCenter)
     
             applyBtn = QPushButton('Zoeken')
+            logger.debug("__init__(self=%s,parent=%s): applyBtn → %s", self, parent, applyBtn)
+            logger.debug("__init__(parent=%s): applyBtn → %s", parent, applyBtn)
             applyBtn.clicked.connect(self.accept)
                 
             grid.addWidget(applyBtn, 4, 1, 1, 1, Qt.AlignRight)
@@ -204,29 +264,55 @@ def zoeken(m_email):
             applyBtn.setStyleSheet("color: black;  background-color: gainsboro")
             
             cancelBtn = QPushButton('Sluiten')
+            logger.debug("__init__(self=%s,parent=%s): cancelBtn → %s", self, parent, cancelBtn)
+            logger.debug("__init__(parent=%s): cancelBtn → %s", parent, cancelBtn)
             cancelBtn.clicked.connect(lambda: windowSluit(self, m_email))
 
             grid.addWidget(cancelBtn, 4, 1)
+            logger.debug("<<< Exiting __init__(parent=%s)", parent)
             cancelBtn.setFont(QFont("Arial",10))
             cancelBtn.setFixedWidth(120)
             cancelBtn.setStyleSheet("color: black;  background-color: gainsboro")
+            logger.debug(">>> Entering __init__(data_list=%s,header=%s)", data_list, header)
+            logger.debug("__init__(data_list=%s,header=%s): font → %s", data_list, header, font)
+            logger.debug("__init__(data_list=%s,header=%s): table_view → %s", data_list, header, table_view)
+            logger.debug("__init__(data_list=%s,header=%s): table_model → %s", data_list, header, table_model)
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): table_model → %s", self, data_list, header, table_model)
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): table_view → %s", self, data_list, header, table_view)
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): font → %s", self, data_list, header, font)
+            logger.debug("__init__(data_list=%s,header=%s): layout → %s", data_list, header, layout)
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): layout → %s", self, data_list, header, layout)
+            logger.debug("<<< Exiting __init__(data_list=%s,header=%s)", data_list, header)
             
         def k0Changed(self, text):
+            logger.debug(">>> Entering k0Changed(text=%s)", text)
+            logger.debug("k0Changed(self=%s,text=%s): Keuze → %s", self, text, Keuze)
             self.Keuze.setText(text)
+            logger.debug("<<< Exiting k0Changed(text=%s)", text)
                 
         def zktermChanged(self, text):
+            logger.debug(">>> Entering zktermChanged(text=%s)", text)
+            logger.debug("zktermChanged(self=%s,text=%s): Zoekterm → %s", self, text, Zoekterm)
             self.Zoekterm.setText(text)
+            logger.debug("<<< Exiting zktermChanged(text=%s)", text)
      
         def returnk0(self):
+            logger.debug(">>> Entering returnk0()")
+            logger.debug("<<< Exiting returnk0()")
             return self.Keuze.text()
             
         def returnzkterm(self):
+            logger.debug(">>> Entering returnzkterm()")
+            logger.debug("<<< Exiting returnzkterm()")
             return self.Zoekterm.text()
             
         @staticmethod
         def getData(parent=None):
+            logger.debug(">>> Entering getData(parent=%s)", parent)
             dialog = Widget(parent)
+            logger.debug("getData(parent=%s): dialog → %s", parent, dialog)
             dialog.exec_()
+            logger.debug("<<< Exiting getData(parent=%s)", parent)
             return [dialog.returnk0(), dialog.returnzkterm()]       
 
     window = Widget()
@@ -244,8 +330,10 @@ def zoeken(m_email):
     toonOrders(keuze, zoekterm, m_email)  
 
 def toonOrders(keuze,zoekterm, m_email):
+    logger.debug(">>> Entering toonOrders(keuze=%s,zoekterm=%s,m_email=%s)", keuze, zoekterm, m_email)
     import validZt
     class MyWindow(QDialog):
+        logger.debug("<<< Exiting toonOrders(keuze=%s,zoekterm=%s,m_email=%s)", keuze, zoekterm, m_email)
         def __init__(self, data_list, header, *args):
             QWidget.__init__(self, *args,)
             self.setGeometry(100, 50, 1700, 900)
@@ -264,18 +352,231 @@ def toonOrders(keuze,zoekterm, m_email):
             layout = QVBoxLayout(self)
             layout.addWidget(table_view)
             self.setLayout(layout)
+            logger.debug(">>> Entering __init__(parent=%s,mylist=%s,header=%s)", parent, mylist, header)
+            logger.debug("<<< Exiting __init__(parent=%s,mylist=%s,header=%s)", parent, mylist, header)
+            logger.debug("__init__(self=%s,parent=%s,mylist=%s,header=%s): self.mylist → %s", self, parent, mylist, header, self.mylist)
     
     class MyTableModel(QAbstractTableModel):
         def __init__(self, parent, mylist, header, *args):
+            logger.debug("__init__(self=%s,parent=%s,mylist=%s,header=%s): self.header → %s", self, parent, mylist, header, self.header)
             QAbstractTableModel.__init__(self, parent, *args)
             self.mylist = mylist
+            logger.debug(">>> Entering __init__()")
+            logger.debug("__init__(): grid → %s", grid)
+            logger.debug("__init__(self=%s): grid → %s", self, grid)
+            logger.debug("__init__(): pixmap → %s", pixmap)
+            logger.debug("__init__(): q1Edit → %s", q1Edit)
+            logger.debug("__init__(self=%s): q1Edit → %s", self, q1Edit)
+            logger.debug("__init__(): q2Edit → %s", q2Edit)
+            logger.debug("__init__(self=%s): q2Edit → %s", self, q2Edit)
+            logger.debug("__init__(): q3Edit → %s", q3Edit)
+            logger.debug("__init__(self=%s): q3Edit → %s", self, q3Edit)
+            logger.debug("__init__(): q4Edit → %s", q4Edit)
+            logger.debug("__init__(self=%s): q4Edit → %s", self, q4Edit)
+            logger.debug("__init__(): q5Edit → %s", q5Edit)
+            logger.debug("__init__(self=%s): q5Edit → %s", self, q5Edit)
+            logger.debug("__init__(): q6Edit → %s", q6Edit)
+            logger.debug("__init__(self=%s): q6Edit → %s", self, q6Edit)
+            logger.debug("__init__(): q7Edit → %s", q7Edit)
+            logger.debug("__init__(self=%s): q7Edit → %s", self, q7Edit)
+            logger.debug("__init__(): q8Edit → %s", q8Edit)
+            logger.debug("__init__(self=%s): q8Edit → %s", self, q8Edit)
+            logger.debug("__init__(): q9Edit → %s", q9Edit)
+            logger.debug("__init__(self=%s): q9Edit → %s", self, q9Edit)
+            logger.debug("__init__(): q10Edit → %s", q10Edit)
+            logger.debug("__init__(self=%s): q10Edit → %s", self, q10Edit)
+            logger.debug("__init__(): q11Edit → %s", q11Edit)
+            logger.debug("__init__(self=%s): q11Edit → %s", self, q11Edit)
+            logger.debug("__init__(): q12Edit → %s", q12Edit)
+            logger.debug("__init__(self=%s): q12Edit → %s", self, q12Edit)
+            logger.debug("__init__(): q13Edit → %s", q13Edit)
+            logger.debug("__init__(self=%s): q13Edit → %s", self, q13Edit)
+            logger.debug("__init__(): q14Edit → %s", q14Edit)
+            logger.debug("__init__(self=%s): q14Edit → %s", self, q14Edit)
+            logger.debug("__init__(): q15Edit → %s", q15Edit)
+            logger.debug("__init__(self=%s): q15Edit → %s", self, q15Edit)
+            logger.debug("__init__(): q16Edit → %s", q16Edit)
+            logger.debug("__init__(self=%s): q16Edit → %s", self, q16Edit)
+            logger.debug("__init__(): q17Edit → %s", q17Edit)
+            logger.debug("__init__(self=%s): q17Edit → %s", self, q17Edit)
+            logger.debug("__init__(): q18Edit → %s", q18Edit)
+            logger.debug("__init__(self=%s): q18Edit → %s", self, q18Edit)
+            logger.debug("__init__(): q19Edit → %s", q19Edit)
+            logger.debug("__init__(self=%s): q19Edit → %s", self, q19Edit)
+            logger.debug("__init__(): q20Edit → %s", q20Edit)
+            logger.debug("__init__(self=%s): q20Edit → %s", self, q20Edit)
+            logger.debug("__init__(): u1Edit → %s", u1Edit)
+            logger.debug("__init__(self=%s): u1Edit → %s", self, u1Edit)
+            logger.debug("__init__(): u2Edit → %s", u2Edit)
+            logger.debug("__init__(self=%s): u2Edit → %s", self, u2Edit)
+            logger.debug("__init__(): u3Edit → %s", u3Edit)
+            logger.debug("__init__(self=%s): u3Edit → %s", self, u3Edit)
+            logger.debug("__init__(): u4Edit → %s", u4Edit)
+            logger.debug("__init__(self=%s): u4Edit → %s", self, u4Edit)
+            logger.debug("__init__(): u5Edit → %s", u5Edit)
+            logger.debug("__init__(self=%s): u5Edit → %s", self, u5Edit)
+            logger.debug("__init__(): u6Edit → %s", u6Edit)
+            logger.debug("__init__(self=%s): u6Edit → %s", self, u6Edit)
+            logger.debug("__init__(): u7Edit → %s", u7Edit)
+            logger.debug("__init__(self=%s): u7Edit → %s", self, u7Edit)
+            logger.debug("__init__(): u8Edit → %s", u8Edit)
+            logger.debug("__init__(self=%s): u8Edit → %s", self, u8Edit)
+            logger.debug("__init__(): u9Edit → %s", u9Edit)
+            logger.debug("__init__(self=%s): u9Edit → %s", self, u9Edit)
+            logger.debug("__init__(): u10Edit → %s", u10Edit)
+            logger.debug("__init__(self=%s): u10Edit → %s", self, u10Edit)
+            logger.debug("__init__(): u11Edit → %s", u11Edit)
+            logger.debug("__init__(self=%s): u11Edit → %s", self, u11Edit)
+            logger.debug("__init__(): u12Edit → %s", u12Edit)
+            logger.debug("__init__(self=%s): u12Edit → %s", self, u12Edit)
+            logger.debug("__init__(): u13Edit → %s", u13Edit)
+            logger.debug("__init__(self=%s): u13Edit → %s", self, u13Edit)
+            logger.debug("__init__(): u14Edit → %s", u14Edit)
+            logger.debug("__init__(self=%s): u14Edit → %s", self, u14Edit)
+            logger.debug("__init__(): u15Edit → %s", u15Edit)
+            logger.debug("__init__(self=%s): u15Edit → %s", self, u15Edit)
+            logger.debug("__init__(): u16Edit → %s", u16Edit)
+            logger.debug("__init__(self=%s): u16Edit → %s", self, u16Edit)
+            logger.debug("__init__(): u17Edit → %s", u17Edit)
+            logger.debug("__init__(self=%s): u17Edit → %s", self, u17Edit)
+            logger.debug("__init__(): u18Edit → %s", u18Edit)
+            logger.debug("__init__(self=%s): u18Edit → %s", self, u18Edit)
+            logger.debug("__init__(): u19Edit → %s", u19Edit)
+            logger.debug("__init__(self=%s): u19Edit → %s", self, u19Edit)
+            logger.debug("__init__(): u20Edit → %s", u20Edit)
+            logger.debug("__init__(self=%s): u20Edit → %s", self, u20Edit)
+            logger.debug("__init__(): u21Edit → %s", u21Edit)
+            logger.debug("__init__(self=%s): u21Edit → %s", self, u21Edit)
+            logger.debug("__init__(): u22Edit → %s", u22Edit)
+            logger.debug("__init__(self=%s): u22Edit → %s", self, u22Edit)
+            logger.debug("__init__(): u23Edit → %s", u23Edit)
+            logger.debug("__init__(self=%s): u23Edit → %s", self, u23Edit)
+            logger.debug("__init__(): u24Edit → %s", u24Edit)
+            logger.debug("__init__(self=%s): u24Edit → %s", self, u24Edit)
+            logger.debug("__init__(): u25Edit → %s", u25Edit)
+            logger.debug("__init__(self=%s): u25Edit → %s", self, u25Edit)
+            logger.debug("__init__(): u26Edit → %s", u26Edit)
+            logger.debug("__init__(self=%s): u26Edit → %s", self, u26Edit)
+            logger.debug("__init__(): u27Edit → %s", u27Edit)
+            logger.debug("__init__(self=%s): u27Edit → %s", self, u27Edit)
+            logger.debug("__init__(): u28Edit → %s", u28Edit)
+            logger.debug("__init__(self=%s): u28Edit → %s", self, u28Edit)
+            logger.debug("__init__(): u29Edit → %s", u29Edit)
+            logger.debug("__init__(self=%s): u29Edit → %s", self, u29Edit)
+            logger.debug("__init__(): u30Edit → %s", u30Edit)
+            logger.debug("__init__(self=%s): u30Edit → %s", self, u30Edit)
+            logger.debug("__init__(): u31Edit → %s", u31Edit)
+            logger.debug("__init__(self=%s): u31Edit → %s", self, u31Edit)
+            logger.debug("__init__(): u32Edit → %s", u32Edit)
+            logger.debug("__init__(self=%s): u32Edit → %s", self, u32Edit)
+            logger.debug("__init__(): u33Edit → %s", u33Edit)
+            logger.debug("__init__(self=%s): u33Edit → %s", self, u33Edit)
+            logger.debug("__init__(): u34Edit → %s", u34Edit)
+            logger.debug("__init__(self=%s): u34Edit → %s", self, u34Edit)
+            logger.debug("__init__(): u35Edit → %s", u35Edit)
+            logger.debug("__init__(self=%s): u35Edit → %s", self, u35Edit)
+            logger.debug("__init__(): u36Edit → %s", u36Edit)
+            logger.debug("__init__(self=%s): u36Edit → %s", self, u36Edit)
+            logger.debug("__init__(): u37Edit → %s", u37Edit)
+            logger.debug("__init__(self=%s): u37Edit → %s", self, u37Edit)
+            logger.debug("__init__(): u38Edit → %s", u38Edit)
+            logger.debug("__init__(self=%s): u38Edit → %s", self, u38Edit)
+            logger.debug("__init__(): u39Edit → %s", u39Edit)
+            logger.debug("__init__(self=%s): u39Edit → %s", self, u39Edit)
+            logger.debug("__init__(): u40Edit → %s", u40Edit)
+            logger.debug("__init__(self=%s): u40Edit → %s", self, u40Edit)
+            logger.debug("__init__(): u41Edit → %s", u41Edit)
+            logger.debug("__init__(self=%s): u41Edit → %s", self, u41Edit)
+            logger.debug("__init__(): u42Edit → %s", u42Edit)
+            logger.debug("__init__(self=%s): u42Edit → %s", self, u42Edit)
+            logger.debug("__init__(): u43Edit → %s", u43Edit)
+            logger.debug("__init__(self=%s): u43Edit → %s", self, u43Edit)
+            logger.debug("__init__(): u44Edit → %s", u44Edit)
+            logger.debug("__init__(self=%s): u44Edit → %s", self, u44Edit)
+            logger.debug("__init__(): u45Edit → %s", u45Edit)
+            logger.debug("__init__(self=%s): u45Edit → %s", self, u45Edit)
+            logger.debug("__init__(): u46Edit → %s", u46Edit)
+            logger.debug("__init__(self=%s): u46Edit → %s", self, u46Edit)
+            logger.debug("__init__(): u47Edit → %s", u47Edit)
+            logger.debug("__init__(self=%s): u47Edit → %s", self, u47Edit)
+            logger.debug("__init__(): u48Edit → %s", u48Edit)
+            logger.debug("__init__(self=%s): u48Edit → %s", self, u48Edit)
+            logger.debug("__init__(): u49Edit → %s", u49Edit)
+            logger.debug("__init__(self=%s): u49Edit → %s", self, u49Edit)
+            logger.debug("__init__(): u50Edit → %s", u50Edit)
+            logger.debug("__init__(self=%s): u50Edit → %s", self, u50Edit)
+            logger.debug("__init__(): u51Edit → %s", u51Edit)
+            logger.debug("__init__(self=%s): u51Edit → %s", self, u51Edit)
+            logger.debug("__init__(): u52Edit → %s", u52Edit)
+            logger.debug("__init__(self=%s): u52Edit → %s", self, u52Edit)
+            logger.debug("__init__(): u53Edit → %s", u53Edit)
+            logger.debug("__init__(self=%s): u53Edit → %s", self, u53Edit)
+            logger.debug("__init__(): u54Edit → %s", u54Edit)
+            logger.debug("__init__(self=%s): u54Edit → %s", self, u54Edit)
+            logger.debug("__init__(): u55Edit → %s", u55Edit)
+            logger.debug("__init__(self=%s): u55Edit → %s", self, u55Edit)
+            logger.debug("__init__(): u56Edit → %s", u56Edit)
+            logger.debug("__init__(self=%s): u56Edit → %s", self, u56Edit)
+            logger.debug("__init__(): u57Edit → %s", u57Edit)
+            logger.debug("__init__(self=%s): u57Edit → %s", self, u57Edit)
+            logger.debug("__init__(): u58Edit → %s", u58Edit)
+            logger.debug("__init__(self=%s): u58Edit → %s", self, u58Edit)
+            logger.debug("__init__(): u59Edit → %s", u59Edit)
+            logger.debug("__init__(self=%s): u59Edit → %s", self, u59Edit)
+            logger.debug("__init__(): u60Edit → %s", u60Edit)
+            logger.debug("__init__(self=%s): u60Edit → %s", self, u60Edit)
+            logger.debug("__init__(): u61Edit → %s", u61Edit)
+            logger.debug("__init__(self=%s): u61Edit → %s", self, u61Edit)
+            logger.debug("__init__(): u62Edit → %s", u62Edit)
+            logger.debug("__init__(self=%s): u62Edit → %s", self, u62Edit)
+            logger.debug("__init__(): u63Edit → %s", u63Edit)
+            logger.debug("__init__(self=%s): u63Edit → %s", self, u63Edit)
+            logger.debug("__init__(): u64Edit → %s", u64Edit)
+            logger.debug("__init__(self=%s): u64Edit → %s", self, u64Edit)
+            logger.debug("__init__(): u65Edit → %s", u65Edit)
+            logger.debug("__init__(self=%s): u65Edit → %s", self, u65Edit)
+            logger.debug("__init__(): u66Edit → %s", u66Edit)
+            logger.debug("__init__(self=%s): u66Edit → %s", self, u66Edit)
+            logger.debug("__init__(): u67Edit → %s", u67Edit)
+            logger.debug("__init__(self=%s): u67Edit → %s", self, u67Edit)
+            logger.debug("__init__(): u68Edit → %s", u68Edit)
+            logger.debug("__init__(self=%s): u68Edit → %s", self, u68Edit)
+            logger.debug("__init__(): u69Edit → %s", u69Edit)
+            logger.debug("__init__(self=%s): u69Edit → %s", self, u69Edit)
+            logger.debug("__init__(): u70Edit → %s", u70Edit)
+            logger.debug("__init__(self=%s): u70Edit → %s", self, u70Edit)
+            logger.debug("__init__(): u71Edit → %s", u71Edit)
+            logger.debug("__init__(self=%s): u71Edit → %s", self, u71Edit)
+            logger.debug("__init__(): u72Edit → %s", u72Edit)
+            logger.debug("__init__(self=%s): u72Edit → %s", self, u72Edit)
+            logger.debug("__init__(): u73Edit → %s", u73Edit)
+            logger.debug("__init__(self=%s): u73Edit → %s", self, u73Edit)
+            logger.debug("__init__(): lbl → %s", lbl)
+            logger.debug("__init__(self=%s): lbl → %s", self, lbl)
+            logger.debug("__init__(self=%s): pixmap → %s", self, pixmap)
+            logger.debug("__init__(): logo → %s", logo)
+            logger.debug("__init__(self=%s): logo → %s", self, logo)
+            logger.debug("__init__(): lbl1 → %s", lbl1)
+            logger.debug("__init__(self=%s): lbl1 → %s", self, lbl1)
+            logger.debug("__init__(): lbl2 → %s", lbl2)
+            logger.debug("__init__(self=%s): lbl2 → %s", self, lbl2)
+            logger.debug("__init__(): cancelBtn → %s", cancelBtn)
+            logger.debug("__init__(self=%s): cancelBtn → %s", self, cancelBtn)
+            logger.debug("__init__(): werkbriefBtn → %s", werkbriefBtn)
+            logger.debug("__init__(self=%s): werkbriefBtn → %s", self, werkbriefBtn)
+            logger.debug("<<< Exiting __init__()")
             self.header = header
         def rowCount(self, parent):
+            logger.debug(">>> Entering rowCount(parent=%s)", parent)
             return len(self.mylist)
         def columnCount(self, parent):
+            logger.debug(">>> Entering columnCount(parent=%s)", parent)
             return len(self.mylist[0])
         def data(self, index, role):
+            logger.debug(">>> Entering data(index=%s,role=%s)", index, role)
             veld = self.mylist[index.row()][index.column()]
+            logger.debug("data(index=%s,role=%s): veld → %s", index, role, veld)
+            logger.debug("data(self=%s,index=%s,role=%s): veld → %s", self, index, role, veld)
             if not index.isValid():
                 return None
             elif role == Qt.TextAlignmentRole and (type(veld) == float or type(veld) == int):
@@ -285,10 +586,13 @@ def toonOrders(keuze,zoekterm, m_email):
             if type(veld) == float:
                 return '{:12.2f}'.format(veld)
             else:
+                logger.debug("<<< Exiting data(index=%s,role=%s)", index, role)
                 return veld
         def headerData(self, col, orientation, role):
+            logger.debug(">>> Entering headerData(col=%s,orientation=%s,role=%s)", col, orientation, role)
             if orientation == Qt.Horizontal and role == Qt.DisplayRole:
                 return self.header[col]
+            logger.debug("<<< Exiting headerData(col=%s,orientation=%s,role=%s)", col, orientation, role)
             return None
               
     header = ['Werkorder', 'Omschrijving','Artikelnummer','Hoeveelheid',\
@@ -475,15 +779,22 @@ def toonOrders(keuze,zoekterm, m_email):
         data_list += [(row)]
         
     def ShowSelection(idx):
+        logger.debug(">>> Entering ShowSelection(idx=%s)", idx)
         mwerkorder = idx.data()
+        logger.debug("ShowSelection(idx=%s): mwerkorder → %s", idx, mwerkorder)
         if  idx.column() == 0:
             engine = create_engine('postgresql+psycopg2://postgres@localhost/bisystem')
+            logger.debug("ShowSelection(idx=%s): engine → %s", idx, engine)
             con = engine.connect()
             selord = select([orders_intern]).where(orders_intern.c.werkorderID == mwerkorder)
+            logger.debug("ShowSelection(idx=%s): con → %s", idx, con)
             rpord = con.execute(selord).first()
             
+            logger.debug("ShowSelection(idx=%s): selord → %s", idx, selord)
+            logger.debug("ShowSelection(idx=%s): rpord → %s", idx, rpord)
             class MainWindow(QDialog):
                 def __init__(self):
+                    logger.debug("<<< Exiting ShowSelection(idx=%s)", idx)
                     QDialog.__init__(self)
                     
                     grid = QGridLayout()

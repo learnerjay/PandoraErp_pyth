@@ -8,17 +8,23 @@ from PyQt5.QtCore import Qt, QRegExp
 from sqlalchemy import (Table, Column, Integer, String, MetaData,\
                           create_engine, func, ForeignKey)
 from sqlalchemy.sql import select
+import logging
+logger = logging.getLogger(__name__)
 
 def foutPostcode():
+    logger.debug(">>> Entering foutPostcode()")
     msg = QMessageBox()
+    logger.debug("foutPostcode(): msg → %s", msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     msg.setIcon(QMessageBox.Critical)
     msg.setText('Incorrect Zipcode inserted!')
     msg.setWindowTitle('ZIPCODE!')
+    logger.debug("<<< Exiting foutPostcode()")
     msg.exec_()
   
 def info():
+    logger.debug(">>> Entering info()")
     class Widget(QDialog):
         def __init__(self, parent=None):
             super(Widget, self).__init__(parent)

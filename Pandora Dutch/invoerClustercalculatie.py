@@ -8,8 +8,11 @@ from PyQt5.QtWidgets import QWidget, QTableView, QVBoxLayout, QComboBox,\
 from sqlalchemy import (Table, Column, Integer, String, Float,\
                         MetaData, create_engine, ForeignKey)
 from sqlalchemy.sql import select, insert, func, update, delete, and_
+import logging
+logger = logging.getLogger(__name__)
 
 def info():
+    logger.debug(">>> Entering info()")
     class Widget(QDialog):
         def __init__(self, parent=None):
             super(Widget, self).__init__(parent)

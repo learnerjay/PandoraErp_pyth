@@ -8,42 +8,56 @@ from PyQt5.QtWidgets import  QDialog, QLabel, QGridLayout,\
 from sqlalchemy import (Table, Column, Integer, String, Float,\
                         MetaData, create_engine, ForeignKey)
 from sqlalchemy.sql import select, update, insert, and_, func
+import logging
+logger = logging.getLogger(__name__)
 
 def windowSluit(self, m_email):
+    logger.debug(">>> Entering windowSluit(m_email=%s)", m_email)
     self.close()
     hoofdMenu(m_email)
+    logger.debug("<<< Exiting windowSluit(m_email=%s)", m_email)
     
 def foutWerknr():
+    logger.debug(">>> Entering foutWerknr()")
     msg = QMessageBox()
+    logger.debug("foutWerknr(): msg → %s", msg)
     msg.setFont(QFont("Arial", 10))
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg')) 
     msg.setIcon(QMessageBox.Warning)
     msg.setText('Order has not yet been obtained for this calculation\nOrder for Purchase cannot be printed yet!')
     msg.setWindowTitle('Work number')
+    logger.debug("<<< Exiting foutWerknr()")
     msg.exec_()
     
 def calcBestaatniet():
+    logger.debug(">>> Entering calcBestaatniet()")
     msg = QMessageBox()
+    logger.debug("calcBestaatniet(): msg → %s", msg)
     msg.setFont(QFont("Arial", 10))
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg')) 
     msg.setIcon(QMessageBox.Warning)
     msg.setText('Calculation is not present!')
     msg.setWindowTitle('Entry')
+    logger.debug("<<< Exiting calcBestaatniet()")
     msg.exec_()
     
 def printing():
+    logger.debug(">>> Entering printing()")
     msg = QMessageBox()
+    logger.debug("printing(): msg → %s", msg)
     msg.setFont(QFont("Arial", 10))
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg')) 
     msg.setIcon(QMessageBox.Information)
     msg.setText('Just a moment printing is started!')
     msg.setWindowTitle('Printing')
+    logger.debug("<<< Exiting printing()")
     msg.exec_()
      
 def zoekCalculatie(m_email):
+    logger.debug(">>> Entering zoekCalculatie(m_email=%s)", m_email)
     class Widget(QDialog):
         def __init__(self, parent=None):
             super(Widget, self).__init__(parent)
@@ -99,17 +113,26 @@ def zoekCalculatie(m_email):
             cancelBtn.setFont(QFont("Arial",10))
             cancelBtn.setFixedWidth(100)
             cancelBtn.setStyleSheet("color: black;  background-color: gainsboro")
+            logger.debug("<<< Exiting __init__(data_list=%s,header=%s)", data_list, header)
              
         def zkcalcChanged(self, text):
+            logger.debug(">>> Entering zkcalcChanged(text=%s)", text)
+            logger.debug("zkcalcChanged(self=%s,text=%s): Calculatie → %s", self, text, Calculatie)
             self.Calculatie.setText(text)
+            logger.debug("<<< Exiting zkcalcChanged(text=%s)", text)
              
         def returnCalculatie(self):
+            logger.debug(">>> Entering returnCalculatie()")
+            logger.debug("<<< Exiting returnCalculatie()")
             return self.Calculatie.text()
         
         @staticmethod
         def getData(parent=None):
+            logger.debug(">>> Entering getData(parent=%s)", parent)
             dialog = Widget(parent)
+            logger.debug("getData(parent=%s): dialog → %s", parent, dialog)
             dialog.exec_()
+            logger.debug("<<< Exiting getData(parent=%s)", parent)
             return [dialog.returnCalculatie()]       
 
     window = Widget()
@@ -145,6 +168,7 @@ def zoekCalculatie(m_email):
         opvragenCalc(rpcl[0], rpcl[1], rpcl[2], rpcl[3], m_email)
     
 def opvragenCalc(mcalnr, mwerkomschr,mverw, mwerknr, m_email):
+   logger.debug(">>> Entering opvragenCalc(mcalnr=%s,mwerkomschr=%s,mverw=%s,mwerknr=%s,m_email=%s)", mcalnr, mwerkomschr, mverw, mwerknr, m_email)
    class MainWindow(QDialog):
         def __init__(self):
             QDialog.__init__(self)
@@ -223,13 +247,24 @@ def opvragenCalc(mcalnr, mwerkomschr,mverw, mwerknr, m_email):
                                              
             self.setLayout(grid)
             self.setGeometry(600, 300, 150, 150)
+            logger.debug(">>> Entering __init__(data_list=%s,header=%s)", data_list, header)
+            logger.debug("__init__(data_list=%s,header=%s): font → %s", data_list, header, font)
+            logger.debug("__init__(data_list=%s,header=%s): table_view → %s", data_list, header, table_view)
+            logger.debug("__init__(data_list=%s,header=%s): table_model → %s", data_list, header, table_model)
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): table_model → %s", self, data_list, header, table_model)
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): table_view → %s", self, data_list, header, table_view)
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): font → %s", self, data_list, header, font)
+            logger.debug("__init__(data_list=%s,header=%s): layout → %s", data_list, header, layout)
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): layout → %s", self, data_list, header, layout)
      
    mainWin = MainWindow()
    mainWin.exec_()
    zoekCalculatie(m_email)
     
 def opbouwRp(mcalnr, mwerkomschr, mverw, mwerknr, m_email):
+    logger.debug(">>> Entering opbouwRp(mcalnr=%s,mwerkomschr=%s,mverw=%s,mwerknr=%s,m_email=%s)", mcalnr, mwerkomschr, mverw, mwerknr, m_email)
     metadata = MetaData()
+    logger.debug("opbouwRp(mcalnr=%s,mwerkomschr=%s,mverw=%s,mwerknr=%s,m_email=%s): metadata → %s", mcalnr, mwerkomschr, mverw, mwerknr, m_email, metadata)
     calculaties = Table('calculaties', metadata,
         Column('calcID', Integer(), primary_key=True),
         Column('clusterID', None, ForeignKey('clusters.clusterID')),
@@ -264,19 +299,27 @@ def opbouwRp(mcalnr, mwerkomschr, mverw, mwerknr, m_email):
     con = engine.connect()
     selpar = select([params_finance]).order_by(params_finance.c.financeID)
     rppar = con.execute(selpar).fetchall()
+    logger.debug("opbouwRp(mcalnr=%s,mwerkomschr=%s,mverw=%s,mwerknr=%s,m_email=%s): selpar → %s", mcalnr, mwerkomschr, mverw, mwerknr, m_email, selpar)
 
     selpar1 = select([params_hours]).order_by(params_hours.c.rateID)
+    logger.debug("opbouwRp(mcalnr=%s,mwerkomschr=%s,mverw=%s,mwerknr=%s,m_email=%s): rppar → %s", mcalnr, mwerkomschr, mverw, mwerknr, m_email, rppar)
     rppar1 = con.execute(selpar1).fetchall()
 
+    logger.debug("opbouwRp(mcalnr=%s,mwerkomschr=%s,mverw=%s,mwerknr=%s,m_email=%s): selpar1 → %s", mcalnr, mwerkomschr, mverw, mwerknr, m_email, selpar1)
     selpar2 = select([params_services]).order_by(params_services.c.servicesID)
     rppar2 = con.execute(selpar2).fetchall()
+    logger.debug("opbouwRp(mcalnr=%s,mwerkomschr=%s,mverw=%s,mwerknr=%s,m_email=%s): rppar1 → %s", mcalnr, mwerkomschr, mverw, mwerknr, m_email, rppar1)
 
     engine = create_engine('postgresql+psycopg2://postgres@localhost/bisystem')
+    logger.debug("opbouwRp(mcalnr=%s,mwerkomschr=%s,mverw=%s,mwerknr=%s,m_email=%s): engine → %s", mcalnr, mwerkomschr, mverw, mwerknr, m_email, engine)
+    logger.debug("opbouwRp(mcalnr=%s,mwerkomschr=%s,mverw=%s,mwerknr=%s,m_email=%s): selpar2 → %s", mcalnr, mwerkomschr, mverw, mwerknr, m_email, selpar2)
     con = engine.connect()
+    logger.debug("opbouwRp(mcalnr=%s,mwerkomschr=%s,mverw=%s,mwerknr=%s,m_email=%s): con → %s", mcalnr, mwerkomschr, mverw, mwerknr, m_email, con)
     selmat=select([calculaties, cluster_artikelen, artikelen]).where(and_(\
             calculaties.c.calculatie == mcalnr,\
             calculaties.c.clusterID == cluster_artikelen.c.clusterID,\
             cluster_artikelen.c.artikelID == artikelen.c.artikelID))
+    logger.debug("opbouwRp(mcalnr=%s,mwerkomschr=%s,mverw=%s,mwerknr=%s,m_email=%s): rppar2 → %s", mcalnr, mwerkomschr, mverw, mwerknr, m_email, rppar2)
     rpmat = con.execute(selmat)
     for rij in rpmat:
         updcalmat = update(calculaties).where(and_(calculaties.c.calculatie ==\
@@ -285,6 +328,7 @@ def opbouwRp(mcalnr, mwerkomschr, mverw, mwerknr, m_email):
         con.execute(updcalmat)
    
     metadata = MetaData()
+    logger.debug("opbouwRp(mcalnr=%s,mwerkomschr=%s,mverw=%s,mwerknr=%s,m_email=%s): selmat → %s", mcalnr, mwerkomschr, mverw, mwerknr, m_email, selmat)
     calculaties = Table('calculaties', metadata,
         Column('omschrijving', String),
         Column('werkomschrijving', String),
@@ -394,11 +438,13 @@ def opbouwRp(mcalnr, mwerkomschr, mverw, mwerknr, m_email):
     
     selcalc = select([calculaties, clusters]).where(and_(calculaties.c\
        .calculatie == int(mcalnr), calculaties.c.clusterID == clusters.c.clusterID))
+    logger.debug("opbouwRp(mcalnr=%s,mwerkomschr=%s,mverw=%s,mwerknr=%s,m_email=%s): clusters → %s", mcalnr, mwerkomschr, mverw, mwerknr, m_email, clusters)
     rpcalc = con.execute(selcalc)
     selclart = select([cluster_artikelen,artikelen]).where(and_(cluster_artikelen.c.\
       artikelID == artikelen.c.artikelID, calculaties.c.clusterID ==\
       cluster_artikelen.c.clusterID, calculaties.c.calculatie == (int(mcalnr))))\
       .order_by(cluster_artikelen.c.clusterID, cluster_artikelen.c.artikelID)
+    logger.debug("opbouwRp(mcalnr=%s,mwerkomschr=%s,mverw=%s,mwerknr=%s,m_email=%s): materiaallijsten → %s", mcalnr, mwerkomschr, mverw, mwerknr, m_email, materiaallijsten)
     rpclart = con.execute(selclart)
     for record in rpcalc:
         updcalc = update(calculaties).where(and_(calculaties.c.calculatie == record[3],\
@@ -452,43 +498,59 @@ def opbouwRp(mcalnr, mwerkomschr, mverw, mwerknr, m_email):
               calculaties.c.robeltrein * rppar2[11][1] * rppar2[11][2])
         con.execute(updcal1)
         for row in rpclart:
+            logger.debug("opbouwRp(mcalnr=%s,mwerkomschr=%s,mverw=%s,mwerknr=%s,m_email=%s): rpcalc → %s", mcalnr, mwerkomschr, mverw, mwerknr, m_email, rpcalc)
             selart = select([materiaallijsten.c.artikelID, materiaallijsten.c.calculatie]).where(and_(materiaallijsten.\
                 c.artikelID == row[1], materiaallijsten.c.calculatie == record[3]))
             rpart = con.execute(selart).first()
+            logger.debug("opbouwRp(mcalnr=%s,mwerkomschr=%s,mverw=%s,mwerknr=%s,m_email=%s): selclart → %s", mcalnr, mwerkomschr, mverw, mwerknr, m_email, selclart)
             if rpart:
                 updmatlijst = update(materiaallijsten).where(and_(materiaallijsten.c.\
                   artikelID == row[1], materiaallijsten.c.calculatie == record[3]))\
                  .values(hoeveelheid = materiaallijsten.c.hoeveelheid+(record[6]*row[3]),\
                 artikelprijs = row[6]*(1+rppar[6][1]), subtotaal = materiaallijsten.\
                 c.subtotaal+record[6]*row[3]*row[6]*(1+rppar[6][1]))
+                logger.debug("opbouwRp(mcalnr=%s,mwerkomschr=%s,mverw=%s,mwerknr=%s,m_email=%s): rpclart → %s", mcalnr, mwerkomschr, mverw, mwerknr, m_email, rpclart)
+                logger.debug("opbouwRp(mcalnr=%s,mwerkomschr=%s,mverw=%s,mwerknr=%s,m_email=%s): updcalc → %s", mcalnr, mwerkomschr, mverw, mwerknr, m_email, updcalc)
+                logger.debug("opbouwRp(mcalnr=%s,mwerkomschr=%s,mverw=%s,mwerknr=%s,m_email=%s): uren_constr → %s", mcalnr, mwerkomschr, mverw, mwerknr, m_email, uren_constr)
                 con.execute(updmatlijst)
             elif not rpart:
                 try:
                     mmatlijstnr = (con.execute(select([func.max(materiaallijsten.c.matlijstID,\
                         type_=Integer)])).scalar())
+                    logger.debug("opbouwRp(mcalnr=%s,mwerkomschr=%s,mverw=%s,mwerknr=%s,m_email=%s): uren_mont → %s", mcalnr, mwerkomschr, mverw, mwerknr, m_email, uren_mont)
                     mmatlijstnr += 1
                 except:
+                    logger.debug("opbouwRp(mcalnr=%s,mwerkomschr=%s,mverw=%s,mwerknr=%s,m_email=%s): uren_retourlas → %s", mcalnr, mwerkomschr, mverw, mwerknr, m_email, uren_retourlas)
                     mmatlijstnr = 1
                 insmatlijst = insert(materiaallijsten).values(matlijstID = mmatlijstnr,\
                     calculatie = record[3], artikelID = row[1],\
                     hoeveelheid = record[6]*row[3], resterend = record[6]*row[3],\
                     artikelprijs = row[6]*(1+rppar[6][1]),\
                     subtotaal = record[6]*row[3]*row[6]*(1+rppar[6][1]))
+                logger.debug("opbouwRp(mcalnr=%s,mwerkomschr=%s,mverw=%s,mwerknr=%s,m_email=%s): uren_telecom → %s", mcalnr, mwerkomschr, mverw, mwerknr, m_email, uren_telecom)
                 con.execute(insmatlijst)
         selber = select([calculaties.c.calcID, calculaties.c.calculatie])\
                            .where(calculaties.c.calculatie == mcalnr)
+        logger.debug("opbouwRp(mcalnr=%s,mwerkomschr=%s,mverw=%s,mwerknr=%s,m_email=%s): uren_bfi → %s", mcalnr, mwerkomschr, mverw, mwerknr, m_email, uren_bfi)
+        logger.debug("opbouwRp(mcalnr=%s,mwerkomschr=%s,mverw=%s,mwerknr=%s,m_email=%s): uren_voeding → %s", mcalnr, mwerkomschr, mverw, mwerknr, m_email, uren_voeding)
         rpselber = con.execute(selber)
         for regel in rpselber:
             updber = update(calculaties).where(calculaties.c.calculatie==mcalnr)\
              .values(prijs=calculaties.c.materialen+calculaties.c.materieel+\
               calculaties.c.lonen+calculaties.c.diensten, werkomschrijving = mwerkomschr)
+            logger.debug("opbouwRp(mcalnr=%s,mwerkomschr=%s,mverw=%s,mwerknr=%s,m_email=%s): uren_bvl → %s", mcalnr, mwerkomschr, mverw, mwerknr, m_email, uren_bvl)
+            logger.debug("opbouwRp(mcalnr=%s,mwerkomschr=%s,mverw=%s,mwerknr=%s,m_email=%s): uren_spoorleg → %s", mcalnr, mwerkomschr, mverw, mwerknr, m_email, uren_spoorleg)
             con.execute(updber)
 
     opvragenCalc(mcalnr, mwerkomschr, mverw, mwerknr, m_email)
+    logger.debug("opbouwRp(mcalnr=%s,mwerkomschr=%s,mverw=%s,mwerknr=%s,m_email=%s): uren_spoorlas → %s", mcalnr, mwerkomschr, mverw, mwerknr, m_email, uren_spoorlas)
+    logger.debug("<<< Exiting opbouwRp(mcalnr=%s,mwerkomschr=%s,mverw=%s,mwerknr=%s,m_email=%s)", mcalnr, mwerkomschr, mverw, mwerknr, m_email)
                         
 def printCalculatie(mcalnr, mwerknr):
+    logger.debug(">>> Entering printCalculatie(mcalnr=%s,mwerknr=%s)", mcalnr, mwerknr)
     from sys import platform
     metadata = MetaData()
+    logger.debug("printCalculatie(mcalnr=%s,mwerknr=%s): metadata → %s", mcalnr, mwerknr, metadata)
     calculaties = Table('calculaties', metadata,
         Column('calcID', Integer(), primary_key=True),
         Column('clusterID', None, ForeignKey('clusters.clusterID')),
@@ -505,24 +567,35 @@ def printCalculatie(mcalnr, mwerknr):
         Column('werkomschrijving', String))
     
     engine = create_engine('postgresql+psycopg2://postgres@localhost/bisystem')
+    logger.debug("printCalculatie(mcalnr=%s,mwerknr=%s): engine → %s", mcalnr, mwerknr, engine)
     con = engine.connect()
+    logger.debug("printCalculatie(mcalnr=%s,mwerknr=%s): con → %s", mcalnr, mwerknr, con)
     
     selcal = select([calculaties]).where(calculaties.c.calculatie == mcalnr)
+    logger.debug("printCalculatie(mcalnr=%s,mwerknr=%s): selcal → %s", mcalnr, mwerknr, selcal)
     rpcal = con.execute(selcal)
+    logger.debug("printCalculatie(mcalnr=%s,mwerknr=%s): rpcal → %s", mcalnr, mwerknr, rpcal)
     
     mblad = 1
+    logger.debug("printCalculatie(mcalnr=%s,mwerknr=%s): mblad → %s", mcalnr, mwerknr, mblad)
     rgl = 0
     mmat = 0
+    logger.debug("printCalculatie(mcalnr=%s,mwerknr=%s): mmat → %s", mcalnr, mwerknr, mmat)
     mlon = 0
+    logger.debug("printCalculatie(mcalnr=%s,mwerknr=%s): mlon → %s", mcalnr, mwerknr, mlon)
     mmater = 0
+    logger.debug("printCalculatie(mcalnr=%s,mwerknr=%s): mmater → %s", mcalnr, mwerknr, mmater)
     minh = 0
+    logger.debug("printCalculatie(mcalnr=%s,mwerknr=%s): minh → %s", mcalnr, mwerknr, minh)
     mtotaal = 0
+    logger.debug("printCalculatie(mcalnr=%s,mwerknr=%s): mtotaal → %s", mcalnr, mwerknr, mtotaal)
     for row in rpcal:
         if rgl == 0 or rgl%55 == 0:
             if platform == 'win32':
                 filename = '.\\forms\\Extern_Clustercalculaties\\clustercalculation_'+str(row[3])+'-'+str(row[2])+'.txt'
             else:
                 filename = './forms/Extern_Clustercalculaties/clustercalculation_'+str(row[3])+'-'+str(row[2])+'.txt'
+                logger.debug("printCalculatie(mcalnr=%s,mwerknr=%s): filename → %s", mcalnr, mwerknr, filename)
             kop=\
     ('Work number: '+str(mwerknr)+' '+'{:<24.24s}'.format(str(row[12]))+'  Calculation: '+str(row[3])+'  Date: '+str(datetime.datetime.now())[0:10]+'  Page : '+str(mblad)+'\n'+
     '=====================================================================================================\n'+
@@ -551,10 +624,13 @@ def printCalculatie(mcalnr, mwerknr):
     else:
         os.system("lpr "+filename)
     printing()
+    logger.debug("<<< Exiting printCalculatie(mcalnr=%s,mwerknr=%s)", mcalnr, mwerknr)
                      
 def printArtikellijst(mcalnr, mwerknr):
+    logger.debug(">>> Entering printArtikellijst(mcalnr=%s,mwerknr=%s)", mcalnr, mwerknr)
     from sys import platform
     metadata = MetaData()
+    logger.debug("printArtikellijst(mcalnr=%s,mwerknr=%s): metadata → %s", mcalnr, mwerknr, metadata)
     materiaallijsten = Table('materiaallijsten', metadata,
          Column('matlijstID', Integer, primary_key=True),
          Column('calculatie', Integer),
@@ -572,23 +648,31 @@ def printArtikellijst(mcalnr, mwerknr):
         Column('koppelnummer', Integer))
                                     
     engine = create_engine('postgresql+psycopg2://postgres@localhost/bisystem')
+    logger.debug("printArtikellijst(mcalnr=%s,mwerknr=%s): engine → %s", mcalnr, mwerknr, engine)
     con = engine.connect()
+    logger.debug("printArtikellijst(mcalnr=%s,mwerknr=%s): con → %s", mcalnr, mwerknr, con)
     
     selmat = select([materiaallijsten, artikelen])\
       .where(and_(materiaallijsten.c.artikelID == artikelen.c.artikelID,\
       materiaallijsten.c.artikelID == artikelen.c.artikelID,\
       materiaallijsten.c.calculatie == mcalnr)).order_by(materiaallijsten.c.artikelID)
+    logger.debug("printArtikellijst(mcalnr=%s,mwerknr=%s): selmat → %s", mcalnr, mwerknr, selmat)
     rpmat = con.execute(selmat)
+    logger.debug("printArtikellijst(mcalnr=%s,mwerknr=%s): rpmat → %s", mcalnr, mwerknr, rpmat)
     selkop = select([calculaties]).where(calculaties.c.calculatie == mcalnr)
     rpkop = con.execute(selkop).first()
+    logger.debug("printArtikellijst(mcalnr=%s,mwerknr=%s): selkop → %s", mcalnr, mwerknr, selkop)
+    logger.debug("printArtikellijst(mcalnr=%s,mwerknr=%s): rpkop → %s", mcalnr, mwerknr, rpkop)
     mblad = 1
     rgl = 0
     for row in rpmat:
+        logger.debug("printArtikellijst(mcalnr=%s,mwerknr=%s): mblad → %s", mcalnr, mwerknr, mblad)
         if rgl == 0 or rgl%55 == 0:
             if platform == 'win32':
                 filename =  filename = '.\\forms\\Extern_Clustercalculaties\\material_list_'+str(rpkop[0])+'-'+str(rpkop[1])+'.txt'
             else:
                 filename =  filename = './forms/Extern_Clustercalculaties/material_list_'+str(rpkop[0])+'-'+str(rpkop[1])+'.txt'
+                logger.debug("printArtikellijst(mcalnr=%s,mwerknr=%s): filename → %s", mcalnr, mwerknr, filename)
             kop=\
     ('Work number:   '+str(mwerknr)+'  Calculation: '+str(rpkop[0])+'   Date: '+str(datetime.datetime.now())[0:10]+'  Page :  '+str(mblad)+'\n'+
     '=============================================================================================\n'+
@@ -607,13 +691,16 @@ def printArtikellijst(mcalnr, mwerknr):
     else:
         os.system("lpr "+filename)
     printing()
+    logger.debug("<<< Exiting printArtikellijst(mcalnr=%s,mwerknr=%s)", mcalnr, mwerknr)
     
 def printDienstenlijst(mcalnr, mwerknr):
+    logger.debug(">>> Entering printDienstenlijst(mcalnr=%s,mwerknr=%s)", mcalnr, mwerknr)
     if mwerknr == 0:
         foutWerknr()
         return
     from sys import platform
     metadata = MetaData()               
+    logger.debug("printDienstenlijst(mcalnr=%s,mwerknr=%s): metadata → %s", mcalnr, mwerknr, metadata)
     calculaties = Table('calculaties', metadata,
         Column('calcID', Integer(), primary_key=True),
         Column('omschrijving', String),
@@ -665,22 +752,34 @@ def printDienstenlijst(mcalnr, mwerknr):
         Column('overhead_factor', Float))
 
     engine = create_engine('postgresql+psycopg2://postgres@localhost/bisystem')
+    logger.debug("printDienstenlijst(mcalnr=%s,mwerknr=%s): engine → %s", mcalnr, mwerknr, engine)
     con = engine.connect()
+    logger.debug("printDienstenlijst(mcalnr=%s,mwerknr=%s): con → %s", mcalnr, mwerknr, con)
     selpar = select([params_finance]).order_by(params_finance.c.financeID)
+    logger.debug("printDienstenlijst(mcalnr=%s,mwerknr=%s): selpar → %s", mcalnr, mwerknr, selpar)
     rppar = con.execute(selpar).fetchall()
+    logger.debug("printDienstenlijst(mcalnr=%s,mwerknr=%s): rppar → %s", mcalnr, mwerknr, rppar)
     selpar1 = select([params_hours]).order_by(params_hours.c.rateID)
+    logger.debug("printDienstenlijst(mcalnr=%s,mwerknr=%s): selpar1 → %s", mcalnr, mwerknr, selpar1)
     rppar1 = con.execute(selpar1).fetchall()
+    logger.debug("printDienstenlijst(mcalnr=%s,mwerknr=%s): rppar1 → %s", mcalnr, mwerknr, rppar1)
     selpar2 = select([params_services]).order_by(params_services.c.servicesID)
+    logger.debug("printDienstenlijst(mcalnr=%s,mwerknr=%s): selpar2 → %s", mcalnr, mwerknr, selpar2)
     rppar2 = con.execute(selpar2).fetchall()
+    logger.debug("printDienstenlijst(mcalnr=%s,mwerknr=%s): rppar2 → %s", mcalnr, mwerknr, rppar2)
 
     selcal = select([calculaties]).where(calculaties.c.koppelnummer == mwerknr).\
      order_by(calculaties.c.clusterID)
     rpcal = con.execute(selcal)
+    logger.debug("printDienstenlijst(mcalnr=%s,mwerknr=%s): rpcal → %s", mcalnr, mwerknr, rpcal)
 
     mblad = 0
+    logger.debug("printDienstenlijst(mcalnr=%s,mwerknr=%s): mblad → %s", mcalnr, mwerknr, mblad)
     rgl = 0
     m_uren = 0
+    logger.debug("printDienstenlijst(mcalnr=%s,mwerknr=%s): m_uren → %s", mcalnr, mwerknr, m_uren)
     mtotaal = 0
+    logger.debug("printDienstenlijst(mcalnr=%s,mwerknr=%s): mtotaal → %s", mcalnr, mwerknr, mtotaal)
     
     header = ['Hiring','Trench machine','Pressing machine','Atlas crane','Crane big',\
           'Mainliner','Ballast scraper','Wagon','Locomotor','Locomotive','Assemble Trolley',\
@@ -690,12 +789,14 @@ def printDienstenlijst(mcalnr, mwerknr):
     for row in rpcal:
         if row[7] == 0:
             foutWerknr()
+            logger.debug("<<< Exiting printDienstenlijst(mcalnr=%s,mwerknr=%s)", mcalnr, mwerknr)
             return
         if rgl == 0 or rgl%54 == 0:
             if platform == 'win32':
                 filename = '.\\forms\\Extern_Clustercalculaties_Diensten\\clustercalculation_'+str(row[2]).replace(' ', '_')+'.txt'
             else:
                 filename = './forms/Extern_Clustercalculaties_Diensten/clustercalculation_'+str(row[2]).replace(' ', '_')+'.txt'
+                logger.debug("printDienstenlijst(mcalnr=%s,mwerknr=%s): filename → %s", mcalnr, mwerknr, filename)
 
         for k in range(14, 34):
             if rgl == 0:
@@ -719,9 +820,12 @@ def printDienstenlijst(mcalnr, mwerknr):
                         '=====================================================================================================\n')
                 open(filename, 'a').write(kop)
             dienst = header[k-14]
+            logger.debug("printDienstenlijst(mcalnr=%s,mwerknr=%s): dienst → %s", mcalnr, mwerknr, dienst)
             if k == 14:
                 uren = row[k]
+                logger.debug("printDienstenlijst(mcalnr=%s,mwerknr=%s): uren → %s", mcalnr, mwerknr, uren)
                 bedrag = row[k]*rppar1[0][1]*rppar1[0][2]
+                logger.debug("printDienstenlijst(mcalnr=%s,mwerknr=%s): bedrag → %s", mcalnr, mwerknr, bedrag)
             elif k < 27:
                 uren = row[k]
                 bedrag = row[k]*rppar2[k-15][1]*rppar2[k-15][2]
@@ -750,6 +854,7 @@ def printDienstenlijst(mcalnr, mwerknr):
     printing()
 
 def toonCalculatie(mcalnr, mwerknr):
+    logger.debug(">>> Entering toonCalculatie(mcalnr=%s,mwerknr=%s)", mcalnr, mwerknr)
     class MyWindow(QDialog):
         def __init__(self, data_list, header, *args):
             QWidget.__init__(self, *args,)
@@ -779,18 +884,26 @@ def toonCalculatie(mcalnr, mwerknr):
             layout = QVBoxLayout(self)
             layout.addWidget(table_view)
             self.setLayout(layout)
+            logger.debug(">>> Entering __init__(parent=%s,mylist=%s,header=%s)", parent, mylist, header)
+            logger.debug("<<< Exiting __init__(parent=%s,mylist=%s,header=%s)", parent, mylist, header)
+            logger.debug("__init__(self=%s,parent=%s,mylist=%s,header=%s): self.mylist → %s", self, parent, mylist, header, self.mylist)
     
     class MyTableModel(QAbstractTableModel):
         def __init__(self, parent, mylist, header, *args):
+            logger.debug("__init__(self=%s,parent=%s,mylist=%s,header=%s): self.header → %s", self, parent, mylist, header, self.header)
             QAbstractTableModel.__init__(self, parent, *args)
             self.mylist = mylist
             self.header = header
         def rowCount(self, parent):
+            logger.debug(">>> Entering rowCount(parent=%s)", parent)
             return len(self.mylist)
         def columnCount(self, parent):
             return len(self.mylist[0])
         def data(self, index, role):
+            logger.debug(">>> Entering data(index=%s,role=%s)", index, role)
             veld = self.mylist[index.row()][index.column()]
+            logger.debug("data(index=%s,role=%s): veld → %s", index, role, veld)
+            logger.debug("data(self=%s,index=%s,role=%s): veld → %s", self, index, role, veld)
             if not index.isValid():
                 return None
             elif role == Qt.TextAlignmentRole and (type(veld) == float or type(veld) == int):
@@ -800,10 +913,13 @@ def toonCalculatie(mcalnr, mwerknr):
             if type(veld) == float:
                 return '{:12.2f}'.format(veld)
             else:
+                logger.debug("<<< Exiting data(index=%s,role=%s)", index, role)
                 return veld
         def headerData(self, col, orientation, role):
+            logger.debug(">>> Entering headerData(col=%s,orientation=%s,role=%s)", col, orientation, role)
             if orientation == Qt.Horizontal and role == Qt.DisplayRole:
                 return self.header[col]
+            logger.debug("<<< Exiting headerData(col=%s,orientation=%s,role=%s)", col, orientation, role)
             return None
              
     header = ['ID','Cluster','Work description','Calculation','Cluster number',\
@@ -876,15 +992,22 @@ def toonCalculatie(mcalnr, mwerknr):
         data_list += [(row)]
         
     def ShowSelection(idx):
+        logger.debug(">>> Entering ShowSelection(idx=%s)", idx)
         mcalnr = idx.data()
+        logger.debug("ShowSelection(idx=%s): mcalnr → %s", idx, mcalnr)
         if  idx.column() == 0:
 
             engine = create_engine('postgresql+psycopg2://postgres@localhost/bisystem')
+            logger.debug("ShowSelection(idx=%s): engine → %s", idx, engine)
             con = engine.connect()
+            logger.debug("ShowSelection(idx=%s): con → %s", idx, con)
             selcal = select([calculaties]).where(calculaties.c.calcID == mcalnr)
             rpcal = con.execute(selcal).first()
+            logger.debug("ShowSelection(idx=%s): selcal → %s", idx, selcal)
+            logger.debug("ShowSelection(idx=%s): rpcal → %s", idx, rpcal)
                                                       
             class MainWindow(QDialog):
+                logger.debug("<<< Exiting ShowSelection(idx=%s)", idx)
                 def __init__(self):
                     QDialog.__init__(self)
                     
@@ -959,6 +1082,7 @@ def toonCalculatie(mcalnr, mwerknr):
     win.exec_()
     
 def toonDienstenlijst(mcalnr, mwerknr):
+    logger.debug(">>> Entering toonDienstenlijst(mcalnr=%s,mwerknr=%s)", mcalnr, mwerknr)
     class MyWindow(QDialog):
         def __init__(self, data_list, header, *args):
             QWidget.__init__(self, *args,)
@@ -993,10 +1117,99 @@ def toonDienstenlijst(mcalnr, mwerknr):
         def __init__(self, parent, mylist, header, *args):
             QAbstractTableModel.__init__(self, parent, *args)
             self.mylist = mylist
+            logger.debug(">>> Entering __init__(parent=%s)", parent)
+            logger.debug("__init__(parent=%s): pixmap → %s", parent, pixmap)
+            logger.debug("__init__(parent=%s): q1Edit → %s", parent, q1Edit)
+            logger.debug("__init__(self=%s,parent=%s): q1Edit → %s", self, parent, q1Edit)
+            logger.debug("__init__(parent=%s): q2Edit → %s", parent, q2Edit)
+            logger.debug("__init__(self=%s,parent=%s): q2Edit → %s", self, parent, q2Edit)
+            logger.debug("__init__(parent=%s): q3Edit → %s", parent, q3Edit)
+            logger.debug("__init__(self=%s,parent=%s): q3Edit → %s", self, parent, q3Edit)
+            logger.debug("__init__(parent=%s): q4Edit → %s", parent, q4Edit)
+            logger.debug("__init__(self=%s,parent=%s): q4Edit → %s", self, parent, q4Edit)
+            logger.debug("__init__(parent=%s): q5Edit → %s", parent, q5Edit)
+            logger.debug("__init__(self=%s,parent=%s): q5Edit → %s", self, parent, q5Edit)
+            logger.debug("__init__(parent=%s): q8Edit → %s", parent, q8Edit)
+            logger.debug("__init__(self=%s,parent=%s): q8Edit → %s", self, parent, q8Edit)
+            logger.debug("__init__(parent=%s): q9Edit → %s", parent, q9Edit)
+            logger.debug("__init__(self=%s,parent=%s): q9Edit → %s", self, parent, q9Edit)
+            logger.debug("__init__(parent=%s): q11Edit → %s", parent, q11Edit)
+            logger.debug("__init__(self=%s,parent=%s): q11Edit → %s", self, parent, q11Edit)
+            logger.debug("__init__(parent=%s): q12Edit → %s", parent, q12Edit)
+            logger.debug("__init__(self=%s,parent=%s): q12Edit → %s", self, parent, q12Edit)
+            logger.debug("__init__(parent=%s): q13Edit → %s", parent, q13Edit)
+            logger.debug("__init__(self=%s,parent=%s): q13Edit → %s", self, parent, q13Edit)
+            logger.debug("__init__(parent=%s): q19Edit → %s", parent, q19Edit)
+            logger.debug("__init__(self=%s,parent=%s): q19Edit → %s", self, parent, q19Edit)
+            logger.debug("__init__(parent=%s): q14Edit → %s", parent, q14Edit)
+            logger.debug("__init__(self=%s,parent=%s): q14Edit → %s", self, parent, q14Edit)
+            logger.debug("__init__(parent=%s): q15Edit → %s", parent, q15Edit)
+            logger.debug("__init__(self=%s,parent=%s): q15Edit → %s", self, parent, q15Edit)
+            logger.debug("__init__(parent=%s): q16Edit → %s", parent, q16Edit)
+            logger.debug("__init__(self=%s,parent=%s): q16Edit → %s", self, parent, q16Edit)
+            logger.debug("__init__(parent=%s): q17Edit → %s", parent, q17Edit)
+            logger.debug("__init__(self=%s,parent=%s): q17Edit → %s", self, parent, q17Edit)
+            logger.debug("__init__(parent=%s): q20Edit → %s", parent, q20Edit)
+            logger.debug("__init__(self=%s,parent=%s): q20Edit → %s", self, parent, q20Edit)
+            logger.debug("__init__(parent=%s): q21Edit → %s", parent, q21Edit)
+            logger.debug("__init__(self=%s,parent=%s): q21Edit → %s", self, parent, q21Edit)
+            logger.debug("__init__(parent=%s): q22Edit → %s", parent, q22Edit)
+            logger.debug("__init__(self=%s,parent=%s): q22Edit → %s", self, parent, q22Edit)
+            logger.debug("__init__(parent=%s): q23Edit → %s", parent, q23Edit)
+            logger.debug("__init__(self=%s,parent=%s): q23Edit → %s", self, parent, q23Edit)
+            logger.debug("__init__(parent=%s): q24Edit → %s", parent, q24Edit)
+            logger.debug("__init__(self=%s,parent=%s): q24Edit → %s", self, parent, q24Edit)
+            logger.debug("__init__(parent=%s): q26Edit → %s", parent, q26Edit)
+            logger.debug("__init__(self=%s,parent=%s): q26Edit → %s", self, parent, q26Edit)
+            logger.debug("__init__(parent=%s): q27Edit → %s", parent, q27Edit)
+            logger.debug("__init__(self=%s,parent=%s): q27Edit → %s", self, parent, q27Edit)
+            logger.debug("__init__(parent=%s): q28Edit → %s", parent, q28Edit)
+            logger.debug("__init__(self=%s,parent=%s): q28Edit → %s", self, parent, q28Edit)
+            logger.debug("__init__(parent=%s): q29Edit → %s", parent, q29Edit)
+            logger.debug("__init__(self=%s,parent=%s): q29Edit → %s", self, parent, q29Edit)
+            logger.debug("__init__(parent=%s): q30Edit → %s", parent, q30Edit)
+            logger.debug("__init__(self=%s,parent=%s): q30Edit → %s", self, parent, q30Edit)
+            logger.debug("__init__(parent=%s): q31Edit → %s", parent, q31Edit)
+            logger.debug("__init__(self=%s,parent=%s): q31Edit → %s", self, parent, q31Edit)
+            logger.debug("__init__(parent=%s): q32Edit → %s", parent, q32Edit)
+            logger.debug("__init__(self=%s,parent=%s): q32Edit → %s", self, parent, q32Edit)
+            logger.debug("__init__(parent=%s): q33Edit → %s", parent, q33Edit)
+            logger.debug("__init__(self=%s,parent=%s): q33Edit → %s", self, parent, q33Edit)
+            logger.debug("__init__(parent=%s): q34Edit → %s", parent, q34Edit)
+            logger.debug("__init__(self=%s,parent=%s): q34Edit → %s", self, parent, q34Edit)
+            logger.debug("__init__(parent=%s): q35Edit → %s", parent, q35Edit)
+            logger.debug("__init__(self=%s,parent=%s): q35Edit → %s", self, parent, q35Edit)
+            logger.debug("__init__(parent=%s): q36Edit → %s", parent, q36Edit)
+            logger.debug("__init__(self=%s,parent=%s): q36Edit → %s", self, parent, q36Edit)
+            logger.debug("__init__(parent=%s): q37Edit → %s", parent, q37Edit)
+            logger.debug("__init__(self=%s,parent=%s): q37Edit → %s", self, parent, q37Edit)
+            logger.debug("__init__(parent=%s): q38Edit → %s", parent, q38Edit)
+            logger.debug("__init__(self=%s,parent=%s): q38Edit → %s", self, parent, q38Edit)
+            logger.debug("__init__(parent=%s): q39Edit → %s", parent, q39Edit)
+            logger.debug("__init__(self=%s,parent=%s): q39Edit → %s", self, parent, q39Edit)
+            logger.debug("__init__(parent=%s): grid → %s", parent, grid)
+            logger.debug("__init__(self=%s,parent=%s): grid → %s", self, parent, grid)
+            logger.debug("__init__(parent=%s): lbl → %s", parent, lbl)
+            logger.debug("__init__(self=%s,parent=%s): lbl → %s", self, parent, lbl)
+            logger.debug("__init__(self=%s,parent=%s): pixmap → %s", self, parent, pixmap)
+            logger.debug("__init__(parent=%s): logo → %s", parent, logo)
+            logger.debug("__init__(self=%s,parent=%s): logo → %s", self, parent, logo)
+            logger.debug("__init__(parent=%s): lblbedrag → %s", parent, lblbedrag)
+            logger.debug("__init__(parent=%s): lbluren → %s", parent, lbluren)
+            logger.debug("__init__(parent=%s): lblsoort → %s", parent, lblsoort)
+            logger.debug("__init__(self=%s,parent=%s): lblsoort → %s", self, parent, lblsoort)
+            logger.debug("__init__(self=%s,parent=%s): lbluren → %s", self, parent, lbluren)
+            logger.debug("__init__(self=%s,parent=%s): lblbedrag → %s", self, parent, lblbedrag)
+            logger.debug("__init__(parent=%s): cancelBtn → %s", parent, cancelBtn)
+            logger.debug("__init__(self=%s,parent=%s): cancelBtn → %s", self, parent, cancelBtn)
+            logger.debug("<<< Exiting __init__(parent=%s)", parent)
             self.header = header
         def rowCount(self, parent):
             return len(self.mylist)
         def columnCount(self, parent):
+            logger.debug(">>> Entering columnCount(parent=%s)", parent)
+            logger.error("Exception in columnCount(parent=%s)", parent, exc_info=True)
+            logger.debug("<<< Exiting columnCount(parent=%s)", parent)
             return len(self.mylist[0])
         def data(self, index, role):
             veld = self.mylist[index.row()][index.column()]
@@ -1093,15 +1306,21 @@ def toonDienstenlijst(mcalnr, mwerknr):
         data_list += [(row)]
     
     def showDienst(idx):
+        logger.debug(">>> Entering showDienst(idx=%s)", idx)
         calcnr = idx.data()
+        logger.debug("showDienst(idx=%s): calcnr → %s", idx, calcnr)
         if idx.column() == 0:
             engine = create_engine('postgresql+psycopg2://postgres@localhost/bisystem')
+            logger.debug("showDienst(idx=%s): engine → %s", idx, engine)
             con = engine.connect()
             seldienst = select([calculaties]).where(calculaties.c.calcID==calcnr)
+            logger.debug("showDienst(idx=%s): con → %s", idx, con)
             rpcalc = con.execute(seldienst).first()
             class Widget(QDialog):
+                 logger.debug("showDienst(idx=%s): seldienst → %s", idx, seldienst)
                  def __init__(self, parent=None):
                     super(Widget, self).__init__(parent)
+                    logger.debug("<<< Exiting showDienst(idx=%s)", idx)
                     self.setWindowTitle("Request works external calculation data equipment")
                     self.setWindowIcon(QIcon('./images/logos/logo.jpg')) 
                                          
@@ -1429,6 +1648,7 @@ def toonDienstenlijst(mcalnr, mwerknr):
                     cancelBtn.clicked.connect(self.close)
                 
                     grid.addWidget(cancelBtn, 15, 6, 1, 1, Qt.AlignRight)
+                    logger.debug("<<< Exiting __init__(parent=%s)", parent)
                     cancelBtn.setFont(QFont("Arial",10))
                     cancelBtn.setFixedWidth(100)
                     cancelBtn.setStyleSheet("color: black;  background-color: gainsboro")
@@ -1440,7 +1660,9 @@ def toonDienstenlijst(mcalnr, mwerknr):
     win.exec_()
 
 def toonArtikellijst(mcalnr, mwerknr):
+    logger.debug(">>> Entering toonArtikellijst(mcalnr=%s,mwerknr=%s)", mcalnr, mwerknr)
     class MyWindow(QDialog):
+        logger.error("Exception in toonArtikellijst(mcalnr=%s,mwerknr=%s)", mcalnr, mwerknr, exc_info=True)
         def __init__(self, data_list, header, *args):
             QWidget.__init__(self, *args,)
             self.setGeometry(100, 50, 1200, 900)
@@ -1466,6 +1688,20 @@ def toonArtikellijst(mcalnr, mwerknr):
         def __init__(self, parent, mylist, header, *args):
             QAbstractTableModel.__init__(self, parent, *args)
             self.mylist = mylist
+            logger.debug(">>> Entering __init__()")
+            logger.debug("__init__(): grid → %s", grid)
+            logger.debug("__init__(self=%s): grid → %s", self, grid)
+            logger.debug("__init__(): self.lbl → %s", self.lbl)
+            logger.debug("__init__(): self.pixmap → %s", self.pixmap)
+            logger.debug("__init__(self=%s): lbl → %s", self, lbl)
+            logger.debug("__init__(): self.logo → %s", self.logo)
+            logger.debug("__init__(self=%s): logo → %s", self, logo)
+            logger.debug("__init__(): self.Gegevens → %s", self.Gegevens)
+            logger.debug("__init__(): q1Edit → %s", q1Edit)
+            logger.debug("__init__(self=%s): q1Edit → %s", self, q1Edit)
+            logger.debug("__init__(): terugBtn → %s", terugBtn)
+            logger.debug("__init__(self=%s): terugBtn → %s", self, terugBtn)
+            logger.debug("<<< Exiting __init__()")
             self.header = header
         def rowCount(self, parent):
             return len(self.mylist)
@@ -1531,25 +1767,34 @@ def toonArtikellijst(mcalnr, mwerknr):
         data_list += [(row)]
 
     def showSelart(idx):
+        logger.debug(">>> Entering showSelart(idx=%s)", idx)
         martnr = idx.data()
+        logger.debug("showSelart(idx=%s): martnr → %s", idx, martnr)
         if idx.column() == 0:
             engine = create_engine('postgresql+psycopg2://postgres@localhost/bisystem')
+            logger.debug("showSelart(idx=%s): engine → %s", idx, engine)
             con = engine.connect()
 
+            logger.debug("showSelart(idx=%s): con → %s", idx, con)
             selmat = select([artikelen, materiaallijsten]).where(\
                  and_(materiaallijsten.c.artikelID == artikelen.c.artikelID,\
                  materiaallijsten.c.artikelID == int(martnr),\
                  materiaallijsten.c.calculatie == mcalnr))\
                  .order_by(materiaallijsten.c.artikelID)
+            logger.debug("showSelart(idx=%s): selmat → %s", idx, selmat)
             rpmat = con.execute(selmat).first()
 
+            logger.debug("showSelart(idx=%s): rpmat → %s", idx, rpmat)
             header = ['Article number','Description','Reservation balance','ListID','Calculation',\
               'Work number','Purchase order number','Article number','Article price',\
               'Amount','Call-off','Remaining','Subtotal','Reservation date',\
               'Delivery end','Delivery start', 'Category']
 
+            logger.debug("showSelart(idx=%s): header → %s", idx, header)
             class MainWindow(QDialog):
+                logger.debug("<<< Exiting showSelart(idx=%s)", idx)
                 def __init__(self):
+                    logger.debug(">>> Entering __init__()")
                     QDialog.__init__(self)
 
                     grid = QGridLayout()
@@ -1638,6 +1883,7 @@ def toonArtikellijst(mcalnr, mwerknr):
 
                     self.setLayout(grid)
                     self.setGeometry(400, 200, 150, 150)
+                    logger.debug("<<< Exiting __init__()")
                             
             mainWin = MainWindow()
             mainWin.exec_()

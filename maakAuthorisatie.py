@@ -4,33 +4,47 @@ from PyQt5.QtWidgets import QLabel, QGridLayout, QDialog, QLineEdit, QMessageBox
 from PyQt5.QtGui import QFont, QPixmap, QRegExpValidator, QIcon, QMovie
 from PyQt5.QtCore import Qt, QRegExp, QSize
 from sqlalchemy import MetaData, Integer, Table, Column, String, create_engine, select, update
+import logging
+logger = logging.getLogger(__name__)
            
 def foutAccountnr():
+    logger.debug(">>> Entering foutAccountnr()")
     msg = QMessageBox()
+    logger.debug("foutAccountnr(): msg → %s", msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setIcon(QMessageBox.Critical)
     msg.setText('Account number not present!')
     msg.setWindowTitle('Account')
+    logger.debug("<<< Exiting foutAccountnr()")
     msg.exec_()
     
 def windowSluit(self, m_email):
+    logger.debug(">>> Entering windowSluit(m_email=%s)", m_email)
     self.close()
     hoofdMenu(m_email) 
+    logger.debug("<<< Exiting windowSluit(m_email=%s)", m_email)
     
 def winSluit(self, m_email):
+    logger.debug(">>> Entering winSluit(m_email=%s)", m_email)
     self.close()
     zoekAccount(m_email)
+    logger.debug("<<< Exiting winSluit(m_email=%s)", m_email)
 
 def updateOK(self):
+    logger.debug(">>> Entering updateOK()")
     msg = QMessageBox()
+    logger.debug("updateOK(): msg → %s", msg)
+    logger.debug("updateOK(self=%s): msg → %s", self, msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setIcon(QMessageBox.Information)
     msg.setFont(QFont("Arial",10))
     msg.setText('The authorisations of: \n'+self.mvoorn+' '+self.mtussen+' '+self.machtern+'\nhave been adjusted!')
     msg.setWindowTitle('Authorisation')
+    logger.debug("<<< Exiting updateOK()")
     msg.exec_()
 
 def info():
+    logger.debug(">>> Entering info()")
     class Widget(QDialog):
         def __init__(self, parent=None):
             super(Widget, self).__init__(parent)

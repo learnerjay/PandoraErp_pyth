@@ -5,17 +5,24 @@ from PyQt5.QtGui import QFont, QIcon
 from PyQt5.QtWidgets import QWidget, QDialog, QTableView, QVBoxLayout
 from sqlalchemy import (Table, Column, Integer, String, MetaData, ForeignKey,\
                         create_engine, and_ , select)
+import logging
+logger = logging.getLogger(__name__)
 
 def noRecord():
+    logger.debug(">>> Entering noRecord()")
     msg = QMessageBox()
+    logger.debug("noRecord(): msg → %s", msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setIcon(QMessageBox.Warning)
     msg.setText('No record present, first insert record(s)!')
     msg.setWindowTitle('Insert parameters')
+    logger.debug("<<< Exiting noRecord()")
     msg.exec_()
 
 def eigenLeverancier(m_email):
+    logger.debug(">>> Entering eigenLeverancier(m_email=%s)", m_email)
     metadata = MetaData()
+    logger.debug("eigenLeverancier(m_email=%s): metadata → %s", m_email, metadata)
     accounts = Table('accounts', metadata,
         Column('accountID', Integer, primary_key=True),
         Column('email', String))
@@ -35,45 +42,70 @@ def eigenLeverancier(m_email):
         Column('toevoeging', String))
      
     engine = create_engine('postgresql+psycopg2://postgres@localhost/bisystem')
+    logger.debug("eigenLeverancier(m_email=%s): engine → %s", m_email, engine)
     con = engine.connect()
     sel = select([leveranciers]).where(and_(leveranciers.c.leverancierID == lev_accounts.c.leverancierID,\
                     lev_accounts.c.accountID == accounts.c.accountID, accounts.c.email == m_email))
+    logger.debug("eigenLeverancier(m_email=%s): con → %s", m_email, con)
     rplev = con.execute(sel)
     class MyWindow(QDialog):
+        logger.debug("eigenLeverancier(m_email=%s): sel → %s", m_email, sel)
         def __init__(self, data_list, header, *args):
+            logger.debug("<<< Exiting eigenLeverancier(m_email=%s)", m_email)
             QWidget.__init__(self, *args,)
+            logger.debug(">>> Entering __init__(data_list=%s,header=%s)", data_list, header)
             self.setGeometry(50, 50, 1500, 900)
             self.setWindowTitle('Leveranciers opvragen')
+            logger.debug("__init__(data_list=%s,header=%s): font → %s", data_list, header, font)
+            logger.debug("__init__(data_list=%s,header=%s): table_view → %s", data_list, header, table_view)
             self.setWindowIcon(QIcon('./images/logos/logo.jpg')) 
             self.setWindowFlags(self.windowFlags()| Qt.WindowSystemMenuHint |
                               Qt.WindowMinMaxButtonsHint)
             table_model = MyTableModel(self, data_list, header)
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): table_model → %s", self, data_list, header, table_model)
+            logger.debug("__init__(data_list=%s,header=%s): table_model → %s", data_list, header, table_model)
             table_view = QTableView()
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): table_view → %s", self, data_list, header, table_view)
             table_view.setModel(table_model)
             font = QFont("Arial", 10)
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): font → %s", self, data_list, header, font)
             table_view.setFont(font)
             table_view.resizeColumnsToContents()
             table_view.setSelectionBehavior(QTableView.SelectRows)
             #table_view.clicked.connect(showLeverancier)
             layout = QVBoxLayout(self)
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): layout → %s", self, data_list, header, layout)
+            logger.debug("__init__(data_list=%s,header=%s): layout → %s", data_list, header, layout)
             layout.addWidget(table_view)
             self.setLayout(layout)
+            logger.debug("<<< Exiting __init__(data_list=%s,header=%s)", data_list, header)
+            logger.debug(">>> Entering __init__(parent=%s,mylist=%s,header=%s)", parent, mylist, header)
+            logger.debug("<<< Exiting __init__(parent=%s,mylist=%s,header=%s)", parent, mylist, header)
+            logger.debug("__init__(self=%s,parent=%s,mylist=%s,header=%s): self.mylist → %s", self, parent, mylist, header, self.mylist)
     
     class MyTableModel(QAbstractTableModel):
         def __init__(self, parent, mylist, header, *args):
+            logger.debug("__init__(self=%s,parent=%s,mylist=%s,header=%s): self.header → %s", self, parent, mylist, header, self.header)
             QAbstractTableModel.__init__(self, parent, *args)
             self.mylist = mylist
             self.header = header
         def rowCount(self, parent):
+            logger.debug(">>> Entering rowCount(parent=%s)", parent)
             return len(self.mylist)
         def columnCount(self, parent):
+            logger.debug(">>> Entering columnCount(parent=%s)", parent)
             try:
+                logger.debug("<<< Exiting columnCount(parent=%s)", parent)
                 return len(self.mylist[0])
             except:
+                logger.error("Exception in columnCount(parent=%s)", parent, exc_info=True)
                 noRecord()
                 hoofdMenu(m_email)
         def data(self, index, role):
+            logger.debug(">>> Entering data(index=%s,role=%s)", index, role)
             veld = self.mylist[index.row()][index.column()]
+            logger.debug("data(index=%s,role=%s): veld → %s", index, role, veld)
+            logger.debug("data(self=%s,index=%s,role=%s): veld → %s", self, index, role, veld)
             if not index.isValid():
                 return None
             elif role == Qt.TextAlignmentRole and (type(veld) == float or type(veld) == int):
@@ -83,10 +115,13 @@ def eigenLeverancier(m_email):
             if type(veld) == float:
                 return '{:12.2f}'.format(veld)
             else:
+                logger.debug("<<< Exiting data(index=%s,role=%s)", index, role)
                 return veld
         def headerData(self, col, orientation, role):
+            logger.debug(">>> Entering headerData(col=%s,orientation=%s,role=%s)", col, orientation, role)
             if orientation == Qt.Horizontal and role == Qt.DisplayRole:
                 return self.header[col]
+            logger.debug("<<< Exiting headerData(col=%s,orientation=%s,role=%s)", col, orientation, role)
             return None
   
     header = ['Leveranciernummer','Bedrijfsnaam', 'Rechtsvorm','BTWnummer',\

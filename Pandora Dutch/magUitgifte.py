@@ -8,59 +8,81 @@ from sqlalchemy import (Table, Column, Integer, String, Float, Boolean,\
                      MetaData, create_engine, CheckConstraint, ForeignKey)
 from sqlalchemy.sql import select, update, insert, func, and_
 from sqlalchemy.exc import IntegrityError
+import logging
+logger = logging.getLogger(__name__)
 
 def refresh(keuze, zoekterm, m_email, route, self):
+    logger.debug(">>> Entering refresh(keuze=%s,zoekterm=%s,m_email=%s,route=%s)", keuze, zoekterm, m_email, route)
     self.close()
     raapLijst(keuze, zoekterm, m_email, route)   
+    logger.debug("<<< Exiting refresh(keuze=%s,zoekterm=%s,m_email=%s,route=%s)", keuze, zoekterm, m_email, route)
 
 def windowSluit(self, m_email):
+    logger.debug(">>> Entering windowSluit(m_email=%s)", m_email)
     self.close()
     hoofdMenu(m_email)
+    logger.debug("<<< Exiting windowSluit(m_email=%s)", m_email)
  
 def ongInvoer():
+    logger.debug(">>> Entering ongInvoer()")
     msg = QMessageBox()
+    logger.debug("ongInvoer(): msg → %s", msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     msg.setIcon(QMessageBox.Warning)
     msg.setText('Foutieve invoer\nzoekterm opnieuw invoeren s.v.p.!')
     msg.setWindowTitle('Materialen uitgeven/ printen')               
+    logger.debug("<<< Exiting ongInvoer()")
     msg.exec_() 
     
 def geenRecord():
+    logger.debug(">>> Entering geenRecord()")
     msg = QMessageBox()
+    logger.debug("geenRecord(): msg → %s", msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     msg.setIcon(QMessageBox.Warning)
     msg.setText('Geen record gevonden\nmaak een andere selektie s.v.p.!')
     msg.setWindowTitle('Materialen uitgeven/ printen')               
+    logger.debug("<<< Exiting geenRecord()")
     msg.exec_() 
  
 def _11check(mcontr):
+    logger.debug(">>> Entering _11check(mcontr=%s)", mcontr)
     number = str(mcontr)
+    logger.debug("_11check(mcontr=%s): number → %s", mcontr, number)
     total = 0       
     fullnumber = number                       
+    logger.debug("_11check(mcontr=%s): total → %s", mcontr, total)
     for i in range(8):
         total += int(fullnumber[i])*(9-i)
+        logger.debug("_11check(mcontr=%s): fullnumber → %s", mcontr, fullnumber)
         checkdigit = total % 11
     if checkdigit == 10:
         checkdigit = 0
     if checkdigit == int(fullnumber[8]):
         return True
     else:
+        logger.debug("<<< Exiting _11check(mcontr=%s)", mcontr)
         return False
     
 def printing():
+    logger.debug(">>> Entering printing()")
     msg = QMessageBox()
+    logger.debug("printing(): msg → %s", msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg')) 
     msg.setIcon(QMessageBox.Information)
     msg.setText('Ogenblik afdrukken wordt gestart!')
     msg.setWindowTitle('AFDRUKKEN')
+    logger.debug("<<< Exiting printing()")
     msg.exec_()
     
 def printGeg(filename):
+    logger.debug(">>> Entering printGeg(filename=%s)", filename)
     from sys import platform
     msgBox=QMessageBox()
+    logger.debug("printGeg(filename=%s): msgBox → %s", filename, msgBox)
     msgBox.setStyleSheet("color: black;  background-color: gainsboro")
     msgBox.setWindowIcon(QIcon('./images/logos/logo.jpg')) 
     msgBox.setWindowTitle("Printen raaplijst")
@@ -76,62 +98,83 @@ def printGeg(filename):
         else:
             os.system("lpr "+filename)
         printing()
+        logger.debug("<<< Exiting printGeg(filename=%s)", filename)
     
 def foutWerknr():
+    logger.debug(">>> Entering foutWerknr()")
     msg = QMessageBox()
+    logger.debug("foutWerknr(): msg → %s", msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setIcon(QMessageBox.Critical)
     msg.setText('Werknummer niet gevonden\nWerknummer bestaat niet!')
     msg.setWindowTitle('Gegevens!')
+    logger.debug("<<< Exiting foutWerknr()")
     msg.exec_()
         
 def invoerOK():
+    logger.debug(">>> Entering invoerOK()")
     msg = QMessageBox()
+    logger.debug("invoerOK(): msg → %s", msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setIcon(QMessageBox.Information)
     msg.setText('Invoer gelukt!')
     msg.setWindowTitle('RAAPLIJST')
+    logger.debug("<<< Exiting invoerOK()")
     msg.exec_()
     
 def negVoorraad():
+        logger.debug(">>> Entering negVoorraad()")
         msg = QMessageBox()
+        logger.debug("negVoorraad(): msg → %s", msg)
         msg.setStyleSheet("color: black;  background-color: gainsboro")
         msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
         msg.setIcon(QMessageBox.Critical)
         msg.setText('Te weinig voorraad\nvoor de transactie!')
         msg.setWindowTitle('VOORRAAD ONVOLDOENDE')
+        logger.debug("<<< Exiting negVoorraad()")
         msg.exec_()
         
 def foutHoev():
+        logger.debug(">>> Entering foutHoev()")
         msg = QMessageBox()
+        logger.debug("foutHoev(): msg → %s", msg)
         msg.setStyleSheet("color: black;  background-color: gainsboro")
         msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
         msg.setIcon(QMessageBox.Warning)
         msg.setText('Geen wijzigingen\ndoorgevoerd!')
         msg.setWindowTitle('INVOERFOUT')
+        logger.debug("<<< Exiting foutHoev()")
         msg.exec_()
 
 def werkGereed():
+    logger.debug(">>> Entering werkGereed()")
     msg = QMessageBox()
+    logger.debug("werkGereed(): msg → %s", msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     msg.setIcon(QMessageBox.Warning)
     msg.setText('Werknummer is afgemeld,\nboekingen niet meer mogelijk!')
     msg.setWindowTitle('Gegevens!')
+    logger.debug("<<< Exiting werkGereed()")
     msg.exec_()
           
 def eindProgram():
+    logger.debug(">>> Entering eindProgram()")
     msg = QMessageBox()
+    logger.debug("eindProgram(): msg → %s", msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     msg.setIcon(QMessageBox.Information)
     msg.setText('Programma afgesloten.\nTot ziens!')
     msg.setWindowTitle('BESTELLINGEN')               
+    logger.debug("<<< Exiting eindProgram()")
     msg.exec_() 
 				            
 def printRaaplijst(keuze, zoekterm, m_email, route):
+    logger.debug(">>> Entering printRaaplijst(keuze=%s,zoekterm=%s,m_email=%s,route=%s)", keuze, zoekterm, m_email, route)
     import validZt
     metadata = MetaData()
+    logger.debug("printRaaplijst(keuze=%s,zoekterm=%s,m_email=%s,route=%s): metadata → %s", keuze, zoekterm, m_email, route, metadata)
     raaplijst = Table('raaplijst', metadata,
         Column('lijstID', Integer,primary_key=True),
         Column('artikelID', Integer),
@@ -153,13 +196,17 @@ def printRaaplijst(keuze, zoekterm, m_email, route):
         Column('locatie_magazijn', String))
     
     engine = create_engine('postgresql+psycopg2://postgres@localhost/bisystem')
+    logger.debug("printRaaplijst(keuze=%s,zoekterm=%s,m_email=%s,route=%s): engine → %s", keuze, zoekterm, m_email, route, engine)
     con = engine.connect()
+    logger.debug("printRaaplijst(keuze=%s,zoekterm=%s,m_email=%s,route=%s): con → %s", keuze, zoekterm, m_email, route, con)
     if route < 2:
         if keuze == 1:
             selrl = select([raaplijst, artikelen]).where(and_(raaplijst.c.geleverd < raaplijst.c.afroep,\
                  raaplijst.c.artikelID == artikelen.c.artikelID)).order_by(raaplijst.c.werkorder, raaplijst.c.leverdatum)
             kop1 = 'Raaplijst Alle Afroepen '
+            logger.debug("printRaaplijst(keuze=%s,zoekterm=%s,m_email=%s,route=%s): kop1 → %s", keuze, zoekterm, m_email, route, kop1)
             tekst1 = ''
+            logger.debug("printRaaplijst(keuze=%s,zoekterm=%s,m_email=%s,route=%s): tekst1 → %s", keuze, zoekterm, m_email, route, tekst1)
         elif keuze == 2:
             selrl = select([raaplijst, artikelen]).where(and_(raaplijst.c.werkorder < 800000000,\
               raaplijst.c.geleverd < raaplijst.c.afroep, raaplijst.c.artikelID ==\
@@ -297,8 +344,10 @@ def printRaaplijst(keuze, zoekterm, m_email, route):
     else:
        geenRecord()
        kiesSelektie(route, m_email)
+       logger.debug("printRaaplijst(keuze=%s,zoekterm=%s,m_email=%s,route=%s): rprl → %s", keuze, zoekterm, m_email, route, rprl)
     
     mblad = 1
+    logger.debug("printRaaplijst(keuze=%s,zoekterm=%s,m_email=%s,route=%s): mblad → %s", keuze, zoekterm, m_email, route, mblad)
     rgl = 0
 
     for row in rprl:
@@ -319,6 +368,7 @@ def printRaaplijst(keuze, zoekterm, m_email, route):
             if keuze == 2:
                 kop1 = row[2]
                 kop = kop5
+                logger.debug("printRaaplijst(keuze=%s,zoekterm=%s,m_email=%s,route=%s): kop → %s", keuze, zoekterm, m_email, route, kop)
             elif keuze == 3:
                 kop1 = row[2]
                 kop = kop5
@@ -340,6 +390,7 @@ def printRaaplijst(keuze, zoekterm, m_email, route):
                 filename = '.\\forms\\Raaplijsten\\raaplijst-'+str(kop1)+'-'+str(datetime.datetime.now())[0:10]+'.txt'
             else:
                 filename = './forms/Raaplijsten/raaplijst-'+str(kop1)+'-'+str(datetime.datetime.now())[0:10]+'.txt'
+                logger.debug("printRaaplijst(keuze=%s,zoekterm=%s,m_email=%s,route=%s): filename → %s", keuze, zoekterm, m_email, route, filename)
 
             if rgl == 0:
                 open(filename, 'w').write(kop)
@@ -353,8 +404,10 @@ def printRaaplijst(keuze, zoekterm, m_email, route):
         rgl += 1
     printGeg(filename)
     kiesSelektie(route, m_email)
+    logger.debug("<<< Exiting printRaaplijst(keuze=%s,zoekterm=%s,m_email=%s,route=%s)", keuze, zoekterm, m_email, route)
  
 def kiesSelektie(route, m_email):
+    logger.debug(">>> Entering kiesSelektie(route=%s,m_email=%s)", route, m_email)
     class Widget(QDialog):
         def __init__(self, parent=None):
             super(Widget, self).__init__(parent)
@@ -461,23 +514,56 @@ def kiesSelektie(route, m_email):
             cancelBtn.setFont(QFont("Arial",10))
             cancelBtn.setFixedWidth(100)
             cancelBtn.setStyleSheet("color: black;  background-color: gainsboro")
+            logger.debug(">>> Entering __init__(data_list=%s,header=%s)", data_list, header)
+            logger.debug("__init__(data_list=%s,header=%s): font → %s", data_list, header, font)
+            logger.debug("__init__(data_list=%s,header=%s): table_view → %s", data_list, header, table_view)
+            logger.debug("__init__(data_list=%s,header=%s): grid → %s", data_list, header, grid)
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): grid → %s", self, data_list, header, grid)
+            logger.debug("__init__(data_list=%s,header=%s): table_model → %s", data_list, header, table_model)
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): table_model → %s", self, data_list, header, table_model)
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): table_view → %s", self, data_list, header, table_view)
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): font → %s", self, data_list, header, font)
+            logger.debug("__init__(data_list=%s,header=%s): pixmap → %s", data_list, header, pixmap)
+            logger.debug("__init__(data_list=%s,header=%s): lbl → %s", data_list, header, lbl)
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): lbl → %s", self, data_list, header, lbl)
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): pixmap → %s", self, data_list, header, pixmap)
+            logger.debug("__init__(data_list=%s,header=%s): logo → %s", data_list, header, logo)
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): logo → %s", self, data_list, header, logo)
+            logger.debug("__init__(data_list=%s,header=%s): freshBtn → %s", data_list, header, freshBtn)
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): freshBtn → %s", self, data_list, header, freshBtn)
+            logger.debug("__init__(data_list=%s,header=%s): sluitBtn → %s", data_list, header, sluitBtn)
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): sluitBtn → %s", self, data_list, header, sluitBtn)
+            logger.debug("<<< Exiting __init__(data_list=%s,header=%s)", data_list, header)
 
         def k0Changed(self, text):
+            logger.debug(">>> Entering k0Changed(text=%s)", text)
+            logger.debug("k0Changed(self=%s,text=%s): Keuze → %s", self, text, Keuze)
             self.Keuze.setText(text)
+            logger.debug("<<< Exiting k0Changed(text=%s)", text)
             
         def zktermChanged(self, text):
+            logger.debug(">>> Entering zktermChanged(text=%s)", text)
+            logger.debug("zktermChanged(self=%s,text=%s): Zoekterm → %s", self, text, Zoekterm)
             self.Zoekterm.setText(text)
+            logger.debug("<<< Exiting zktermChanged(text=%s)", text)
  
         def returnk0(self):
+            logger.debug(">>> Entering returnk0()")
+            logger.debug("<<< Exiting returnk0()")
             return self.Keuze.text()
         
         def returnzkterm(self):
+            logger.debug(">>> Entering returnzkterm()")
+            logger.debug("<<< Exiting returnzkterm()")
             return self.Zoekterm.text()
         
         @staticmethod
         def getData(parent=None):
             dialog = Widget(parent)
             dialog.exec_()
+            logger.debug(">>> Entering getData(parent=%s)", parent)
+            logger.debug("getData(parent=%s): dialog → %s", parent, dialog)
+            logger.debug("<<< Exiting getData(parent=%s)", parent)
             return [dialog.returnk0(), dialog.returnzkterm()] 
     
     window = Widget()
@@ -498,7 +584,9 @@ def kiesSelektie(route, m_email):
         printRaaplijst(keuze, zoekterm, m_email, route)
 
 def raapLijst(keuze, zoekterm, m_email, route):
+    logger.debug(">>> Entering raapLijst(keuze=%s,zoekterm=%s,m_email=%s,route=%s)", keuze, zoekterm, m_email, route)
     class MyWindow(QDialog):
+        logger.error("Exception in raapLijst(keuze=%s,zoekterm=%s,m_email=%s,route=%s)", keuze, zoekterm, m_email, route, exc_info=True)
         def __init__(self, data_list, header, *args):
             QWidget.__init__(self, *args,)
             self.setWindowTitle('Raaplijst Opvragen / Muteren')
@@ -551,18 +639,62 @@ def raapLijst(keuze, zoekterm, m_email, route):
             
             self.setLayout(grid)
             self.setGeometry(50, 50, 1500, 900)
+            logger.debug(">>> Entering __init__(parent=%s,mylist=%s,header=%s)", parent, mylist, header)
+            logger.debug("<<< Exiting __init__(parent=%s,mylist=%s,header=%s)", parent, mylist, header)
+            logger.debug("__init__(self=%s,parent=%s,mylist=%s,header=%s): self.mylist → %s", self, parent, mylist, header, self.mylist)
             
     class MyTableModel(QAbstractTableModel):
         def __init__(self, parent, mylist, header, *args):
+            logger.debug("__init__(self=%s,parent=%s,mylist=%s,header=%s): self.header → %s", self, parent, mylist, header, self.header)
             QAbstractTableModel.__init__(self, parent, *args)
             self.mylist = mylist
+            logger.debug(">>> Entering __init__(parent=%s)", parent)
+            logger.debug("__init__(parent=%s): pixmap → %s", parent, pixmap)
+            logger.debug("__init__(parent=%s): input_validator → %s", parent, input_validator)
+            logger.debug("__init__(parent=%s): zkwerknEdit → %s", parent, zkwerknEdit)
+            logger.debug("__init__(parent=%s): self.Werknummer → %s", parent, self.Werknummer)
+            logger.debug("__init__(self=%s,parent=%s): zkwerknEdit → %s", self, parent, zkwerknEdit)
+            logger.debug("__init__(parent=%s): reg_ex → %s", parent, reg_ex)
+            logger.debug("__init__(self=%s,parent=%s): reg_ex → %s", self, parent, reg_ex)
+            logger.debug("__init__(self=%s,parent=%s): input_validator → %s", self, parent, input_validator)
+            logger.debug("__init__(parent=%s): artEdit → %s", parent, artEdit)
+            logger.debug("__init__(parent=%s): self.Artikelnummer → %s", parent, self.Artikelnummer)
+            logger.debug("__init__(self=%s,parent=%s): artEdit → %s", self, parent, artEdit)
+            logger.debug("__init__(parent=%s): hoevEdit → %s", parent, hoevEdit)
+            logger.debug("__init__(parent=%s): self.Hoeveelheid → %s", parent, self.Hoeveelheid)
+            logger.debug("__init__(self=%s,parent=%s): hoevEdit → %s", self, parent, hoevEdit)
+            logger.debug("__init__(parent=%s): grid → %s", parent, grid)
+            logger.debug("__init__(self=%s,parent=%s): grid → %s", self, parent, grid)
+            logger.debug("__init__(parent=%s): lbl → %s", parent, lbl)
+            logger.debug("__init__(self=%s,parent=%s): lbl → %s", self, parent, lbl)
+            logger.debug("__init__(self=%s,parent=%s): pixmap → %s", self, parent, pixmap)
+            logger.debug("__init__(parent=%s): logo → %s", parent, logo)
+            logger.debug("__init__(self=%s,parent=%s): logo → %s", self, parent, logo)
+            logger.debug("__init__(parent=%s): lbl1 → %s", parent, lbl1)
+            logger.debug("__init__(self=%s,parent=%s): lbl1 → %s", self, parent, lbl1)
+            logger.debug("__init__(parent=%s): lbl2 → %s", parent, lbl2)
+            logger.debug("__init__(self=%s,parent=%s): lbl2 → %s", self, parent, lbl2)
+            logger.debug("__init__(parent=%s): lbl4 → %s", parent, lbl4)
+            logger.debug("__init__(self=%s,parent=%s): lbl4 → %s", self, parent, lbl4)
+            logger.debug("__init__(parent=%s): lbl3 → %s", parent, lbl3)
+            logger.debug("__init__(self=%s,parent=%s): lbl3 → %s", self, parent, lbl3)
+            logger.debug("__init__(parent=%s): applyBtn → %s", parent, applyBtn)
+            logger.debug("__init__(self=%s,parent=%s): applyBtn → %s", self, parent, applyBtn)
+            logger.debug("__init__(parent=%s): sluitBtn → %s", parent, sluitBtn)
+            logger.debug("__init__(self=%s,parent=%s): sluitBtn → %s", self, parent, sluitBtn)
+            logger.debug("<<< Exiting __init__(parent=%s)", parent)
             self.header = header
         def rowCount(self, parent):
+            logger.debug(">>> Entering rowCount(parent=%s)", parent)
             return len(self.mylist)
         def columnCount(self, parent):
+            logger.debug(">>> Entering columnCount(parent=%s)", parent)
             return len(self.mylist[0])
         def data(self, index, role):
+            logger.debug(">>> Entering data(index=%s,role=%s)", index, role)
             veld = self.mylist[index.row()][index.column()]
+            logger.debug("data(index=%s,role=%s): veld → %s", index, role, veld)
+            logger.debug("data(self=%s,index=%s,role=%s): veld → %s", self, index, role, veld)
             if not index.isValid():
                 return None
             elif role == Qt.TextAlignmentRole and (type(veld) == float or type(veld) == int):
@@ -572,10 +704,13 @@ def raapLijst(keuze, zoekterm, m_email, route):
             if type(veld) == float:
                 return '{:12.2f}'.format(veld)
             else:
+                logger.debug("<<< Exiting data(index=%s,role=%s)", index, role)
                 return veld
         def headerData(self, col, orientation, role):
+            logger.debug(">>> Entering headerData(col=%s,orientation=%s,role=%s)", col, orientation, role)
             if orientation == Qt.Horizontal and role == Qt.DisplayRole:
                 return self.header[col]
+            logger.debug("<<< Exiting headerData(col=%s,orientation=%s,role=%s)", col, orientation, role)
             return None
        
     metadata = MetaData()
@@ -645,9 +780,12 @@ def raapLijst(keuze, zoekterm, m_email, route):
         data_list += [(row)]
         
     def boekAfroep(idx):
+        logger.debug(">>> Entering boekAfroep(idx=%s)", idx)
         mlijstnr = idx.data()
+        logger.debug("boekAfroep(idx=%s): mlijstnr → %s", idx, mlijstnr)
         if idx.column() == 0 :
             metadata = MetaData()
+            logger.debug("boekAfroep(idx=%s): metadata → %s", idx, metadata)
             raaplijst = Table('raaplijst', metadata,
                 Column('lijstID', Integer,primary_key=True),
                 Column('artikelID', Integer),
@@ -665,21 +803,33 @@ def raapLijst(keuze, zoekterm, m_email, route):
                 Column('woonplaats', String))
             
             engine = create_engine('postgresql+psycopg2://postgres@localhost/bisystem')
+            logger.debug("boekAfroep(idx=%s): engine → %s", idx, engine)
             con = engine.connect()
       
+            logger.debug("boekAfroep(idx=%s): con → %s", idx, con)
             selrlr = select([raaplijst]).where(raaplijst.c.lijstID == mlijstnr)                           
             rprlr = con.execute(selrlr).first()
+            logger.debug("boekAfroep(idx=%s): selrlr → %s", idx, selrlr)
+            logger.debug("boekAfroep(idx=%s): rprlr → %s", idx, rprlr)
            
             mwerknr = rprlr[2]
             martnr = rprlr[1]
+            logger.debug("boekAfroep(idx=%s): mwerknr → %s", idx, mwerknr)
+            logger.debug("boekAfroep(idx=%s): martnr → %s", idx, martnr)
             mleverdat = rprlr[4]
+            logger.debug("boekAfroep(idx=%s): mleverdat → %s", idx, mleverdat)
             mmmstatus = rprlr[6]
+            logger.debug("boekAfroep(idx=%s): mmmstatus → %s", idx, mmmstatus)
             mafroep = rprlr[3]
+            logger.debug("boekAfroep(idx=%s): mafroep → %s", idx, mafroep)
             mgeleverd = rprlr[5]
+            logger.debug("boekAfroep(idx=%s): mgeleverd → %s", idx, mgeleverd)
             
             class Widget(QDialog):
+                logger.debug("<<< Exiting boekAfroep(idx=%s)", idx)
                 def __init__(self, parent=None):
                     super(Widget, self).__init__(parent)
+                    logger.debug(">>> Entering __init__(parent=%s)", parent)
                     self.setWindowTitle("Materiaaluitgifte muteren")
                     self.setWindowIcon(QIcon('./images/logos/logo.jpg'))
             
@@ -773,27 +923,44 @@ def raapLijst(keuze, zoekterm, m_email, route):
                     sluitBtn.setStyleSheet("color: black;  background-color: gainsboro")
                                 
                     grid.addWidget(QLabel('\u00A9 2017 all rights reserved dj.jansen@casema.nl'), 7, 0, 1, 3, Qt.AlignCenter)     
+                    logger.debug("<<< Exiting __init__(parent=%s)", parent)
                                                                               
                 def zkwerknChanged(self, text):
+                    logger.debug(">>> Entering zkwerknChanged(text=%s)", text)
+                    logger.debug("zkwerknChanged(self=%s,text=%s): Werknummer → %s", self, text, Werknummer)
                     self.Werknummer.setText(text)
+                    logger.debug("<<< Exiting zkwerknChanged(text=%s)", text)
                     
                 def artChanged(self,text):
+                    logger.debug(">>> Entering artChanged(text=%s)", text)
+                    logger.debug("artChanged(self=%s,text=%s): Artikelnummer → %s", self, text, Artikelnummer)
                     self.Artikelnummer.setText(text)
+                    logger.debug("<<< Exiting artChanged(text=%s)", text)
                     
                 def hoevChanged(self,text):
+                    logger.debug(">>> Entering hoevChanged(text=%s)", text)
+                    logger.debug("hoevChanged(self=%s,text=%s): Hoeveelheid → %s", self, text, Hoeveelheid)
                     self.Hoeveelheid.setText(text)
+                    logger.debug("<<< Exiting hoevChanged(text=%s)", text)
                                                             
                 def returnzkwerkn(self):
+                    logger.debug(">>> Entering returnzkwerkn()")
+                    logger.debug("<<< Exiting returnzkwerkn()")
                     return self.Werknummer.text()
                 
                 def returnart(self):
+                    logger.debug(">>> Entering returnart()")
+                    logger.debug("<<< Exiting returnart()")
                     return self.Artikelnummer.text()
                 
                 def returnhoev(self):
+                    logger.debug(">>> Entering returnhoev()")
+                    logger.debug("<<< Exiting returnhoev()")
                     return self.Hoeveelheid.text()
                                         
                 @staticmethod
                 def getData(parent=None):
+                    logger.debug(">>> Entering getData(parent=%s)", parent)
                     dialog = Widget(parent)
                     dialog.exec_()
                     return [dialog.returnzkwerkn(), dialog.returnart(), dialog.returnhoev()]

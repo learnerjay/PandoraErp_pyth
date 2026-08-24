@@ -3,14 +3,19 @@ from sqlalchemy import Table, Column, Integer, String, MetaData, create_engine,\
                      Float, update
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QMessageBox, QApplication
+import logging
+logger = logging.getLogger(__name__)
 
 def odd_even(message):
+    logger.debug(">>> Entering odd_even(message=%s)", message)
     msg = QMessageBox()
+    logger.debug("odd_even(message=%s): msg → %s", message, msg)
     msg.setStyleSheet("font: 10pt Arial; color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     msg.setIcon(QMessageBox.Information)
     msg.setText(message)
     msg.setWindowTitle('Reset parameter')
+    logger.debug("<<< Exiting odd_even(message=%s)", message)
     msg.exec_()
 
 try:

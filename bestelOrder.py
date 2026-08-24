@@ -8,95 +8,127 @@ from PyQt5.QtWidgets import  QDialog, QLabel, QGridLayout, QPushButton, QLineEdi
 from sqlalchemy import (Table, Column, Integer, String, MetaData, create_engine,\
                         Float, Boolean, ForeignKey, select, insert, update, delete, and_, func)
 from sqlalchemy.exc import IntegrityError
+import logging
+logger = logging.getLogger(__name__)
 
 def windowSluit(self, m_email):
+    logger.debug(">>> Entering windowSluit(m_email=%s)", m_email)
     self.close()
     hoofdMenu(m_email)
+    logger.debug("<<< Exiting windowSluit(m_email=%s)", m_email)
 
 def bestGelukt():
+    logger.debug(">>> Entering bestGelukt()")
     msg = QMessageBox()
+    logger.debug("bestGelukt(): msg → %s", msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     msg.setIcon(QMessageBox.Information)
     msg.setText('Payment has been made\nOrder will be processed!')
     msg.setWindowTitle('Orders')               
+    logger.debug("<<< Exiting bestGelukt()")
     msg.exec_()
     
 def betMislukt():
+    logger.debug(">>> Entering betMislukt()")
     msg = QMessageBox()
+    logger.debug("betMislukt(): msg → %s", msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     msg.setIcon(QMessageBox.Warning)
     msg.setText('Payment was not successful\npayment redo!')
     msg.setWindowTitle('Payments')               
+    logger.debug("<<< Exiting betMislukt()")
     msg.exec_()
     
 def betGelukt():
+    logger.debug(">>> Entering betGelukt()")
     msg = QMessageBox()
+    logger.debug("betGelukt(): msg → %s", msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     msg.setIcon(QMessageBox.Information)
     msg.setText('Payment has been successful!')
     msg.setWindowTitle('Payments')               
+    logger.debug("<<< Exiting betGelukt()")
     msg.exec_()
   
 def ongInvoer():
+    logger.debug(">>> Entering ongInvoer()")
     msg = QMessageBox()
+    logger.debug("ongInvoer(): msg → %s", msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     msg.setIcon(QMessageBox.Warning)
     msg.setText('Please re-enter incorrect input\nsearch term!')
     msg.setWindowTitle('Request articles')               
+    logger.debug("<<< Exiting ongInvoer()")
     msg.exec_()
     
 def geenRecord():
+    logger.debug(">>> Entering geenRecord()")
     msg = QMessageBox()
+    logger.debug("geenRecord(): msg → %s", msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     msg.setIcon(QMessageBox.Warning)
     msg.setText('No record found\ncreate another selection please!')
     msg.setWindowTitle('Request articles')               
+    logger.debug("<<< Exiting geenRecord()")
     msg.exec_() 
     
 def geenRegels():
+    logger.debug(">>> Entering geenRegels()")
     msg = QMessageBox()
+    logger.debug("geenRegels(): msg → %s", msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     msg.setIcon(QMessageBox.Warning)
     msg.setText('No pending order yet\nfirst order please!')
     msg.setWindowTitle('Ordering')               
+    logger.debug("<<< Exiting geenRegels()")
     msg.exec_()
     
 def foutPostcode():
+    logger.debug(">>> Entering foutPostcode()")
     msg = QMessageBox()
+    logger.debug("foutPostcode(): msg → %s", msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     msg.setIcon(QMessageBox.Warning)
     msg.setText('Incorrect Zipcode and/or house number inserted\nor incorrect combination of postcode and house number!')
     msg.setWindowTitle('Zipcode')               
     msg.exec_()
+    logger.debug("<<< Exiting foutPostcode()")
     return(False)
    
 def negVoorraad(maant):
+    logger.debug(">>> Entering negVoorraad(maant=%s)", maant)
     msg = QMessageBox()
+    logger.debug("negVoorraad(maant=%s): msg → %s", maant, msg)
     msg.setStyleSheet("font: 10pt Arial; color: black;  background-color: gainsboro")
     #msg.setStyleSheet("font: italic 10pt Arial; color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     msg.setIcon(QMessageBox.Critical)
     msg.setText('There is a shortage of '+str(int(maant))+' on the stock\nThe order cannot be executed, sorry!')
     msg.setWindowTitle('Stock insufficient')
+    logger.debug("<<< Exiting negVoorraad(maant=%s)", maant)
     msg.exec_()
     
 def foutAlert(e):
+    logger.debug(">>> Entering foutAlert(e=%s)", e)
     msg = QMessageBox()
+    logger.debug("foutAlert(e=%s): msg → %s", e, msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     msg.setIcon(QMessageBox.Critical)
     msg.setText('\n\nAn error occurred.\nPass error message to system administration.\nPress OK to exit program!\n\nError message: '+str(e))
     msg.setWindowTitle('System error')
+    logger.debug("<<< Exiting foutAlert(e=%s)", e)
     msg.exec_()
     
 def info():
+    logger.debug(">>> Entering info()")
     class Widget(QDialog):
         def __init__(self):
             QDialog.__init__(self)

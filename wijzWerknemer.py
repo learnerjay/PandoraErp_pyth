@@ -6,43 +6,64 @@ from PyQt5.QtCore import Qt, QRegExp
 from sqlalchemy import (Table, Column, Integer, String, Float, Boolean,\
                         ForeignKey,  MetaData, create_engine)
 from sqlalchemy.sql import select, and_, update
+import logging
+logger = logging.getLogger(__name__)
 
 def geenBetaalgeg():
+    logger.debug(">>> Entering geenBetaalgeg()")
     msg = QMessageBox()
+    logger.debug("geenBetaalgeg(): msg → %s", msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setIcon(QMessageBox.Warning)
     msg.setText('No payment details found for this period!')
     msg.setWindowTitle('Payment details!')
+    logger.debug("<<< Exiting geenBetaalgeg()")
     msg.exec_()
     
 def wijzSluit(self, m_email):
+    logger.debug(">>> Entering wijzSluit(m_email=%s)", m_email)
     self.close()
     zoekWerknemer(m_email)
+    logger.debug("<<< Exiting wijzSluit(m_email=%s)", m_email)
     
 def windowSluit(self, m_email):
+    logger.debug(">>> Entering windowSluit(m_email=%s)", m_email)
     self.close()
     hoofdMenu(m_email)
+    logger.debug("<<< Exiting windowSluit(m_email=%s)", m_email)
     
 def info():
+    logger.debug(">>> Entering info()")
     class Widget(QDialog):
         def __init__(self):
+            logger.debug(">>> Entering __init__()")
             QDialog.__init__(self)
             self.setWindowTitle("Information replacement work")
             self.setWindowIcon(QIcon('./images/logos/logo.jpg'))
+            logger.debug("__init__(): pixmap → %s", pixmap)
+            logger.debug("__init__(): grid → %s", grid)
+            logger.debug("__init__(self=%s): grid → %s", self, grid)
             self.setFont(QFont("Arial", 10))
             grid = QGridLayout()
             grid.setSpacing(20)
             
             logo = QLabel()
+            logger.debug("__init__(self=%s): logo → %s", self, logo)
+            logger.debug("__init__(): logo → %s", logo)
             pixmap = QPixmap('./images/logos/logo.jpg')
+            logger.debug("__init__(self=%s): pixmap → %s", self, pixmap)
             logo.setPixmap(pixmap)
             grid.addWidget(logo , 0, 3, 1, 1, Qt.AlignRight)
             
+            logger.debug("<<< Exiting __init__()")
             lblinfo = QLabel('Replacement work.')
+            logger.debug("__init__(self=%s): lblinfo → %s", self, lblinfo)
             grid.addWidget(lblinfo, 0, 0, 1, 4, Qt.AlignCenter)
             lblinfo.setStyleSheet("color:rgb(45, 83, 115); font: 25pt Comic Sans MS")
         
             lbl = QLabel()
+            logger.debug("__init__(self=%s): lbl → %s", self, lbl)
+            logger.debug("__init__(): lbl → %s", lbl)
             pixmap = QPixmap('./images/logos/verbinding.jpg')
             lbl.setPixmap(pixmap)
             grid.addWidget(lbl, 0, 0)

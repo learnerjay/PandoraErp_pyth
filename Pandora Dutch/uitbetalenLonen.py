@@ -1,15 +1,23 @@
+import logging
+logger = logging.getLogger(__name__)
 def maandBetalingen(m_email):
+    logger.debug(">>> Entering maandBetalingen(m_email=%s)", m_email)
     from login import hoofdMenu
     import os, datetime
     from PyQt5.QtWidgets import QLabel, QLineEdit, QGridLayout, QPushButton, \
         QDialog, QMessageBox, QWidget, QTableView, QVBoxLayout
+    logger.error("Exception in maandBetalingen(m_email=%s)", m_email, exc_info=True)
+    import time; __log_start = time.time()
     from PyQt5.QtGui import QRegExpValidator, QFont, QPixmap, QIcon
     from PyQt5.QtCore import Qt, QRegExp, QAbstractTableModel
     from sqlalchemy import (Table, Column, Integer, String, Float, Boolean, \
                             ForeignKey, MetaData, create_engine)
+    logger.info("maandBetalingen(m_email)=%s: query operation took %s ms", m_email, int((time.time() - __log_start) * 1000))
+    logger.debug("maandBetalingen(m_email=%s): params_periods → %s", m_email, params_periods)
     from sqlalchemy.sql import select, insert, update, and_, func
 
     metadata = MetaData()
+    logger.debug("maandBetalingen(m_email=%s): metadata → %s", m_email, metadata)
     params_periods = Table('params_periods', metadata,
                            Column('periodID', Integer, primary_key=True),
                            Column('working_hours_per_period', Integer),
@@ -17,6 +25,7 @@ def maandBetalingen(m_email):
                            Column('lock_processed', Boolean))
 
     def info():
+        logger.debug(">>> Entering info()")
         class Widget(QDialog):
             def __init__(self):
                 QDialog.__init__(self)

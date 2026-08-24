@@ -7,94 +7,132 @@ from PyQt5.QtWidgets import QDialog, QLabel, QGridLayout,\
 from sqlalchemy import (Table, Column, Integer, String, Float,\
                         MetaData, create_engine, ForeignKey)
 from sqlalchemy.sql import select, update, and_
+import logging
+logger = logging.getLogger(__name__)
    
 def windowSluit(self, m_email):
+    logger.debug(">>> Entering windowSluit(m_email=%s)", m_email)
     self.close()
     hoofdMenu(m_email)
+    logger.debug("<<< Exiting windowSluit(m_email=%s)", m_email)
     
 def foutWerknr():
+    logger.debug(">>> Entering foutWerknr()")
     msg = QMessageBox()
+    logger.debug("foutWerknr(): msg → %s", msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg')) 
     msg.setIcon(QMessageBox.Warning)
     msg.setText('Werkorder niet aanwezig, \nmaak eerst een werkorder aan,\nalvorens de begroting te koppelen!')
     msg.setWindowTitle('Koppel begroting')
+    logger.debug("<<< Exiting foutWerknr()")
     msg.exec_()
     
 def gekoppeld():
+    logger.debug(">>> Entering gekoppeld()")
     msg = QMessageBox()
+    logger.debug("gekoppeld(): msg → %s", msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg')) 
     msg.setIcon(QMessageBox.Critical)
     msg.setText('Werknummer is reeds gekoppeld!')
     msg.setWindowTitle('Koppel begroting')
+    logger.debug("<<< Exiting gekoppeld()")
     msg.exec_()
         
 def verwFout(mwerknr):
+    logger.debug(">>> Entering verwFout(mwerknr=%s)", mwerknr)
     msg = QMessageBox()
+    logger.debug("verwFout(mwerknr=%s): msg → %s", mwerknr, msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg')) 
     msg.setIcon(QMessageBox.Warning)
     msg.setText('Koppeling heeft al plaatsgevonden\nde begrote gegevens zijn eerder\nnaar werk '+str(mwerknr)+' overgezet!')
     msg.setWindowTitle('Koppel begroting')
+    logger.debug("<<< Exiting verwFout(mwerknr=%s)", mwerknr)
     msg.exec_()
     
 def foutCalc():
+    logger.debug(">>> Entering foutCalc()")
     msg = QMessageBox()
+    logger.debug("foutCalc(): msg → %s", msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg')) 
     msg.setIcon(QMessageBox.Warning)
     msg.setText('Calculatie niet aanwezig!')
     msg.setWindowTitle('Koppel begroting')
+    logger.debug("<<< Exiting foutCalc()")
     msg.exec_()
         
 def geenOpdracht():
+    logger.debug(">>> Entering geenOpdracht()")
     msg = QMessageBox()
+    logger.debug("geenOpdracht(): msg → %s", msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg')) 
     msg.setIcon(QMessageBox.Warning)
     msg.setText('Nog geen opdracht aanwezig!')
     msg.setWindowTitle('Koppel begroting')
+    logger.debug("<<< Exiting geenOpdracht()")
     msg.exec_()
 
 def gegevensOk():
+    logger.debug(">>> Entering gegevensOk()")
     msg = QMessageBox()
+    logger.debug("gegevensOk(): msg → %s", msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg')) 
     msg.setIcon(QMessageBox.Information)
     msg.setText('Transfer is gelukt!')
     msg.setWindowTitle('Koppel begroting')
+    logger.debug("<<< Exiting gegevensOk()")
     msg.exec_()
 
 def noLinking():
+    logger.debug(">>> Entering noLinking()")
     msg = QMessageBox()
+    logger.debug("noLinking(): msg → %s", msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     msg.setIcon(QMessageBox.Critical)
     msg.setText('Geen koppeling mogelijk, verwerf eerst de opdracht!')
     msg.setWindowTitle('Koppel calculatie')
+    logger.debug("<<< Exiting noLinking()")
     msg.exec_()
    
 def zoekBegroting(m_email):
+    logger.debug(">>> Entering zoekBegroting(m_email=%s)", m_email)
     class Widget(QDialog):
         def __init__(self, parent=None):
             super(Widget, self).__init__(parent)
+            logger.debug(">>> Entering __init__(parent=%s)", parent)
             self.setWindowTitle("Calculatie koppelen")
             self.setWindowIcon(QIcon('./images/logos/logo.jpg'))
+            logger.debug("__init__(parent=%s): pixmap → %s", parent, pixmap)
+            logger.debug("__init__(parent=%s): input_validator → %s", parent, input_validator)
     
             self.setFont(QFont('Arial', 10))
                                       
             self.Calculatie = QLabel()
+            logger.debug("__init__(parent=%s): self.Calculatie → %s", parent, self.Calculatie)
             zkcalcEdit = QLineEdit()
+            logger.debug("__init__(self=%s,parent=%s): zkcalcEdit → %s", self, parent, zkcalcEdit)
+            logger.debug("__init__(parent=%s): zkcalcEdit → %s", parent, zkcalcEdit)
             zkcalcEdit.setFixedWidth(100)
             zkcalcEdit.setFont(QFont("Arial",10))
             zkcalcEdit.textChanged.connect(self.zkcalcChanged)
             reg_ex = QRegExp('^[1-9]{1}[0-9]{0,8}$')
+            logger.debug("__init__(self=%s,parent=%s): reg_ex → %s", self, parent, reg_ex)
+            logger.debug("__init__(parent=%s): reg_ex → %s", parent, reg_ex)
             input_validator = QRegExpValidator(reg_ex, zkcalcEdit)
+            logger.debug("__init__(self=%s,parent=%s): input_validator → %s", self, parent, input_validator)
             zkcalcEdit.setValidator(input_validator)  
             
             self.Werkorder = QLabel()
+            logger.debug("__init__(parent=%s): self.Werkorder → %s", parent, self.Werkorder)
             zkwerknrEdit = QLineEdit()
+            logger.debug("__init__(self=%s,parent=%s): zkwerknrEdit → %s", self, parent, zkwerknrEdit)
+            logger.debug("__init__(parent=%s): zkwerknrEdit → %s", parent, zkwerknrEdit)
             zkwerknrEdit.setFixedWidth(100)
             zkwerknrEdit.setFont(QFont("Arial",10))
             zkwerknrEdit.textChanged.connect(self.zkwerknrChanged)
@@ -103,19 +141,28 @@ def zoekBegroting(m_email):
             zkwerknrEdit.setValidator(input_validator)  
            
             grid = QGridLayout()
+            logger.debug("__init__(self=%s,parent=%s): grid → %s", self, parent, grid)
+            logger.debug("__init__(parent=%s): grid → %s", parent, grid)
             grid.setSpacing(20)
                           
             lbl = QLabel()
+            logger.debug("__init__(self=%s,parent=%s): lbl → %s", self, parent, lbl)
+            logger.debug("__init__(parent=%s): lbl → %s", parent, lbl)
             pixmap = QPixmap('./images/logos/verbinding.jpg')
+            logger.debug("__init__(self=%s,parent=%s): pixmap → %s", self, parent, pixmap)
             lbl.setPixmap(pixmap)
             grid.addWidget(lbl , 1, 0)
             
             lbl1 = QLabel('Calculatienummer')  
+            logger.debug("__init__(self=%s,parent=%s): lbl1 → %s", self, parent, lbl1)
+            logger.debug("__init__(parent=%s): lbl1 → %s", parent, lbl1)
             lbl1.setAlignment(Qt.AlignRight)
             grid.addWidget(lbl1, 3, 0)
             grid.addWidget(zkcalcEdit, 3, 1)
             
             lbl2 = QLabel('Werkorder')
+            logger.debug("__init__(self=%s,parent=%s): lbl2 → %s", self, parent, lbl2)
+            logger.debug("__init__(parent=%s): lbl2 → %s", parent, lbl2)
             lbl2.setAlignment(Qt.AlignRight)
             grid.addWidget(lbl2, 4, 0)
             grid.addWidget(zkwerknrEdit, 4, 1)
@@ -126,11 +173,15 @@ def zoekBegroting(m_email):
             grid.addWidget(QLabel('\u00A9 2017 all rights reserved dj.jansen@casema.nl'), 7, 0, 1, 2, Qt.AlignCenter)
              
             logo = QLabel()
+            logger.debug("__init__(self=%s,parent=%s): logo → %s", self, parent, logo)
+            logger.debug("__init__(parent=%s): logo → %s", parent, logo)
             pixmap = QPixmap('./images/logos/logo.jpg')
             logo.setPixmap(pixmap)
             grid.addWidget(logo ,  1, 0, 1, 2, Qt.AlignRight)
    
             applyBtn = QPushButton('Zoeken')
+            logger.debug("__init__(self=%s,parent=%s): applyBtn → %s", self, parent, applyBtn)
+            logger.debug("__init__(parent=%s): applyBtn → %s", parent, applyBtn)
             applyBtn.clicked.connect(self.accept)
     
             grid.addWidget(applyBtn, 6, 1)
@@ -139,29 +190,45 @@ def zoekBegroting(m_email):
             applyBtn.setStyleSheet("color: black;  background-color: gainsboro")
             
             cancelBtn = QPushButton('Sluiten')
+            logger.debug("__init__(self=%s,parent=%s): cancelBtn → %s", self, parent, cancelBtn)
+            logger.debug("__init__(parent=%s): cancelBtn → %s", parent, cancelBtn)
             cancelBtn.clicked.connect(lambda: windowSluit(self, m_email))
     
             grid.addWidget(cancelBtn, 6, 0, 1, 1,Qt.AlignRight)
+            logger.debug("<<< Exiting __init__(parent=%s)", parent)
             cancelBtn.setFont(QFont("Arial",10))
             cancelBtn.setFixedWidth(100)
             cancelBtn.setStyleSheet("color: black;  background-color: gainsboro")
               
         def zkcalcChanged(self, text):
+            logger.debug(">>> Entering zkcalcChanged(text=%s)", text)
+            logger.debug("zkcalcChanged(self=%s,text=%s): Calculatie → %s", self, text, Calculatie)
             self.Calculatie.setText(text)
+            logger.debug("<<< Exiting zkcalcChanged(text=%s)", text)
             
         def zkwerknrChanged(self, text):
+            logger.debug(">>> Entering zkwerknrChanged(text=%s)", text)
+            logger.debug("zkwerknrChanged(self=%s,text=%s): Werkorder → %s", self, text, Werkorder)
             self.Werkorder.setText(text)
+            logger.debug("<<< Exiting zkwerknrChanged(text=%s)", text)
              
         def returnCalculatie(self):
+            logger.debug(">>> Entering returnCalculatie()")
+            logger.debug("<<< Exiting returnCalculatie()")
             return self.Calculatie.text()
         
         def returnWerkorder(self):
+            logger.debug(">>> Entering returnWerkorder()")
+            logger.debug("<<< Exiting returnWerkorder()")
             return self.Werkorder.text()
         
         @staticmethod
         def getData(parent=None):
+            logger.debug(">>> Entering getData(parent=%s)", parent)
             dialog = Widget(parent)
+            logger.debug("getData(parent=%s): dialog → %s", parent, dialog)
             dialog.exec_()
+            logger.debug("<<< Exiting getData(parent=%s)", parent)
             return [dialog.returnCalculatie(), dialog.returnWerkorder()]       
 
     window = Widget()
@@ -215,7 +282,9 @@ def zoekBegroting(m_email):
         koppelCalc(mcalnr, mwerknr,mwerkomschr, m_email)
   
 def koppelCalc(mcalnr, mwerknr, mwerkomschr, m_email):
+    logger.debug(">>> Entering koppelCalc(mcalnr=%s,mwerknr=%s,mwerkomschr=%s,m_email=%s)", mcalnr, mwerknr, mwerkomschr, m_email)
     msgBox=QMessageBox()
+    logger.debug("koppelCalc(mcalnr=%s,mwerknr=%s,mwerkomschr=%s,m_email=%s): msgBox → %s", mcalnr, mwerknr, mwerkomschr, m_email, msgBox)
     msgBox.setWindowIcon(QIcon('./images/logos/logo.jpg')) 
     msgBox.setWindowTitle("Begroting Koppelen")
     msgBox.setIcon(QMessageBox.Warning)
@@ -225,6 +294,7 @@ def koppelCalc(mcalnr, mwerknr, mwerkomschr, m_email):
     msgBox.setDefaultButton(QMessageBox.Yes)
     if(msgBox.exec_() == QMessageBox.Yes):
         metadata = MetaData()
+        logger.debug("koppelCalc(mcalnr=%s,mwerknr=%s,mwerkomschr=%s,m_email=%s): metadata → %s", mcalnr, mwerknr, mwerkomschr, m_email, metadata)
         icalculaties = Table('icalculaties', metadata,
             Column('icalcID', Integer(), primary_key=True),
             Column('iclusterID', None, ForeignKey('iclusters.iclusterID')),
@@ -346,9 +416,13 @@ def koppelCalc(mcalnr, mwerknr, mwerkomschr, m_email):
             Column('gereed', Float))
               
         engine = create_engine('postgresql+psycopg2://postgres@localhost/bisystem')
+        logger.debug("koppelCalc(mcalnr=%s,mwerknr=%s,mwerkomschr=%s,m_email=%s): engine → %s", mcalnr, mwerknr, mwerkomschr, m_email, engine)
         con = engine.connect()
+        logger.debug("koppelCalc(mcalnr=%s,mwerknr=%s,mwerkomschr=%s,m_email=%s): con → %s", mcalnr, mwerknr, mwerkomschr, m_email, con)
         selcal = select([icalculaties]).where(icalculaties.c.icalculatie == mcalnr)
         rpcal = con.execute(selcal)
+        logger.debug("koppelCalc(mcalnr=%s,mwerknr=%s,mwerkomschr=%s,m_email=%s): selcal → %s", mcalnr, mwerknr, mwerkomschr, m_email, selcal)
+        logger.debug("koppelCalc(mcalnr=%s,mwerknr=%s,mwerkomschr=%s,m_email=%s): rpcal → %s", mcalnr, mwerknr, mwerkomschr, m_email, rpcal)
         
         for regel in rpcal:
             updwerk = update(orders_intern).where(orders_intern.c.werkorderID == mwerknr)\
@@ -434,16 +508,25 @@ def koppelCalc(mcalnr, mwerknr, mwerkomschr, m_email):
         con = engine.connect()
         selmat = select([materiaallijsten, artikelen]).where(and_(materiaallijsten.\
             c.icalculatie == mcalnr, materiaallijsten.c.artikelID == artikelen.c.artikelID))
+        logger.debug("koppelCalc(mcalnr=%s,mwerknr=%s,mwerkomschr=%s,m_email=%s): sdraaien_klein → %s", mcalnr, mwerknr, mwerkomschr, m_email, sdraaien_klein)
+        logger.debug("koppelCalc(mcalnr=%s,mwerknr=%s,mwerkomschr=%s,m_email=%s): bdraaien_klein → %s", mcalnr, mwerknr, mwerkomschr, m_email, bdraaien_klein)
+        logger.debug("koppelCalc(mcalnr=%s,mwerknr=%s,mwerkomschr=%s,m_email=%s): sdraaien_groot → %s", mcalnr, mwerknr, mwerkomschr, m_email, sdraaien_groot)
+        logger.debug("koppelCalc(mcalnr=%s,mwerknr=%s,mwerkomschr=%s,m_email=%s): bdraaien_groot → %s", mcalnr, mwerknr, mwerkomschr, m_email, bdraaien_groot)
         rpmat = con.execute(selmat)
         mboekd = str(datetime.datetime.now())[0:10]
         for row in rpmat:
            updres = update(materiaallijsten).where(and_(materiaallijsten.c.icalculatie == mcalnr,\
              materiaallijsten.c.artikelID == artikelen.c.artikelID)).values(werknummerID = mwerknr,\
              reserverings_datum = mboekd, categorie = artikelen.c.categorie)
+           logger.debug("koppelCalc(mcalnr=%s,mwerknr=%s,mwerkomschr=%s,m_email=%s): stappen → %s", mcalnr, mwerknr, mwerkomschr, m_email, stappen)
+           logger.debug("koppelCalc(mcalnr=%s,mwerknr=%s,mwerkomschr=%s,m_email=%s): btappen → %s", mcalnr, mwerknr, mwerkomschr, m_email, btappen)
            con.execute(updres)
            updart = update(artikelen).where(and_(materiaallijsten.c.artikelID ==\
                 artikelen.c.artikelID, materiaallijsten.c.icalculatie == mcalnr))\
                 .values(reserveringsaldo = artikelen.c.reserveringsaldo + materiaallijsten.c.hoeveelheid)
+           logger.debug("koppelCalc(mcalnr=%s,mwerknr=%s,mwerkomschr=%s,m_email=%s): bnube_draaien → %s", mcalnr, mwerknr, mwerkomschr, m_email, bnube_draaien)
+           logger.debug("koppelCalc(mcalnr=%s,mwerknr=%s,mwerkomschr=%s,m_email=%s): snube_draaien → %s", mcalnr, mwerknr, mwerkomschr, m_email, snube_draaien)
+           logger.debug("koppelCalc(mcalnr=%s,mwerknr=%s,mwerkomschr=%s,m_email=%s): snube_bewerken → %s", mcalnr, mwerknr, mwerkomschr, m_email, snube_bewerken)
            con.execute(updart)
         params_finance = Table('params_finance', metadata,
                                Column('financeID', Integer, primary_key=True),
@@ -457,8 +540,14 @@ def koppelCalc(mcalnr, mwerknr, mwerkomschr, m_email):
         updprijs = update(artikelen).where(orders_intern.c.artikelID == \
                    artikelen.c.artikelID).values(artikelprijs=(orders_intern.c.begroot_totaal/\
                    orders_intern.c.hoeveelheid) * (1 + rppar[5][1]))
+        logger.debug("koppelCalc(mcalnr=%s,mwerknr=%s,mwerkomschr=%s,m_email=%s): bstansen → %s", mcalnr, mwerknr, mwerkomschr, m_email, bstansen)
+        logger.debug("koppelCalc(mcalnr=%s,mwerknr=%s,mwerkomschr=%s,m_email=%s): slassen_co2 → %s", mcalnr, mwerknr, mwerkomschr, m_email, slassen_co2)
+        logger.debug("koppelCalc(mcalnr=%s,mwerknr=%s,mwerkomschr=%s,m_email=%s): blassen_co2 → %s", mcalnr, mwerknr, mwerkomschr, m_email, blassen_co2)
+        logger.debug("koppelCalc(mcalnr=%s,mwerknr=%s,mwerkomschr=%s,m_email=%s): slassen_hand → %s", mcalnr, mwerknr, mwerkomschr, m_email, slassen_hand)
+        logger.debug("koppelCalc(mcalnr=%s,mwerknr=%s,mwerkomschr=%s,m_email=%s): blassen_hand → %s", mcalnr, mwerknr, mwerkomschr, m_email, blassen_hand)
         con.execute(updprijs)
         gegevensOk()
         zoekBegroting(m_email)    
     else:
+        logger.debug("<<< Exiting koppelCalc(mcalnr=%s,mwerknr=%s,mwerkomschr=%s,m_email=%s)", mcalnr, mwerknr, mwerkomschr, m_email)
         hoofdMenu(m_email)

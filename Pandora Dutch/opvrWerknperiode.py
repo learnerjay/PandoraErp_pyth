@@ -6,60 +6,82 @@ from PyQt5.QtCore import Qt, QRegExp
 from sqlalchemy import (Table, Column, Integer, String, Float, Boolean,\
                         ForeignKey,  MetaData, create_engine)
 from sqlalchemy.sql import select, and_
+import logging
+logger = logging.getLogger(__name__)
 
 def geenBetaalgeg():
+    logger.debug(">>> Entering geenBetaalgeg()")
     msg = QMessageBox()
+    logger.debug("geenBetaalgeg(): msg → %s", msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setIcon(QMessageBox.Warning)
     msg.setText('Geen betaalgegevens voor\ndeze periode gevonden!')
     msg.setWindowTitle('Werknemers periodegegevens opvragen')
+    logger.debug("<<< Exiting geenBetaalgeg()")
     msg.exec_()
     
 def windowSluit(self, m_email):
+    logger.debug(">>> Entering windowSluit(m_email=%s)", m_email)
     self.close()
     hoofdMenu(m_email)
+    logger.debug("<<< Exiting windowSluit(m_email=%s)", m_email)
     
 def ongInvoer():
+    logger.debug(">>> Entering ongInvoer()")
     msg = QMessageBox()
+    logger.debug("ongInvoer(): msg → %s", msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     msg.setIcon(QMessageBox.Warning)
     msg.setText('Foutieve invoer\nzoekterm opnieuw invoeren s.v.p.!')
     msg.setWindowTitle('Werknemers periodegegevens opvragen')               
+    logger.debug("<<< Exiting ongInvoer()")
     msg.exec_() 
 
 def geenRecord():
+    logger.debug(">>> Entering geenRecord()")
     msg = QMessageBox()
+    logger.debug("geenRecord(): msg → %s", msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     msg.setIcon(QMessageBox.Warning)
     msg.setText('Geen urenmutaties van deze persoon gevonden\nin deze periode maak een andere selektie s.v.p.!')
     msg.setWindowTitle('Werknemers periodegegevens opvragen')               
+    logger.debug("<<< Exiting geenRecord()")
     msg.exec_() 
     
 def foutWerknemer():
+    logger.debug(">>> Entering foutWerknemer()")
     msg = QMessageBox()
+    logger.debug("foutWerknemer(): msg → %s", msg)
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setIcon(QMessageBox.Warning)
     msg.setText('Werknemer niet gevonden\nen/of geen geldige periode opgegeven!')
     msg.setWindowTitle('Werknemers periodegegevens opvragen')
+    logger.debug("<<< Exiting foutWerknemer()")
     msg.exec_()
                
 def _11check(minput):
+    logger.debug(">>> Entering _11check(minput=%s)", minput)
     number = str(minput)
+    logger.debug("_11check(minput=%s): number → %s", minput, number)
     total = 0       
     fullnumber = number                       
+    logger.debug("_11check(minput=%s): total → %s", minput, total)
     for i in range(8):
         total += int(fullnumber[i])*(9-i)
+        logger.debug("_11check(minput=%s): fullnumber → %s", minput, fullnumber)
         checkdigit = total % 11
     if checkdigit == 10:
         checkdigit = 0
     if checkdigit == int(fullnumber[8]):
         return True
     else:
+        logger.debug("<<< Exiting _11check(minput=%s)", minput)
         return False 
     
 def zoekWerknemer(m_email):     
+    logger.debug(">>> Entering zoekWerknemer(m_email=%s)", m_email)
     class Widget(QDialog):
         def __init__(self, parent=None):
             super(Widget, self).__init__(parent)
@@ -127,23 +149,96 @@ def zoekWerknemer(m_email):
             
             self.setLayout(grid)
             self.setGeometry(400, 300, 150, 150)
+            logger.debug(">>> Entering __init__(parent=%s)", parent)
+            logger.debug("__init__(parent=%s): pixmap → %s", parent, pixmap)
+            logger.debug("__init__(parent=%s): q2Edit → %s", parent, q2Edit)
+            logger.debug("__init__(parent=%s): self.Accountnummer → %s", parent, self.Accountnummer)
+            logger.debug("__init__(self=%s,parent=%s): q2Edit → %s", self, parent, q2Edit)
+            logger.debug("__init__(parent=%s): q4Edit → %s", parent, q4Edit)
+            logger.debug("__init__(parent=%s): self.Loontabelnummer → %s", parent, self.Loontabelnummer)
+            logger.debug("__init__(self=%s,parent=%s): q4Edit → %s", self, parent, q4Edit)
+            logger.debug("__init__(parent=%s): q5Edit → %s", parent, q5Edit)
+            logger.debug("__init__(parent=%s): self.Loontrede → %s", parent, self.Loontrede)
+            logger.debug("__init__(self=%s,parent=%s): q5Edit → %s", self, parent, q5Edit)
+            logger.debug("__init__(parent=%s): q6Edit → %s", parent, q6Edit)
+            logger.debug("__init__(parent=%s): self.Loonheffing → %s", parent, self.Loonheffing)
+            logger.debug("__init__(self=%s,parent=%s): q6Edit → %s", self, parent, q6Edit)
+            logger.debug("__init__(parent=%s): q8Edit → %s", parent, q8Edit)
+            logger.debug("__init__(parent=%s): self.Reiskostenvergoeding → %s", parent, self.Reiskostenvergoeding)
+            logger.debug("__init__(self=%s,parent=%s): q8Edit → %s", self, parent, q8Edit)
+            logger.debug("__init__(parent=%s): q9Edit → %s", parent, q9Edit)
+            logger.debug("__init__(parent=%s): self.Pensioen → %s", parent, self.Pensioen)
+            logger.debug("__init__(self=%s,parent=%s): q9Edit → %s", self, parent, q9Edit)
+            logger.debug("__init__(parent=%s): q10Edit → %s", parent, q10Edit)
+            logger.debug("__init__(parent=%s): self.Reserveringvakantie → %s", parent, self.Reserveringvakantie)
+            logger.debug("__init__(self=%s,parent=%s): q10Edit → %s", self, parent, q10Edit)
+            logger.debug("__init__(parent=%s): q11Edit → %s", parent, q11Edit)
+            logger.debug("__init__(parent=%s): self.Werkgeverpensioenpremie → %s", parent, self.Werkgeverpensioenpremie)
+            logger.debug("__init__(self=%s,parent=%s): q11Edit → %s", self, parent, q11Edit)
+            logger.debug("__init__(parent=%s): q18Edit → %s", parent, q18Edit)
+            logger.debug("__init__(parent=%s): self.Auto → %s", parent, self.Auto)
+            logger.debug("__init__(self=%s,parent=%s): q18Edit → %s", self, parent, q18Edit)
+            logger.debug("__init__(parent=%s): q12Edit → %s", parent, q12Edit)
+            logger.debug("__init__(parent=%s): self.Periodiekeuitkering → %s", parent, self.Periodiekeuitkering)
+            logger.debug("__init__(self=%s,parent=%s): q12Edit → %s", self, parent, q12Edit)
+            logger.debug("__init__(parent=%s): q13Edit → %s", parent, q13Edit)
+            logger.debug("__init__(parent=%s): self.Overigeinhoudingen → %s", parent, self.Overigeinhoudingen)
+            logger.debug("__init__(self=%s,parent=%s): q13Edit → %s", self, parent, q13Edit)
+            logger.debug("__init__(parent=%s): q19Edit → %s", parent, q19Edit)
+            logger.debug("__init__(parent=%s): self.Overigevergoedingen → %s", parent, self.Overigevergoedingen)
+            logger.debug("__init__(self=%s,parent=%s): q19Edit → %s", self, parent, q19Edit)
+            logger.debug("__init__(parent=%s): q14Edit → %s", parent, q14Edit)
+            logger.debug("__init__(parent=%s): self.Indienst → %s", parent, self.Indienst)
+            logger.debug("__init__(self=%s,parent=%s): q14Edit → %s", self, parent, q14Edit)
+            logger.debug("__init__(parent=%s): q15Edit → %s", parent, q15Edit)
+            logger.debug("__init__(parent=%s): self.Brutoloon → %s", parent, self.Brutoloon)
+            logger.debug("__init__(self=%s,parent=%s): q15Edit → %s", self, parent, q15Edit)
+            logger.debug("__init__(parent=%s): q16Edit → %s", parent, q16Edit)
+            logger.debug("__init__(parent=%s): self.Verlofsaldo → %s", parent, self.Verlofsaldo)
+            logger.debug("__init__(self=%s,parent=%s): q16Edit → %s", self, parent, q16Edit)
+            logger.debug("__init__(parent=%s): q17Edit → %s", parent, q17Edit)
+            logger.debug("__init__(parent=%s): self.ExtraVerlof → %s", parent, self.ExtraVerlof)
+            logger.debug("__init__(self=%s,parent=%s): q17Edit → %s", self, parent, q17Edit)
+            logger.debug("__init__(parent=%s): grid → %s", parent, grid)
+            logger.debug("__init__(self=%s,parent=%s): grid → %s", self, parent, grid)
+            logger.debug("__init__(parent=%s): lbl → %s", parent, lbl)
+            logger.debug("__init__(self=%s,parent=%s): lbl → %s", self, parent, lbl)
+            logger.debug("__init__(self=%s,parent=%s): pixmap → %s", self, parent, pixmap)
+            logger.debug("__init__(parent=%s): logo → %s", parent, logo)
+            logger.debug("__init__(self=%s,parent=%s): logo → %s", self, parent, logo)
+            logger.debug("__init__(parent=%s): cancelBtn → %s", parent, cancelBtn)
+            logger.debug("__init__(self=%s,parent=%s): cancelBtn → %s", self, parent, cancelBtn)
+            logger.debug("<<< Exiting __init__(parent=%s)", parent)
     
         def werknemerChanged(self, text):
+            logger.debug(">>> Entering werknemerChanged(text=%s)", text)
+            logger.debug("werknemerChanged(self=%s,text=%s): Werknemer → %s", self, text, Werknemer)
             self.Werknemer.setText(text)
+            logger.debug("<<< Exiting werknemerChanged(text=%s)", text)
             
         def betChanged(self, text):
+            logger.debug(">>> Entering betChanged(text=%s)", text)
+            logger.debug("betChanged(self=%s,text=%s): Betaalperiode → %s", self, text, Betaalperiode)
             self.Betaalperiode.setText(text)
+            logger.debug("<<< Exiting betChanged(text=%s)", text)
     
         def returnWerknemer(self):
+            logger.debug(">>> Entering returnWerknemer()")
+            logger.debug("<<< Exiting returnWerknemer()")
             return self.Werknemer.text()
         
         def returnBetaalperiode(self):
+            logger.debug(">>> Entering returnBetaalperiode()")
+            logger.debug("<<< Exiting returnBetaalperiode()")
             return self.Betaalperiode.text()
     
         @staticmethod
         def getData(parent=None):
+            logger.debug(">>> Entering getData(parent=%s)", parent)
             dialog = Widget(parent)
+            logger.debug("getData(parent=%s): dialog → %s", parent, dialog)
             dialog.exec_()
+            logger.debug("<<< Exiting getData(parent=%s)", parent)
             return [dialog.returnWerknemer(), dialog.returnBetaalperiode()]
        
     window = Widget()
@@ -179,14 +274,19 @@ def zoekWerknemer(m_email):
         zoekWerknemer(m_email)
 
 def opvrWerknperiode(mwerknmrnr,mbetaalper, m_email):
+    logger.debug(">>> Entering opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s)", mwerknmrnr, mbetaalper, m_email)
     mbegin = str(mbetaalper[0:8]+'-'+'01')
+    logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): mbegin → %s", mwerknmrnr, mbetaalper, m_email, mbegin)
     mtot = str(mbetaalper[0:8]+'-'+'31')
     midx = int(mbetaalper[5:7])
+    logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): mtot → %s", mwerknmrnr, mbetaalper, m_email, mtot)
     mbet = ['Januari','Februari',' Maart', 'April', 'Mei', 'Juni', 'Juli',\
                 'Augustus','September', 'Oktober', 'November', 'December']
     mbetmaand = str(mbet[midx-1])
+    logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): midx → %s", mwerknmrnr, mbetaalper, m_email, midx)
     mbetjr = str(mbetaalper[0:4])
 
+    logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): mbet → %s", mwerknmrnr, mbetaalper, m_email, mbet)
     metadata = MetaData()   
     werknemers = Table('werknemers', metadata,
         Column('werknemerID', Integer(), primary_key=True),
@@ -226,25 +326,38 @@ def opvrWerknperiode(mwerknmrnr,mbetaalper, m_email):
          
     engine = create_engine('postgresql+psycopg2://postgres@localhost/bisystem')
     conn = engine.connect()
+    logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): werknemers → %s", mwerknmrnr, mbetaalper, m_email, werknemers)
     sel = select([werknemers, lonen, wrkwnrln, accounts]).where(and_\
       (werknemers.c.werknemerID == mwerknmrnr, werknemers.c.loonID ==\
        lonen.c.loonID, accounts.c.accountID == werknemers.c.accountID))
+    logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): lonen → %s", mwerknmrnr, mbetaalper, m_email, lonen)
+    logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): wrkwnrln → %s", mwerknmrnr, mbetaalper, m_email, wrkwnrln)
+    logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): accounts → %s", mwerknmrnr, mbetaalper, m_email, accounts)
+    logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): engine → %s", mwerknmrnr, mbetaalper, m_email, engine)
     rpwerkn = conn.execute(sel).first()
     mwerknmrnr = rpwerkn[0]
     maccountnr = rpwerkn[1]
     mloonnr = rpwerkn[2]
     mtrede = rpwerkn[3]*0.03
+    logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): conn → %s", mwerknmrnr, mbetaalper, m_email, conn)
     mreisk = float(rpwerkn[4])
    
+    logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): sel → %s", mwerknmrnr, mbetaalper, m_email, sel)
     #mloonh = (uurloon*40*13)/3 #tabelloon.loonheffing
     if rpwerkn[2] < 37:
+        logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): rpwerkn → %s", mwerknmrnr, mbetaalper, m_email, rpwerkn)
         mbruto = rpwerkn[17]*520/3*(1+mtrede)
         muurl = rpwerkn[17]*(1+mtrede)
+        logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): maccountnr → %s", mwerknmrnr, mbetaalper, m_email, maccountnr)
+        logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): mloonnr → %s", mwerknmrnr, mbetaalper, m_email, mloonnr)
+        logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): mtrede → %s", mwerknmrnr, mbetaalper, m_email, mtrede)
+        logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): mreisk → %s", mwerknmrnr, mbetaalper, m_email, mreisk)
     else:
         mbruto =  rpwerkn[19]*(1+mtrede)
         muurl = mbruto*3/520
     #loonheffing pensioenpremie
     metadata =  MetaData()
+    logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): mbruto → %s", mwerknmrnr, mbetaalper, m_email, mbruto)
     params = Table('params', metadata,
         Column('paramID', Integer, primary_key=True),
         Column('tarief', Float),
@@ -261,15 +374,20 @@ def opvrWerknperiode(mwerknmrnr,mbetaalper, m_email):
     mauto = rpwerkn[12]*12
      #pensioenpremie
     if rpwerkn[2] < 37:
+        logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): params → %s", mwerknmrnr, mbetaalper, m_email, params)
         mbruto = rpwerkn[17]*520/3*(1+mtrede)
         muurl = rpwerkn[17]*(1+mtrede)
     else:
+        logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): con → %s", mwerknmrnr, mbetaalper, m_email, con)
         mbruto =  rpwerkn[2]*(1+mtrede)
         muurl = mbruto*3/520
+        logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): selpar → %s", mwerknmrnr, mbetaalper, m_email, selpar)
     
     mjaarink = mbruto*12.96
+    logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): rppar → %s", mwerknmrnr, mbetaalper, m_email, rppar)
     mpensink = mjaarink
     if mpensink >  rppar[44][5]:
+        logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): mauto → %s", mwerknmrnr, mbetaalper, m_email, mauto)
         mpensprjr = (rppar[44][5]-rppar[44][4])*rppar[44][1]
     else:
         mpensprjr = (mpensink-rppar[44][4])*rppar[44][1]
@@ -279,19 +397,30 @@ def opvrWerknperiode(mwerknmrnr,mbetaalper, m_email):
     mbelink = mjaarink-mpensprjr+(mauto*12)
 
     mwerkg_WAO_IVA_WGA = rppar[69][1]*mjaarink/12.96
+    logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): mjaarink → %s", mwerknmrnr, mbetaalper, m_email, mjaarink)
+    logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): mpensink → %s", mwerknmrnr, mbetaalper, m_email, mpensink)
+    logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): mpensprjr → %s", mwerknmrnr, mbetaalper, m_email, mpensprjr)
     mwerkg_AWF = rppar[70][1]*mjaarink/12.96 
     mwerkg_ZVW = rppar[71][1]*mjaarink/12.96
     # Bijzonder tarief bepalen
     if mbelink > 0 and mbelink <= 6512:
         mbyz = 0.3655
     elif mbelink > 6512 and mbelink <= 10226:
+        logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): mpenspr → %s", mwerknmrnr, mbetaalper, m_email, mpenspr)
         mbyz = 0.3479
     elif mbelink > 10226 and mbelink <=18937:
+        logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): mpensprwg → %s", mwerknmrnr, mbetaalper, m_email, mpensprwg)
+        logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): mresvak → %s", mwerknmrnr, mbetaalper, m_email, mresvak)
+        logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): mbelink → %s", mwerknmrnr, mbetaalper, m_email, mbelink)
         mbyz = 0.0849
     elif mbelink > 18937 and mbelink <= 20143:
         mbyz = 0.3655
     elif mbelink > 20143 and mbelink <= 22029:
+        logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): mwerkg_WAO_IVA_WGA → %s", mwerknmrnr, mbetaalper, m_email, mwerkg_WAO_IVA_WGA)
+        logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): mwerkg_AWF → %s", mwerknmrnr, mbetaalper, m_email, mwerkg_AWF)
+        logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): mwerkg_ZVW → %s", mwerknmrnr, mbetaalper, m_email, mwerkg_ZVW)
         mbyz = 0.4553
+        logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): mbyz → %s", mwerknmrnr, mbetaalper, m_email, mbyz)
     elif mbelink > 22029 and  mbelink <= 33113:
         mbyz = 0.4553
     elif mbelink > 33113 and mbelink <= 33995:
@@ -306,19 +435,30 @@ def opvrWerknperiode(mwerknmrnr,mbetaalper, m_email):
         mbyz = 0.5195
 
     mloonh = rpwerkn[5]
+    logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): mloonh → %s", mwerknmrnr, mbetaalper, m_email, mloonh)
     mbyztar = mbyz*100
+    logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): mbyztar → %s", mwerknmrnr, mbetaalper, m_email, mbyztar)
     #mwerkglasten = float(rpwerkn[8])
     mperiodiek = float(rpwerkn[9])
+    logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): mperiodiek → %s", mwerknmrnr, mbetaalper, m_email, mperiodiek)
     moverig = float(rpwerkn[10])
+    logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): moverig → %s", mwerknmrnr, mbetaalper, m_email, moverig)
     mindienst = rpwerkn[13]
+    logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): mindienst → %s", mwerknmrnr, mbetaalper, m_email, mindienst)
     mverlofsaldo = rpwerkn[14]
+    logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): mverlofsaldo → %s", mwerknmrnr, mbetaalper, m_email, mverlofsaldo)
     mextraverlof = rpwerkn[15]
+    logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): mextraverlof → %s", mwerknmrnr, mbetaalper, m_email, mextraverlof)
     mvoorn = rpwerkn[28]
     machtern = rpwerkn[29]
+    logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): mvoorn → %s", mwerknmrnr, mbetaalper, m_email, mvoorn)
+    logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): machtern → %s", mwerknmrnr, mbetaalper, m_email, machtern)
     mgeboren = str(rpwerkn[30])[8:10]+str(rpwerkn[30])[4:7]+'-'+str(rpwerkn[30])[0:4]
+    logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): mgeboren → %s", mwerknmrnr, mbetaalper, m_email, mgeboren)
    
     if rpwerkn[18]:
         mreisuurl = round(rpwerkn[18],2)
+        logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): mreisuurl → %s", mwerknmrnr, mbetaalper, m_email, mreisuurl)
     else:
         mreisuurl = 0
 
@@ -327,47 +467,70 @@ def opvrWerknperiode(mwerknmrnr,mbetaalper, m_email):
      (wrkwnrln.c.boekdatum >= mbegin), (wrkwnrln.c.boekdatum <= mtot)))
     if conn.execute(selwrkwnrln).fetchone():
         rpwrkwnrln = conn.execute(selwrkwnrln)
+        logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): rpwrkwnrln → %s", mwerknmrnr, mbetaalper, m_email, rpwrkwnrln)
     else:
         geenRecord()
         zoekWerknemer(m_email)
     mreisuren = 0
+    logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): mreisuren → %s", mwerknmrnr, mbetaalper, m_email, mreisuren)
     muren = 0
+    logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): muren → %s", mwerknmrnr, mbetaalper, m_email, muren)
     muren125 = 0
+    logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): muren125 → %s", mwerknmrnr, mbetaalper, m_email, muren125)
     muren150 = 0
+    logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): muren150 → %s", mwerknmrnr, mbetaalper, m_email, muren150)
     muren200 = 0
+    logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): muren200 → %s", mwerknmrnr, mbetaalper, m_email, muren200)
     mverlof = 0
+    logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): mverlof → %s", mwerknmrnr, mbetaalper, m_email, mverlof)
     mziek = 0
     mfeest = 0
+    logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): mziek → %s", mwerknmrnr, mbetaalper, m_email, mziek)
     mdokter = 0
     mgverzuim = 0
+    logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): mfeest → %s", mwerknmrnr, mbetaalper, m_email, mfeest)
     moverzuim = 0
     muurlbedr = 0
+    logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): mdokter → %s", mwerknmrnr, mbetaalper, m_email, mdokter)
     muurl125bedr = 0
     muurl150bedr = 0
+    logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): mgverzuim → %s", mwerknmrnr, mbetaalper, m_email, mgverzuim)
     muurl200bedr = 0
     mreisbedr = 0
+    logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): moverzuim → %s", mwerknmrnr, mbetaalper, m_email, moverzuim)
     mverlofbedr = 0
     mziekbedr = 0
+    logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): muurlbedr → %s", mwerknmrnr, mbetaalper, m_email, muurlbedr)
     mfeestbedr = 0
     mdokterbedr = 0
+    logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): muurl125bedr → %s", mwerknmrnr, mbetaalper, m_email, muurl125bedr)
     mgverzuimbedr = 0
     moverzuimbedr = 0
+    logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): muurl150bedr → %s", mwerknmrnr, mbetaalper, m_email, muurl150bedr)
     for row in rpwrkwnrln:
         if row[4] == 'Reis':
+            logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): muurl200bedr → %s", mwerknmrnr, mbetaalper, m_email, muurl200bedr)
             mreisuren = mreisuren + float(row[3])
         if row[4] == '100%':
+            logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): mreisbedr → %s", mwerknmrnr, mbetaalper, m_email, mreisbedr)
             muren = muren + float(row[3])
         if row[4] == '125%':
+            logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): mverlofbedr → %s", mwerknmrnr, mbetaalper, m_email, mverlofbedr)
             muren125 = muren125 + float(row[3])
         if row[4] == '150%':
+            logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): mziekbedr → %s", mwerknmrnr, mbetaalper, m_email, mziekbedr)
             muren150 = muren150 + float(row[3])
         if row[4] == '200%':
+            logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): mfeestbedr → %s", mwerknmrnr, mbetaalper, m_email, mfeestbedr)
             muren200 = muren200 + float(row[3])
         if row[4] == 'Verlof':
+            logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): mdokterbedr → %s", mwerknmrnr, mbetaalper, m_email, mdokterbedr)
             mverlof = mverlof + float(row[3])
         if row[4] == 'Extra verlof':
+            logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): mgverzuimbedr → %s", mwerknmrnr, mbetaalper, m_email, mgverzuimbedr)
             mextraverlof = mextraverlof + float(row[3])
         if row[4] == 'Ziekte':
+            logger.debug("opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s): moverzuimbedr → %s", mwerknmrnr, mbetaalper, m_email, moverzuimbedr)
             mziek = mziek + float(row[3])
         if row[4] == 'Feestdag':
             mfeest = mfeest + float(row[3])
@@ -394,6 +557,7 @@ def opvrWerknperiode(mwerknmrnr,mbetaalper, m_email):
         moverzuimbedr = round(float(str(moverzuim*muurl)),2)
                                        
     class Widget(QDialog):
+         logger.debug("<<< Exiting opvrWerknperiode(mwerknmrnr=%s,mbetaalper=%s,m_email=%s)", mwerknmrnr, mbetaalper, m_email)
          def __init__(self, parent=None):
             super(Widget, self).__init__(parent)
             self.setWindowTitle("Werknemerperiodegegevens opvragen")
