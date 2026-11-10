@@ -7,48 +7,69 @@ from PyQt5.QtWidgets import QWidget, QTableView, QVBoxLayout, QComboBox,\
 from sqlalchemy import (Table, Column, Integer, String, Float, ForeignKey,\
                         MetaData, create_engine)
 from sqlalchemy.sql import select, and_, update
+import logging
+logger = logging.getLogger(__name__)
 
 def jaarweek():
+    logger.warning(">>> Entering jaarweek()", extra={"event.action": "jaarweek"})
     dt = datetime.datetime.now()
+    logger.debug("jaarweek(): dt → %s", dt, extra={"event.action": "jaarweek"})
     week = ('0'+str(dt.isocalendar()[1]))[-2:]
+    logger.debug("jaarweek(): week → %s", week, extra={"event.action": "jaarweek"})
     jaar = str(dt.isocalendar()[0])
     jrwk = jaar+week
+    logger.debug("jaarweek(): jaar → %s", jaar, extra={"event.action": "jaarweek"})
+    logger.debug("jaarweek(): jrwk → %s", jrwk, extra={"event.action": "jaarweek"})
+    logger.debug("<<< Exiting jaarweek()", extra={"event.action": "jaarweek"})
     return(jrwk)
     
 def ongInvoer():
+    logger.warning(">>> Entering ongInvoer()", extra={"event.action": "ongInvoer"})
     msg = QMessageBox()
+    logger.debug("ongInvoer(): msg → %s", msg, extra={"event.action": "ongInvoer"})
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     msg.setIcon(QMessageBox.Warning)
     msg.setText('Foutieve invoer\nzoekterm opnieuw invoeren s.v.p.!')
     msg.setWindowTitle('Artikelen opvragen')               
+    logger.debug("<<< Exiting ongInvoer()", extra={"event.action": "ongInvoer"})
     msg.exec_()
     
 def geenRecord():
+    logger.warning(">>> Entering geenRecord()", extra={"event.action": "geenRecord"})
     msg = QMessageBox()
+    logger.debug("geenRecord(): msg → %s", msg, extra={"event.action": "geenRecord"})
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     msg.setIcon(QMessageBox.Warning)
     msg.setText('Geen record gevonden\nmaak een andere selektie s.v.p.!')
     msg.setWindowTitle('Artikelen opvragen')               
+    logger.debug("<<< Exiting geenRecord()", extra={"event.action": "geenRecord"})
     msg.exec_() 
  
 def windowSluit(self, m_email):
+    logger.warning(">>> Entering windowSluit(m_email=%s)", m_email, extra={"event.action": "windowSluit"})
     self.close()
     hoofdMenu(m_email)
+    logger.debug("<<< Exiting windowSluit(m_email=%s)", m_email, extra={"event.action": "windowSluit"})
     
 def printing():
+    logger.warning(">>> Entering printing()", extra={"event.action": "printing"})
     msg = QMessageBox()
+    logger.debug("printing(): msg → %s", msg, extra={"event.action": "printing"})
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg')) 
     msg.setIcon(QMessageBox.Information)
     msg.setText('Ogenblik afdrukken wordt gestart!')
     msg.setWindowTitle('Werkgeleidebrief printen')
+    logger.debug("<<< Exiting printing()", extra={"event.action": "printing"})
     msg.exec_()
     
 def printWerkbrief(mwerkorder, rpord, header):
+    logger.warning(">>> Entering printWerkbrief(mwerkorder=%s,rpord=%s,header=%s)", mwerkorder, rpord, header, extra={"event.action": "printWerkbrief", "logrite.mwerkorder": mwerkorder, "logrite.rpord": rpord})
     from sys import platform
     metadata = MetaData()
+    logger.debug("printWerkbrief(mwerkorder=%s,rpord=%s,header=%s): metadata → %s", mwerkorder, rpord, header, metadata, extra={"event.action": "printWerkbrief", "logrite.mwerkorder": mwerkorder, "logrite.rpord": rpord})
     materiaallijsten = Table('materiaallijsten', metadata,
          Column('matlijstID', Integer, primary_key=True),
          Column('werknummerID', Integer),
@@ -64,23 +85,30 @@ def printWerkbrief(mwerkorder, rpord, header):
          Column('locatie_magazijn', String))
                                     
     engine = create_engine('postgresql+psycopg2://postgres@localhost/bisystem')
+    logger.debug("printWerkbrief(mwerkorder=%s,rpord=%s,header=%s): engine → %s", mwerkorder, rpord, header, engine, extra={"event.action": "printWerkbrief", "logrite.mwerkorder": mwerkorder, "logrite.rpord": rpord})
     con = engine.connect()
+    logger.debug("printWerkbrief(mwerkorder=%s,rpord=%s,header=%s): con → %s", mwerkorder, rpord, header, con, extra={"event.action": "printWerkbrief", "logrite.mwerkorder": mwerkorder, "logrite.rpord": rpord})
     
     selmat = select([materiaallijsten, artikelen])\
       .where(and_(materiaallijsten.c.artikelID == artikelen.c.artikelID,\
       materiaallijsten.c.werknummerID == mwerkorder)).order_by(materiaallijsten.c.artikelID)
+    logger.debug("printWerkbrief(mwerkorder=%s,rpord=%s,header=%s): selmat → %s", mwerkorder, rpord, header, selmat, extra={"event.action": "printWerkbrief", "logrite.mwerkorder": mwerkorder, "logrite.rpord": rpord})
     rpmat = con.execute(selmat)
+    logger.debug("printWerkbrief(mwerkorder=%s,rpord=%s,header=%s): rpmat → %s", mwerkorder, rpord, header, rpmat, extra={"event.action": "printWerkbrief", "logrite.mwerkorder": mwerkorder, "logrite.rpord": rpord})
     mblad = 1
+    logger.debug("printWerkbrief(mwerkorder=%s,rpord=%s,header=%s): mblad → %s", mwerkorder, rpord, header, mblad, extra={"event.action": "printWerkbrief", "logrite.mwerkorder": mwerkorder, "logrite.rpord": rpord})
     rgl = 0
     if platform == 'win32':
         filename = '.\\forms\\Werkbrieven\\materiaallijst_werkgeleidebrief_'+str(mwerkorder)+'.txt'
     else:
         filename = './forms/Werkbrieven/materiaallijst_werkgeleidebrief_'+str(mwerkorder)+'.txt'
+        logger.debug("printWerkbrief(mwerkorder=%s,rpord=%s,header=%s): filename → %s", mwerkorder, rpord, header, filename, extra={"event.action": "printWerkbrief", "logrite.mwerkorder": mwerkorder, "logrite.rpord": rpord})
     kop=\
     ('Materiaallijst van Werkorder:   '+ str(mwerkorder)+'   Datum: '+str(datetime.datetime.now())[0:10]+'  Blad :  '+str(mblad)+'\n'+
     '=====================================================================================================\n'+
     'Regel Artikelnr    Omschrijving                       Eenheid       Aantal      Ontvangen            \n'+
     '=====================================================================================================\n')
+    logger.debug("printWerkbrief(mwerkorder=%s,rpord=%s,header=%s): kop → %s", mwerkorder, rpord, header, kop, extra={"event.action": "printWerkbrief", "logrite.mwerkorder": mwerkorder, "logrite.rpord": rpord})
     for row in rpmat:
         if rgl == 0 or rgl%57 == 0:
             if rgl == 0:
@@ -100,11 +128,13 @@ def printWerkbrief(mwerkorder, rpord, header):
         filename1 = '.\\forms\\Werkbrieven\\werkgeleidebrief_'+str(mwerkorder)+'.txt' 
     else:
         filename1 = './forms/Werkbrieven/werkgeleidebrief_'+str(mwerkorder)+'.txt'
+        logger.debug("printWerkbrief(mwerkorder=%s,rpord=%s,header=%s): filename1 → %s", mwerkorder, rpord, header, filename1, extra={"event.action": "printWerkbrief", "logrite.mwerkorder": mwerkorder, "logrite.rpord": rpord})
     kop1=\
      ('Werkorder: '+str(mwerkorder)+' Werkgeleidebrief  Datum: '+str(datetime.datetime.now())[0:10]+' Blad : '+str(mblad)+'\n'\
      '=====================================================================================================\n'+
      'Regel Omschrijving bewerking   Aantal  Steltijd  Stuktijd  Totaaluren  Gemaakte uren                 \n'+
      '=====================================================================================================\n')
+    logger.debug("printWerkbrief(mwerkorder=%s,rpord=%s,header=%s): kop1 → %s", mwerkorder, rpord, header, kop1, extra={"event.action": "printWerkbrief", "logrite.mwerkorder": mwerkorder, "logrite.rpord": rpord})
     for column in rpord:
         if rgl == 0 or rgl%57 == 0:
             if rgl == 0:
@@ -114,15 +144,21 @@ def printWerkbrief(mwerkorder, rpord, header):
             mblad += 1
         if k == 3 and column:
             mhoev = column
+            logger.debug("printWerkbrief(mwerkorder=%s,rpord=%s,header=%s): mhoev → %s", mwerkorder, rpord, header, mhoev, extra={"event.action": "printWerkbrief", "logrite.mwerkorder": mwerkorder, "logrite.rpord": rpord})
         if k>17 and k<90 and column:
             if header[k][0] == 'S':
                 mstel = column
             elif header[k][0] == 'B':
+                logger.debug("printWerkbrief(mwerkorder=%s,rpord=%s,header=%s): mstel → %s", mwerkorder, rpord, header, mstel, extra={"event.action": "printWerkbrief", "logrite.mwerkorder": mwerkorder, "logrite.rpord": rpord})
                 rgl += 1
                 mstuk = column
+                logger.debug("printWerkbrief(mwerkorder=%s,rpord=%s,header=%s): mstuk → %s", mwerkorder, rpord, header, mstuk, extra={"event.action": "printWerkbrief", "logrite.mwerkorder": mwerkorder, "logrite.rpord": rpord})
                 mgemaakt = rpord[k+1]
+                logger.debug("printWerkbrief(mwerkorder=%s,rpord=%s,header=%s): mgemaakt → %s", mwerkorder, rpord, header, mgemaakt, extra={"event.action": "printWerkbrief", "logrite.mwerkorder": mwerkorder, "logrite.rpord": rpord})
                 msubtot=mstuk*mhoev+mstel
+                logger.debug("printWerkbrief(mwerkorder=%s,rpord=%s,header=%s): msubtot → %s", mwerkorder, rpord, header, msubtot, extra={"event.action": "printWerkbrief", "logrite.mwerkorder": mwerkorder, "logrite.rpord": rpord})
                 mbewerking = header[k][1:].title()
+                logger.debug("printWerkbrief(mwerkorder=%s,rpord=%s,header=%s): mbewerking → %s", mwerkorder, rpord, header, mbewerking, extra={"event.action": "printWerkbrief", "logrite.mwerkorder": mwerkorder, "logrite.rpord": rpord})
                 open(filename1,'a').write('{:>5s}'.format(str(rgl))+' '+'{:<23.23s}'\
                   .format(mbewerking)+'{:>8.2f}'.format(mhoev)+'  '+'{:>8.2f}'.format(mstel)+\
                    '  '+'{:>8.2f}'.format(mstuk)+'    '+'{:>8.2f}'.format(msubtot)+'{:>15.2f}'\
@@ -137,31 +173,45 @@ def printWerkbrief(mwerkorder, rpord, header):
         os.system("lpr "+filename1)
  
     printing()
+    logger.debug("<<< Exiting printWerkbrief(mwerkorder=%s,rpord=%s,header=%s)", mwerkorder, rpord, header, extra={"event.action": "printWerkbrief", "logrite.mwerkorder": mwerkorder, "logrite.rpord": rpord})
             
 def zoeken(m_email):
+    logger.warning(">>> Entering zoeken(m_email=%s)", m_email, extra={"event.action": "zoeken"})
     class Widget(QDialog):
         def __init__(self, parent=None):
             super(Widget, self).__init__(parent)
+            logger.warning(">>> Entering __init__(parent=%s)", parent, extra={"event.action": "__init__"})
             self.setWindowTitle("Orders_ Intern")
             self.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     
             self.setFont(QFont('Arial', 10))
    
             grid = QGridLayout()
+            logger.debug("__init__(parent=%s): grid → %s", parent, grid, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): grid → %s", self, parent, grid, extra={"event.action": "__init__"})
             grid.setSpacing(20)
                           
             lbl = QLabel()
+            logger.debug("__init__(parent=%s): lbl → %s", parent, lbl, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): lbl → %s", self, parent, lbl, extra={"event.action": "__init__"})
             pixmap = QPixmap('./images/logos/verbinding.jpg')
+            logger.debug("__init__(self=%s,parent=%s): pixmap → %s", self, parent, pixmap, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): pixmap → %s", parent, pixmap, extra={"event.action": "__init__"})
             lbl.setPixmap(pixmap)
             grid.addWidget(lbl , 1, 0, 1, 2)
             
             logo = QLabel()
+            logger.debug("__init__(parent=%s): logo → %s", parent, logo, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): logo → %s", self, parent, logo, extra={"event.action": "__init__"})
             pixmap = QPixmap('./images/logos/logo.jpg')
             logo.setPixmap(pixmap)
             grid.addWidget(logo , 1, 1, 1, 1, Qt.AlignRight)
             
             self.Keuze = QLabel()
+            logger.debug("__init__(parent=%s): self.Keuze → %s", parent, self.Keuze, extra={"event.action": "__init__"})
             k0Edit = QComboBox()
+            logger.debug("__init__(self=%s,parent=%s): k0Edit → %s", self, parent, k0Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): k0Edit → %s", parent, k0Edit, extra={"event.action": "__init__"})
             k0Edit.setFixedWidth(280)
             k0Edit.setFont(QFont("Arial", 10))
             k0Edit.setStyleSheet("color: black;  background-color: #F8F7EE")
@@ -176,7 +226,14 @@ def zoeken(m_email):
             k0Edit.activated[str].connect(self.k0Changed)
             
             self.Zoekterm = QLabel()
+            logger.debug("__init__(parent=%s): self.Zoekterm → %s", parent, self.Zoekterm, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): reg_ex → %s", parent, reg_ex, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): reg_ex → %s", self, parent, reg_ex, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): input_validator → %s", parent, input_validator, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): input_validator → %s", self, parent, input_validator, extra={"event.action": "__init__"})
             zktermEdit = QLineEdit()
+            logger.debug("__init__(self=%s,parent=%s): zktermEdit → %s", self, parent, zktermEdit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): zktermEdit → %s", parent, zktermEdit, extra={"event.action": "__init__"})
             zktermEdit.setFont(QFont("Arial",10))
             reg_ex = QRegExp('^.{0,40}$')
             input_validator = QRegExpValidator(reg_ex, zktermEdit)
@@ -184,6 +241,8 @@ def zoeken(m_email):
             zktermEdit.textChanged.connect(self.zktermChanged)
          
             lbl1 = QLabel('Zoekterm')  
+            logger.debug("__init__(parent=%s): lbl1 → %s", parent, lbl1, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): lbl1 → %s", self, parent, lbl1, extra={"event.action": "__init__"})
             lbl1.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
                            
             grid.addWidget(k0Edit, 2, 1)   
@@ -196,6 +255,8 @@ def zoeken(m_email):
             grid.addWidget(QLabel('\u00A9 2017 all rights reserved dj.jansen@casema.nl'), 5, 0, 1, 3, Qt.AlignCenter)
     
             applyBtn = QPushButton('Zoeken')
+            logger.debug("__init__(parent=%s): applyBtn → %s", parent, applyBtn, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): applyBtn → %s", self, parent, applyBtn, extra={"event.action": "__init__"})
             applyBtn.clicked.connect(self.accept)
                 
             grid.addWidget(applyBtn, 4, 1, 1, 1, Qt.AlignRight)
@@ -204,29 +265,43 @@ def zoeken(m_email):
             applyBtn.setStyleSheet("color: black;  background-color: gainsboro")
             
             cancelBtn = QPushButton('Sluiten')
+            logger.debug("__init__(parent=%s): cancelBtn → %s", parent, cancelBtn, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): cancelBtn → %s", self, parent, cancelBtn, extra={"event.action": "__init__"})
             cancelBtn.clicked.connect(lambda: windowSluit(self, m_email))
 
             grid.addWidget(cancelBtn, 4, 1)
+            logger.debug("<<< Exiting __init__(parent=%s)", parent, extra={"event.action": "__init__"})
             cancelBtn.setFont(QFont("Arial",10))
             cancelBtn.setFixedWidth(120)
             cancelBtn.setStyleSheet("color: black;  background-color: gainsboro")
             
         def k0Changed(self, text):
+            logger.warning(">>> Entering k0Changed(text=%s)", text, extra={"event.action": "k0Changed", "logrite.text": text})
             self.Keuze.setText(text)
+            logger.debug("<<< Exiting k0Changed(text=%s)", text, extra={"event.action": "k0Changed", "logrite.text": text})
                 
         def zktermChanged(self, text):
+            logger.warning(">>> Entering zktermChanged(text=%s)", text, extra={"event.action": "zktermChanged", "logrite.text": text})
             self.Zoekterm.setText(text)
+            logger.debug("<<< Exiting zktermChanged(text=%s)", text, extra={"event.action": "zktermChanged", "logrite.text": text})
      
         def returnk0(self):
+            logger.warning(">>> Entering returnk0()", extra={"event.action": "returnk0"})
+            logger.debug("<<< Exiting returnk0()", extra={"event.action": "returnk0"})
             return self.Keuze.text()
             
         def returnzkterm(self):
+            logger.warning(">>> Entering returnzkterm()", extra={"event.action": "returnzkterm"})
+            logger.debug("<<< Exiting returnzkterm()", extra={"event.action": "returnzkterm"})
             return self.Zoekterm.text()
             
         @staticmethod
         def getData(parent=None):
+            logger.warning(">>> Entering getData(parent=%s)", parent, extra={"event.action": "getData"})
             dialog = Widget(parent)
+            logger.debug("getData(parent=%s): dialog → %s", parent, dialog, extra={"event.action": "getData"})
             dialog.exec_()
+            logger.debug("<<< Exiting getData(parent=%s)", parent, extra={"event.action": "getData"})
             return [dialog.returnk0(), dialog.returnzkterm()]       
 
     window = Widget()
@@ -244,9 +319,12 @@ def zoeken(m_email):
     toonOrders(keuze, zoekterm, m_email)  
 
 def toonOrders(keuze,zoekterm, m_email):
+    logger.warning(">>> Entering toonOrders(keuze=%s,zoekterm=%s,m_email=%s)", keuze, zoekterm, m_email, extra={"event.action": "toonOrders", "logrite.keuze": keuze, "logrite.zoekterm": zoekterm})
     import validZt
     class MyWindow(QDialog):
+        logger.debug("<<< Exiting toonOrders(keuze=%s,zoekterm=%s,m_email=%s)", keuze, zoekterm, m_email, extra={"event.action": "toonOrders", "logrite.keuze": keuze, "logrite.zoekterm": zoekterm})
         def __init__(self, data_list, header, *args):
+            logger.warning(">>> Entering __init__(data_list=%s,header=%s)", data_list, header, extra={"event.action": "__init__", "logrite.data_list": data_list})
             QWidget.__init__(self, *args,)
             self.setGeometry(100, 50, 1700, 900)
             self.setWindowTitle('Interne orders opvragen')
@@ -254,7 +332,13 @@ def toonOrders(keuze,zoekterm, m_email):
             self.setWindowFlags(self.windowFlags()| Qt.WindowSystemMenuHint |
                               Qt.WindowMinMaxButtonsHint)
             table_model = MyTableModel(self, data_list, header)
+            logger.debug("__init__(data_list=%s,header=%s): table_model → %s", data_list, header, table_model, extra={"event.action": "__init__", "logrite.data_list": data_list})
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): table_model → %s", self, data_list, header, table_model, extra={"event.action": "__init__", "logrite.data_list": data_list})
+            logger.debug("__init__(data_list=%s,header=%s): font → %s", data_list, header, font, extra={"event.action": "__init__", "logrite.data_list": data_list})
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): font → %s", self, data_list, header, font, extra={"event.action": "__init__", "logrite.data_list": data_list})
             table_view = QTableView()
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): table_view → %s", self, data_list, header, table_view, extra={"event.action": "__init__", "logrite.data_list": data_list})
+            logger.debug("__init__(data_list=%s,header=%s): table_view → %s", data_list, header, table_view, extra={"event.action": "__init__", "logrite.data_list": data_list})
             table_view.setModel(table_model)
             font = QFont("Arial", 10)
             table_view.setFont(font)
@@ -262,20 +346,236 @@ def toonOrders(keuze,zoekterm, m_email):
             table_view.setSelectionBehavior(QTableView.SelectRows)
             table_view.clicked.connect(ShowSelection)
             layout = QVBoxLayout(self)
+            logger.debug("__init__(data_list=%s,header=%s): layout → %s", data_list, header, layout, extra={"event.action": "__init__", "logrite.data_list": data_list})
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): layout → %s", self, data_list, header, layout, extra={"event.action": "__init__", "logrite.data_list": data_list})
             layout.addWidget(table_view)
             self.setLayout(layout)
+            logger.debug("<<< Exiting __init__(data_list=%s,header=%s)", data_list, header, extra={"event.action": "__init__", "logrite.data_list": data_list})
     
     class MyTableModel(QAbstractTableModel):
         def __init__(self, parent, mylist, header, *args):
+            logger.warning(">>> Entering __init__(parent=%s,mylist=%s,header=%s)", parent, mylist, header, extra={"event.action": "__init__", "logrite.mylist": mylist})
+            logger.debug("__init__(self=%s,parent=%s,mylist=%s,header=%s): self.mylist → %s", self, parent, mylist, header, self.mylist, extra={"event.action": "__init__", "logrite.mylist": mylist})
+            logger.debug("__init__(self=%s,parent=%s,mylist=%s,header=%s): self.header → %s", self, parent, mylist, header, self.header, extra={"event.action": "__init__", "logrite.mylist": mylist})
             QAbstractTableModel.__init__(self, parent, *args)
+            logger.debug("<<< Exiting __init__(parent=%s,mylist=%s,header=%s)", parent, mylist, header, extra={"event.action": "__init__", "logrite.mylist": mylist})
             self.mylist = mylist
+            logger.warning(">>> Entering __init__()", extra={"event.action": "__init__"})
+            logger.debug("__init__(): grid → %s", grid, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): grid → %s", self, grid, extra={"event.action": "__init__"})
+            logger.debug("__init__(): q1Edit → %s", q1Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): q1Edit → %s", self, q1Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): q2Edit → %s", q2Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): q2Edit → %s", self, q2Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): q3Edit → %s", q3Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): q3Edit → %s", self, q3Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): q4Edit → %s", q4Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): q4Edit → %s", self, q4Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): q5Edit → %s", q5Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): q5Edit → %s", self, q5Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): q6Edit → %s", q6Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): q6Edit → %s", self, q6Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): q7Edit → %s", q7Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): q7Edit → %s", self, q7Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): q8Edit → %s", q8Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): q8Edit → %s", self, q8Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): q9Edit → %s", q9Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): q9Edit → %s", self, q9Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): q10Edit → %s", q10Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): q10Edit → %s", self, q10Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): q11Edit → %s", q11Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): q11Edit → %s", self, q11Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): q12Edit → %s", q12Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): q12Edit → %s", self, q12Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): q13Edit → %s", q13Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): q13Edit → %s", self, q13Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): q14Edit → %s", q14Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): q14Edit → %s", self, q14Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): q15Edit → %s", q15Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): q15Edit → %s", self, q15Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): q16Edit → %s", q16Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): q16Edit → %s", self, q16Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): q17Edit → %s", q17Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): q17Edit → %s", self, q17Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): q18Edit → %s", q18Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): q18Edit → %s", self, q18Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): q19Edit → %s", q19Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): q19Edit → %s", self, q19Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): q20Edit → %s", q20Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): q20Edit → %s", self, q20Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u1Edit → %s", u1Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u1Edit → %s", self, u1Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u2Edit → %s", u2Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u2Edit → %s", self, u2Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u3Edit → %s", u3Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u3Edit → %s", self, u3Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u4Edit → %s", u4Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u4Edit → %s", self, u4Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u5Edit → %s", u5Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u5Edit → %s", self, u5Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u6Edit → %s", u6Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u6Edit → %s", self, u6Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u7Edit → %s", u7Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u7Edit → %s", self, u7Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u8Edit → %s", u8Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u8Edit → %s", self, u8Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u9Edit → %s", u9Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u9Edit → %s", self, u9Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u10Edit → %s", u10Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u10Edit → %s", self, u10Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u11Edit → %s", u11Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u11Edit → %s", self, u11Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u12Edit → %s", u12Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u12Edit → %s", self, u12Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u13Edit → %s", u13Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u13Edit → %s", self, u13Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u14Edit → %s", u14Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u14Edit → %s", self, u14Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u15Edit → %s", u15Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u15Edit → %s", self, u15Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u16Edit → %s", u16Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u16Edit → %s", self, u16Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u17Edit → %s", u17Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u17Edit → %s", self, u17Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u18Edit → %s", u18Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u18Edit → %s", self, u18Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u19Edit → %s", u19Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u19Edit → %s", self, u19Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u20Edit → %s", u20Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u20Edit → %s", self, u20Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u21Edit → %s", u21Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u21Edit → %s", self, u21Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u22Edit → %s", u22Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u22Edit → %s", self, u22Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u23Edit → %s", u23Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u23Edit → %s", self, u23Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u24Edit → %s", u24Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u24Edit → %s", self, u24Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u25Edit → %s", u25Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u25Edit → %s", self, u25Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u26Edit → %s", u26Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u26Edit → %s", self, u26Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u27Edit → %s", u27Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u27Edit → %s", self, u27Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u28Edit → %s", u28Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u28Edit → %s", self, u28Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u29Edit → %s", u29Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u29Edit → %s", self, u29Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u30Edit → %s", u30Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u30Edit → %s", self, u30Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u31Edit → %s", u31Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u31Edit → %s", self, u31Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u32Edit → %s", u32Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u32Edit → %s", self, u32Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u33Edit → %s", u33Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u33Edit → %s", self, u33Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u34Edit → %s", u34Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u34Edit → %s", self, u34Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u35Edit → %s", u35Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u35Edit → %s", self, u35Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u36Edit → %s", u36Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u36Edit → %s", self, u36Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u37Edit → %s", u37Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u37Edit → %s", self, u37Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u38Edit → %s", u38Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u38Edit → %s", self, u38Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u39Edit → %s", u39Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u39Edit → %s", self, u39Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u40Edit → %s", u40Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u40Edit → %s", self, u40Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u41Edit → %s", u41Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u41Edit → %s", self, u41Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u42Edit → %s", u42Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u42Edit → %s", self, u42Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u43Edit → %s", u43Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u43Edit → %s", self, u43Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u44Edit → %s", u44Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u44Edit → %s", self, u44Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u45Edit → %s", u45Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u45Edit → %s", self, u45Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u46Edit → %s", u46Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u46Edit → %s", self, u46Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u47Edit → %s", u47Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u47Edit → %s", self, u47Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u48Edit → %s", u48Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u48Edit → %s", self, u48Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u49Edit → %s", u49Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u49Edit → %s", self, u49Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u50Edit → %s", u50Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u50Edit → %s", self, u50Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u51Edit → %s", u51Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u51Edit → %s", self, u51Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u52Edit → %s", u52Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u52Edit → %s", self, u52Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u53Edit → %s", u53Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u53Edit → %s", self, u53Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u54Edit → %s", u54Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u54Edit → %s", self, u54Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u55Edit → %s", u55Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u55Edit → %s", self, u55Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u56Edit → %s", u56Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u56Edit → %s", self, u56Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u57Edit → %s", u57Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u57Edit → %s", self, u57Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u58Edit → %s", u58Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u58Edit → %s", self, u58Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u59Edit → %s", u59Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u59Edit → %s", self, u59Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u60Edit → %s", u60Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u60Edit → %s", self, u60Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u61Edit → %s", u61Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u61Edit → %s", self, u61Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u62Edit → %s", u62Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u62Edit → %s", self, u62Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u63Edit → %s", u63Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u63Edit → %s", self, u63Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u64Edit → %s", u64Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u64Edit → %s", self, u64Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u65Edit → %s", u65Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u65Edit → %s", self, u65Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u66Edit → %s", u66Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u66Edit → %s", self, u66Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u67Edit → %s", u67Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u67Edit → %s", self, u67Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u68Edit → %s", u68Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u68Edit → %s", self, u68Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u69Edit → %s", u69Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u69Edit → %s", self, u69Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u70Edit → %s", u70Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u70Edit → %s", self, u70Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u71Edit → %s", u71Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u71Edit → %s", self, u71Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u72Edit → %s", u72Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u72Edit → %s", self, u72Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): u73Edit → %s", u73Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): u73Edit → %s", self, u73Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): lbl → %s", lbl, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): lbl → %s", self, lbl, extra={"event.action": "__init__"})
+            logger.debug("__init__(): pixmap → %s", pixmap, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): pixmap → %s", self, pixmap, extra={"event.action": "__init__"})
+            logger.debug("__init__(): logo → %s", logo, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): logo → %s", self, logo, extra={"event.action": "__init__"})
+            logger.debug("__init__(): lbl1 → %s", lbl1, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): lbl1 → %s", self, lbl1, extra={"event.action": "__init__"})
+            logger.debug("__init__(): lbl2 → %s", lbl2, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): lbl2 → %s", self, lbl2, extra={"event.action": "__init__"})
+            logger.debug("__init__(): cancelBtn → %s", cancelBtn, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): cancelBtn → %s", self, cancelBtn, extra={"event.action": "__init__"})
+            logger.debug("__init__(): werkbriefBtn → %s", werkbriefBtn, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): werkbriefBtn → %s", self, werkbriefBtn, extra={"event.action": "__init__"})
+            logger.debug("<<< Exiting __init__()", extra={"event.action": "__init__"})
             self.header = header
         def rowCount(self, parent):
+            logger.warning(">>> Entering rowCount(parent=%s)", parent, extra={"event.action": "rowCount"})
             return len(self.mylist)
         def columnCount(self, parent):
+            logger.warning(">>> Entering columnCount(parent=%s)", parent, extra={"event.action": "columnCount"})
             return len(self.mylist[0])
         def data(self, index, role):
+            logger.warning(">>> Entering data(index=%s,role=%s)", index, role, extra={"event.action": "data", "logrite.index": index, "logrite.role": role})
             veld = self.mylist[index.row()][index.column()]
+            logger.debug("data(index=%s,role=%s): veld → %s", index, role, veld, extra={"event.action": "data", "logrite.index": index, "logrite.role": role})
+            logger.debug("data(self=%s,index=%s,role=%s): veld → %s", self, index, role, veld, extra={"event.action": "data", "logrite.index": index, "logrite.role": role})
             if not index.isValid():
                 return None
             elif role == Qt.TextAlignmentRole and (type(veld) == float or type(veld) == int):
@@ -285,10 +585,13 @@ def toonOrders(keuze,zoekterm, m_email):
             if type(veld) == float:
                 return '{:12.2f}'.format(veld)
             else:
+                logger.debug("<<< Exiting data(index=%s,role=%s)", index, role, extra={"event.action": "data", "logrite.index": index, "logrite.role": role})
                 return veld
         def headerData(self, col, orientation, role):
+            logger.warning(">>> Entering headerData(col=%s,orientation=%s,role=%s)", col, orientation, role, extra={"event.action": "headerData", "logrite.col": col, "logrite.orientation": orientation, "logrite.role": role})
             if orientation == Qt.Horizontal and role == Qt.DisplayRole:
                 return self.header[col]
+            logger.debug("<<< Exiting headerData(col=%s,orientation=%s,role=%s)", col, orientation, role, extra={"event.action": "headerData", "logrite.col": col, "logrite.orientation": orientation, "logrite.role": role})
             return None
               
     header = ['Werkorder', 'Omschrijving','Artikelnummer','Hoeveelheid',\
@@ -475,15 +778,22 @@ def toonOrders(keuze,zoekterm, m_email):
         data_list += [(row)]
         
     def ShowSelection(idx):
+        logger.warning(">>> Entering ShowSelection(idx=%s)", idx, extra={"event.action": "ShowSelection", "logrite.idx": idx})
         mwerkorder = idx.data()
+        logger.debug("ShowSelection(idx=%s): mwerkorder → %s", idx, mwerkorder, extra={"event.action": "ShowSelection", "logrite.idx": idx})
         if  idx.column() == 0:
             engine = create_engine('postgresql+psycopg2://postgres@localhost/bisystem')
+            logger.debug("ShowSelection(idx=%s): engine → %s", idx, engine, extra={"event.action": "ShowSelection", "logrite.idx": idx})
             con = engine.connect()
             selord = select([orders_intern]).where(orders_intern.c.werkorderID == mwerkorder)
+            logger.debug("ShowSelection(idx=%s): con → %s", idx, con, extra={"event.action": "ShowSelection", "logrite.idx": idx})
             rpord = con.execute(selord).first()
             
+            logger.debug("ShowSelection(idx=%s): selord → %s", idx, selord, extra={"event.action": "ShowSelection", "logrite.idx": idx})
+            logger.debug("ShowSelection(idx=%s): rpord → %s", idx, rpord, extra={"event.action": "ShowSelection", "logrite.idx": idx})
             class MainWindow(QDialog):
                 def __init__(self):
+                    logger.debug("<<< Exiting ShowSelection(idx=%s)", idx, extra={"event.action": "ShowSelection", "logrite.idx": idx})
                     QDialog.__init__(self)
                     
                     grid = QGridLayout()

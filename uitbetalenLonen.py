@@ -1,41 +1,61 @@
+import logging
+logger = logging.getLogger(__name__)
 def maandBetalingen(m_email):
+    logger.warning(">>> Entering maandBetalingen(m_email=%s)", m_email, extra={"event.action": "maandBetalingen"})
     from login import hoofdMenu
     import os, datetime
     from PyQt5.QtWidgets import QLabel, QLineEdit, QGridLayout, QPushButton,\
         QDialog, QMessageBox, QWidget, QTableView, QVBoxLayout
     from PyQt5.QtGui import QRegExpValidator, QFont, QPixmap, QIcon
+    logger.error("Exception in maandBetalingen(m_email=%s)", m_email, exc_info=True, extra={"event.action": "maandBetalingen", "event.category": "process"})
+    import time; __log_start = time.time()
     from PyQt5.QtCore import Qt, QRegExp, QAbstractTableModel
     from sqlalchemy import (Table, Column, Integer, String, Float, Boolean,\
                             ForeignKey,  MetaData, create_engine)
     from sqlalchemy.sql import select, insert, update, and_, func
+    logger.info("maandBetalingen(m_email)=%s: query operation took %s ms", m_email, int((time.time() - __log_start) * 1000), extra={"event.action": "maandBetalingen", "event.category": "database"})
 
     metadata = MetaData()
+    logger.debug("maandBetalingen(m_email=%s): metadata → %s", m_email, metadata, extra={"event.action": "maandBetalingen"})
     params_periods = Table('params_periods', metadata,
         Column('periodID', Integer, primary_key=True),
         Column('working_hours_per_period', Integer),
         Column('working_period', String),
         Column('lock_processed', Boolean))
+    logger.debug("<<< Exiting maandBetalingen(m_email=%s)", m_email, extra={"event.action": "maandBetalingen"})
 
     def info():
+        logger.warning(">>> Entering info()", extra={"event.action": "info"})
         class Widget(QDialog):
             def __init__(self):
+                logger.warning(">>> Entering __init__()", extra={"event.action": "__init__"})
                 QDialog.__init__(self)
                 self.setWindowTitle("Information on paying wages")
                 self.setWindowIcon(QIcon('./images/logos/logo.jpg'))
                 self.setFont(QFont("Arial", 10))
                 grid = QGridLayout()
+                logger.debug("__init__(): grid → %s", grid, extra={"event.action": "__init__"})
+                logger.debug("__init__(self=%s): grid → %s", self, grid, extra={"event.action": "__init__"})
                 grid.setSpacing(20)
                 
                 logo = QLabel()
+                logger.debug("__init__(): logo → %s", logo, extra={"event.action": "__init__"})
+                logger.debug("__init__(self=%s): logo → %s", self, logo, extra={"event.action": "__init__"})
+                logger.debug("__init__(self=%s): lblinfo → %s", self, lblinfo, extra={"event.action": "__init__"})
                 pixmap = QPixmap('./images/logos/logo.jpg')
+                logger.debug("__init__(self=%s): pixmap → %s", self, pixmap, extra={"event.action": "__init__"})
+                logger.debug("__init__(): pixmap → %s", pixmap, extra={"event.action": "__init__"})
                 logo.setPixmap(pixmap)
                 grid.addWidget(logo , 0, 3, 1, 1, Qt.AlignRight)
                 
+                logger.debug("<<< Exiting __init__()", extra={"event.action": "__init__"})
                 lblinfo = QLabel('Paying wages.')
                 grid.addWidget(lblinfo, 0, 0, 1, 4, Qt.AlignCenter)
                 lblinfo.setStyleSheet("color:rgb(45, 83, 115); font: 25pt Comic Sans MS")
             
                 lbl = QLabel()
+                logger.debug("__init__(): lbl → %s", lbl, extra={"event.action": "__init__"})
+                logger.debug("__init__(self=%s): lbl → %s", self, lbl, extra={"event.action": "__init__"})
                 pixmap = QPixmap('./images/logos/verbinding.jpg')
                 lbl.setPixmap(pixmap)
                 grid.addWidget(lbl, 0, 0)
@@ -80,31 +100,42 @@ def maandBetalingen(m_email):
 
 
     def windowSluit(self, m_email):
+        logger.warning(">>> Entering windowSluit(m_email=%s)", m_email, extra={"event.action": "windowSluit"})
         self.close()
         hoofdMenu(m_email)
+        logger.debug("<<< Exiting windowSluit(m_email=%s)", m_email, extra={"event.action": "windowSluit"})
 
     def winSluit(self, m_email):
+        logger.warning(">>> Entering winSluit(m_email=%s)", m_email, extra={"event.action": "winSluit"})
         self.close()
         maandBetalingen(m_email)
+        logger.debug("<<< Exiting winSluit(m_email=%s)", m_email, extra={"event.action": "winSluit"})
 
     def printing():
+        logger.warning(">>> Entering printing()", extra={"event.action": "printing"})
         msg = QMessageBox()
+        logger.debug("printing(): msg → %s", msg, extra={"event.action": "printing"})
         msg.setStyleSheet("color: black;  background-color: gainsboro")
         msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
         msg.setIcon(QMessageBox.Information)
         msg.setText('Just a moment printing is started!')
         msg.setWindowTitle('Paying wages')
+        logger.debug("<<< Exiting printing()", extra={"event.action": "printing"})
         msg.exec_()
 
     def betaalVak(rpv):
+        logger.warning(">>> Entering betaalVak(rpv=%s)", rpv, extra={"event.action": "betaalVak", "logrite.rpv": rpv})
         from sys import platform
         for row in rpv:
             jaar = str(row[1])[0:4]
+            logger.debug("betaalVak(rpv=%s): jaar → %s", rpv, jaar, extra={"event.action": "betaalVak", "logrite.rpv": rpv})
             mnd = 'Vakantietoeslag'
+            logger.debug("betaalVak(rpv=%s): mnd → %s", rpv, mnd, extra={"event.action": "betaalVak", "logrite.rpv": rpv})
             if platform == 'win32' :
                 filename1 = '.\\forms\\Lonen\\wage_specification_'+str(row[2])+'-'+jaar+'_'+mnd+'.txt'
             else:
                 filename1 = './forms/Lonen/wage_specification_'+str(row[2])+'-'+jaar+'_'+mnd+'.txt'
+                logger.debug("betaalVak(rpv=%s): filename1 → %s", rpv, filename1, extra={"event.action": "betaalVak", "logrite.rpv": rpv})
             gegevens =\
             ('                             Specification'+mnd+' '+str(jaar)+'                             \n'+
             '                                                                                             \n'+
@@ -133,32 +164,42 @@ def maandBetalingen(m_email):
             'Employers contrib ZVW         '+'{:>12.2f}'.format(row[49])+'                                \n'+
             '=============================================================================================\n'+
             'Percentage special rate       '+'{:>12.2f}'.format(row[25]*100)+'                            \n')
+            logger.debug("betaalVak(rpv=%s): gegevens → %s", rpv, gegevens, extra={"event.action": "betaalVak", "logrite.rpv": rpv})
             
             open(filename1, 'w').write(gegevens)
             if platform == 'win32':
                 os.startfile(filename1, "print")
             else:
                 os.system("lpr "+filename1)
+                logger.debug("<<< Exiting betaalVak(rpv=%s)", rpv, extra={"event.action": "betaalVak", "logrite.rpv": rpv})
                 
     def printGeg(rpperln):
+        logger.warning(">>> Entering printGeg(rpperln=%s)", rpperln, extra={"event.action": "printGeg", "logrite.rpperln": rpperln})
+        logger.debug("printGeg(rpperln=%s): selv → %s", rpperln, selv, extra={"event.action": "printGeg", "logrite.rpperln": rpperln})
         from sys import platform
         if mjrmnd[5:7] == '04':
             mper = mjrmnd[0:4]+'vak'
+            logger.debug("printGeg(rpperln=%s): mper → %s", rpperln, mper, extra={"event.action": "printGeg", "logrite.rpperln": rpperln})
             selv = select([loonbetalingen]).where(loonbetalingen.c.periode ==\
               mper).order_by(loonbetalingen.c.achternaam, loonbetalingen.c.voornaam)
             rpv = con.execute(selv)
+            logger.debug("printGeg(rpperln=%s): rpv → %s", rpperln, rpv, extra={"event.action": "printGeg", "logrite.rpperln": rpperln})
             betaalVak(rpv)
             
         for row in rpperln:
             mbetmnd = ['January','February',' March', 'April', 'May', 'June', 'July',\
                     'August','September', 'October', 'November', 'December']
             jaar = row[1][0:4]
+            logger.debug("printGeg(rpperln=%s): jaar → %s", rpperln, jaar, extra={"event.action": "printGeg", "logrite.rpperln": rpperln})
             mndidx = int(row[1][5:7])-1
+            logger.debug("printGeg(rpperln=%s): mndidx → %s", rpperln, mndidx, extra={"event.action": "printGeg", "logrite.rpperln": rpperln})
             mnd = mbetmnd[mndidx]
+            logger.debug("printGeg(rpperln=%s): mnd → %s", rpperln, mnd, extra={"event.action": "printGeg", "logrite.rpperln": rpperln})
             if platform == 'win32':
                 filename = '.\\forms\\Lonen\\wage_specification_'+row[1]+'-'+str(row[2])+'.txt'
             else:
                 filename = './forms/Lonen/wage_specification_'+row[1]+'-'+str(row[2])+'.txt'
+                logger.debug("printGeg(rpperln=%s): filename → %s", rpperln, filename, extra={"event.action": "printGeg", "logrite.rpperln": rpperln})
             gegevens =\
             ('                           Wage specification '+str(mnd)+' '+str(jaar)+'           \n'+
             '                                                                                             \n'+
@@ -218,15 +259,18 @@ def maandBetalingen(m_email):
             'Labour tax credit             '+'{:>12.2f}'.format(row[45])+'                                \n'+
             '=============================================================================================\n'+
             '=============================================================================================\n')
+            logger.debug("printGeg(rpperln=%s): gegevens → %s", rpperln, gegevens, extra={"event.action": "printGeg", "logrite.rpperln": rpperln})
             open(filename, 'w').write(gegevens)
             if platform == 'win32':
                 os.startfile(filename, "print")
             else:
                 os.system("lpr "+filename)
         printing()
+        logger.debug("<<< Exiting printGeg(rpperln=%s)", rpperln, extra={"event.action": "printGeg", "logrite.rpperln": rpperln})
         return(True)
     
     def acceptInvoer(self):
+        logger.warning(">>> Entering acceptInvoer()", extra={"event.action": "acceptInvoer"})
         reply = QMessageBox.question(self, 'Wage data',
           "Have all wage data been entered\nfor the specified period?",\
            QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
@@ -234,12 +278,16 @@ def maandBetalingen(m_email):
             self.accept()
         else:
             winSluit(self, m_email)
+            logger.debug("<<< Exiting acceptInvoer()", extra={"event.action": "acceptInvoer"})
             
     def recordLock():
+            logger.warning(">>> Entering recordLock()", extra={"event.action": "recordLock"})
             msg = QMessageBox()
+            logger.debug("recordLock(): msg → %s", msg, extra={"event.action": "recordLock"})
             msg.setStyleSheet("color: black;  background-color: gainsboro")
             msg.setIcon(QMessageBox.Information)
             msg.setFont(QFont('Arial', 10))
+            logger.debug("<<< Exiting recordLock()", extra={"event.action": "recordLock"})
             msg.setText('''
             
        This period has been blocked and closed 
@@ -252,22 +300,29 @@ def maandBetalingen(m_email):
             msg.exec_()
                        
     def ongPeriode():
+        logger.warning(">>> Entering ongPeriode()", extra={"event.action": "ongPeriode"})
         msg = QMessageBox()
+        logger.debug("ongPeriode(): msg → %s", msg, extra={"event.action": "ongPeriode"})
         msg.setStyleSheet("color: black;  background-color: gainsboro")
         msg.setIcon(QMessageBox.Warning)
         msg.setText('No valid payment period specified!')
         msg.setWindowTitle('Pay wages')
+        logger.debug("<<< Exiting ongPeriode()", extra={"event.action": "ongPeriode"})
         msg.exec_()
     
     def progSluit():
+        logger.warning(">>> Entering progSluit()", extra={"event.action": "progSluit"})
         msg = QMessageBox()
+        logger.debug("progSluit(): msg → %s", msg, extra={"event.action": "progSluit"})
         msg.setStyleSheet("color: black;  background-color: gainsboro")
         msg.setIcon(QMessageBox.Information)
         msg.setText('Program Closed\nSee you soon!')
         msg.setWindowTitle('Pay wages')
+        logger.debug("<<< Exiting progSluit()", extra={"event.action": "progSluit"})
         msg.exec_()
      
     def toonMenu(rpwerknmr): 
+        logger.warning(">>> Entering toonMenu(rpwerknmr=%s)", rpwerknmr, extra={"event.action": "toonMenu", "logrite.rpwerknmr": rpwerknmr})
         class Widget(QDialog):
             def __init__(self, parent=None):
                 super(Widget, self).__init__(parent)
@@ -328,34 +383,53 @@ def maandBetalingen(m_email):
         window.exec_()
         
     def maandPeriode():
+        logger.warning(">>> Entering maandPeriode()", extra={"event.action": "maandPeriode"})
         engine = create_engine('postgresql+psycopg2://postgres@localhost/bisystem')
+        logger.debug("maandPeriode(): engine → %s", engine, extra={"event.action": "maandPeriode"})
         con = engine.connect()
         class Widget(QDialog):
+            logger.debug("maandPeriode(): con → %s", con, extra={"event.action": "maandPeriode"})
             def __init__(self, parent=None):
                 super(Widget, self).__init__(parent)
+                logger.debug("<<< Exiting maandPeriode()", extra={"event.action": "maandPeriode"})
                 self.setWindowTitle("Specify period for wage specifications")
                 self.setWindowIcon(QIcon('./images/logos/logo.jpg')) 
         
                 self.setFont(QFont('Arial', 10))
                    
                 self.Betaalperiode = QLabel()
+                logger.debug("__init__(parent=%s): self.Betaalperiode → %s", parent, self.Betaalperiode, extra={"event.action": "__init__"})
                 betEdit = QLineEdit()
+                logger.debug("__init__(self=%s,parent=%s): betEdit → %s", self, parent, betEdit, extra={"event.action": "__init__"})
+                logger.debug("__init__(parent=%s): betEdit → %s", parent, betEdit, extra={"event.action": "__init__"})
                 betEdit.setFixedWidth(100)
                 betEdit.setFont(QFont("Arial",10))
                 betEdit.textChanged.connect(self.betChanged)
                 reg_ex = QRegExp("^([12][0-9]{3})([-]{1})(0[1-9]|1[0-2])--|$")
+                logger.debug("__init__(parent=%s): reg_ex → %s", parent, reg_ex, extra={"event.action": "__init__"})
+                logger.debug("__init__(self=%s,parent=%s): reg_ex → %s", self, parent, reg_ex, extra={"event.action": "__init__"})
+                logger.debug("__init__(parent=%s): grid → %s", parent, grid, extra={"event.action": "__init__"})
+                logger.debug("__init__(self=%s,parent=%s): grid → %s", self, parent, grid, extra={"event.action": "__init__"})
                 input_validator = QRegExpValidator(reg_ex, betEdit)
+                logger.debug("__init__(self=%s,parent=%s): input_validator → %s", self, parent, input_validator, extra={"event.action": "__init__"})
+                logger.debug("__init__(parent=%s): input_validator → %s", parent, input_validator, extra={"event.action": "__init__"})
                 betEdit.setValidator(input_validator)
                                 
                 grid = QGridLayout()
                 grid.setSpacing(20)
         
                 lbl = QLabel()
+                logger.debug("__init__(parent=%s): lbl → %s", parent, lbl, extra={"event.action": "__init__"})
+                logger.debug("__init__(self=%s,parent=%s): lbl → %s", self, parent, lbl, extra={"event.action": "__init__"})
                 pixmap = QPixmap('./images/logos/verbinding.jpg')
+                logger.debug("__init__(self=%s,parent=%s): pixmap → %s", self, parent, pixmap, extra={"event.action": "__init__"})
+                logger.debug("__init__(parent=%s): pixmap → %s", parent, pixmap, extra={"event.action": "__init__"})
                 lbl.setPixmap(pixmap)
                 grid.addWidget(lbl , 0, 0, 1, 2)
                 
                 logo = QLabel()
+                logger.debug("__init__(parent=%s): logo → %s", parent, logo, extra={"event.action": "__init__"})
+                logger.debug("__init__(self=%s,parent=%s): logo → %s", self, parent, logo, extra={"event.action": "__init__"})
                 pixmap = QPixmap('./images/logos/logo.jpg')
                 logo.setPixmap(pixmap)
                 grid.addWidget(logo , 0, 2, 1, 1, Qt.AlignRight)
@@ -364,12 +438,18 @@ def maandBetalingen(m_email):
                 grid.addWidget(betEdit, 1, 2)
                 
                 infoBtn = QPushButton('Information')
+                logger.debug("__init__(parent=%s): infoBtn → %s", parent, infoBtn, extra={"event.action": "__init__"})
+                logger.debug("__init__(self=%s,parent=%s): infoBtn → %s", self, parent, infoBtn, extra={"event.action": "__init__"})
                 infoBtn.clicked.connect(lambda: info())
                   
                 cancelBtn = QPushButton('Close')
+                logger.debug("__init__(parent=%s): cancelBtn → %s", parent, cancelBtn, extra={"event.action": "__init__"})
+                logger.debug("__init__(self=%s,parent=%s): cancelBtn → %s", self, parent, cancelBtn, extra={"event.action": "__init__"})
                 cancelBtn.clicked.connect(lambda: windowSluit(self, m_email))
              
                 applyBtn = QPushButton('Proceed')
+                logger.debug("__init__(parent=%s): applyBtn → %s", parent, applyBtn, extra={"event.action": "__init__"})
+                logger.debug("__init__(self=%s,parent=%s): applyBtn → %s", self, parent, applyBtn, extra={"event.action": "__init__"})
                 applyBtn.clicked.connect(lambda: acceptInvoer(self))
                       
                 grid.addWidget(applyBtn, 2, 2)
@@ -391,17 +471,25 @@ def maandBetalingen(m_email):
                 
                 self.setLayout(grid)
                 self.setGeometry(400, 300, 150, 150)
+                logger.debug("<<< Exiting __init__(parent=%s)", parent, extra={"event.action": "__init__"})
                      
             def betChanged(self, text):
+                logger.warning(">>> Entering betChanged(text=%s)", text, extra={"event.action": "betChanged", "logrite.text": text})
                 self.Betaalperiode.setText(text)
+                logger.debug("<<< Exiting betChanged(text=%s)", text, extra={"event.action": "betChanged", "logrite.text": text})
         
             def returnBetaalperiode(self):
+                logger.warning(">>> Entering returnBetaalperiode()", extra={"event.action": "returnBetaalperiode"})
+                logger.debug("<<< Exiting returnBetaalperiode()", extra={"event.action": "returnBetaalperiode"})
                 return self.Betaalperiode.text()
         
             @staticmethod
             def getData(parent=None):
+                logger.warning(">>> Entering getData(parent=%s)", parent, extra={"event.action": "getData"})
                 dialog = Widget(parent)
+                logger.debug("getData(parent=%s): dialog → %s", parent, dialog, extra={"event.action": "getData"})
                 dialog.exec_()
+                logger.debug("<<< Exiting getData(parent=%s)", parent, extra={"event.action": "getData"})
                 return [dialog.returnBetaalperiode()]
        
         window = Widget()
@@ -920,8 +1008,10 @@ def maandBetalingen(m_email):
                 con.execute(insvakafdr4) 
 
     def toonBetalingen():
+        logger.warning(">>> Entering toonBetalingen()", extra={"event.action": "toonBetalingen"})
         class MyWindow(QDialog):
             def __init__(self, data_list, header, *args):
+                logger.warning(">>> Entering __init__(data_list=%s,header=%s)", data_list, header, extra={"event.action": "__init__", "logrite.data_list": data_list})
                 QWidget.__init__(self, *args,)
                 self.setGeometry(30, 60, 1500, 900)
                 self.setWindowTitle('Request wage payments')
@@ -929,7 +1019,13 @@ def maandBetalingen(m_email):
                 self.setWindowFlags(self.windowFlags()| Qt.WindowSystemMenuHint |
                               Qt.WindowMinMaxButtonsHint)
                 table_model = MyTableModel(self, data_list, header)
+                logger.debug("__init__(data_list=%s,header=%s): table_model → %s", data_list, header, table_model, extra={"event.action": "__init__", "logrite.data_list": data_list})
+                logger.debug("__init__(self=%s,data_list=%s,header=%s): table_model → %s", self, data_list, header, table_model, extra={"event.action": "__init__", "logrite.data_list": data_list})
+                logger.debug("__init__(data_list=%s,header=%s): font → %s", data_list, header, font, extra={"event.action": "__init__", "logrite.data_list": data_list})
+                logger.debug("__init__(self=%s,data_list=%s,header=%s): font → %s", self, data_list, header, font, extra={"event.action": "__init__", "logrite.data_list": data_list})
                 table_view = QTableView()
+                logger.debug("__init__(self=%s,data_list=%s,header=%s): table_view → %s", self, data_list, header, table_view, extra={"event.action": "__init__", "logrite.data_list": data_list})
+                logger.debug("__init__(data_list=%s,header=%s): table_view → %s", data_list, header, table_view, extra={"event.action": "__init__", "logrite.data_list": data_list})
                 table_view.setModel(table_model)
                 font = QFont("Arial", 10)
                 table_view.setFont(font)
@@ -940,20 +1036,43 @@ def maandBetalingen(m_email):
                 table_view.setSelectionBehavior(QTableView.SelectRows)
                 table_view.clicked.connect(showSelection)
                 layout = QVBoxLayout(self)
+                logger.debug("__init__(data_list=%s,header=%s): layout → %s", data_list, header, layout, extra={"event.action": "__init__", "logrite.data_list": data_list})
+                logger.debug("__init__(self=%s,data_list=%s,header=%s): layout → %s", self, data_list, header, layout, extra={"event.action": "__init__", "logrite.data_list": data_list})
                 layout.addWidget(table_view)
                 self.setLayout(layout)
+                logger.debug("<<< Exiting __init__(data_list=%s,header=%s)", data_list, header, extra={"event.action": "__init__", "logrite.data_list": data_list})
         
         class MyTableModel(QAbstractTableModel):
             def __init__(self, parent, mylist, header, *args):
+                logger.warning(">>> Entering __init__(parent=%s,mylist=%s,header=%s)", parent, mylist, header, extra={"event.action": "__init__", "logrite.mylist": mylist})
+                logger.debug("__init__(self=%s,parent=%s,mylist=%s,header=%s): self.mylist → %s", self, parent, mylist, header, self.mylist, extra={"event.action": "__init__", "logrite.mylist": mylist})
+                logger.debug("__init__(self=%s,parent=%s,mylist=%s,header=%s): self.header → %s", self, parent, mylist, header, self.header, extra={"event.action": "__init__", "logrite.mylist": mylist})
                 QAbstractTableModel.__init__(self, parent, *args)
+                logger.debug("<<< Exiting __init__(parent=%s,mylist=%s,header=%s)", parent, mylist, header, extra={"event.action": "__init__", "logrite.mylist": mylist})
                 self.mylist = mylist
+                logger.debug("__init__(): self.lbl → %s", self.lbl, extra={"event.action": "__init__"})
+                logger.debug("__init__(): self.pixmap → %s", self.pixmap, extra={"event.action": "__init__"})
+                logger.debug("__init__(): self.logo → %s", self.logo, extra={"event.action": "__init__"})
+                logger.debug("__init__(self=%s): index → %s", self, index, extra={"event.action": "__init__"})
+                logger.debug("__init__(self=%s): horpos → %s", self, horpos, extra={"event.action": "__init__"})
+                logger.debug("__init__(self=%s): verpos → %s", self, verpos, extra={"event.action": "__init__"})
+                logger.debug("__init__(): self.Gegevens → %s", self.Gegevens, extra={"event.action": "__init__"})
+                logger.debug("__init__(): q1Edit → %s", q1Edit, extra={"event.action": "__init__"})
+                logger.debug("__init__(self=%s): q1Edit → %s", self, q1Edit, extra={"event.action": "__init__"})
+                logger.debug("__init__(): terugBtn → %s", terugBtn, extra={"event.action": "__init__"})
+                logger.debug("__init__(self=%s): terugBtn → %s", self, terugBtn, extra={"event.action": "__init__"})
                 self.header = header
             def rowCount(self, parent):
+                logger.warning(">>> Entering rowCount(parent=%s)", parent, extra={"event.action": "rowCount"})
                 return len(self.mylist)
             def columnCount(self, parent):
+                logger.warning(">>> Entering columnCount(parent=%s)", parent, extra={"event.action": "columnCount"})
                 return len(self.mylist[0])
             def data(self, index, role):
+                logger.warning(">>> Entering data(index=%s,role=%s)", index, role, extra={"event.action": "data", "logrite.index": index, "logrite.role": role})
                 veld = self.mylist[index.row()][index.column()]
+                logger.debug("data(index=%s,role=%s): veld → %s", index, role, veld, extra={"event.action": "data", "logrite.index": index, "logrite.role": role})
+                logger.debug("data(self=%s,index=%s,role=%s): veld → %s", self, index, role, veld, extra={"event.action": "data", "logrite.index": index, "logrite.role": role})
                 if not index.isValid():
                     return None
                 elif role == Qt.TextAlignmentRole and (type(veld) == float or type(veld) == int):
@@ -963,10 +1082,13 @@ def maandBetalingen(m_email):
                 if type(veld) == float:
                     return '{:12.2f}'.format(veld)
                 else:
+                    logger.debug("<<< Exiting data(index=%s,role=%s)", index, role, extra={"event.action": "data", "logrite.index": index, "logrite.role": role})
                     return veld
             def headerData(self, col, orientation, role):
+                logger.warning(">>> Entering headerData(col=%s,orientation=%s,role=%s)", col, orientation, role, extra={"event.action": "headerData", "logrite.col": col, "logrite.orientation": orientation, "logrite.role": role})
                 if orientation == Qt.Horizontal and role == Qt.DisplayRole:
                     return self.header[col]
+                logger.debug("<<< Exiting headerData(col=%s,orientation=%s,role=%s)", col, orientation, role, extra={"event.action": "headerData", "logrite.col": col, "logrite.orientation": orientation, "logrite.role": role})
                 return None
                   
         header = ['Payment no.', 'Monthly period', 'Account number', 'Employee', 'Thirst name',\
@@ -1000,15 +1122,22 @@ def maandBetalingen(m_email):
             data_list += [(row)]
             
         def showSelection(idx):
+            logger.warning(">>> Entering showSelection(idx=%s)", idx, extra={"event.action": "showSelection", "logrite.idx": idx})
             mbetaalnr = idx.data()
+            logger.debug("showSelection(idx=%s): mbetaalnr → %s", idx, mbetaalnr, extra={"event.action": "showSelection", "logrite.idx": idx})
             if  idx.column() == 0:
                 engine = create_engine('postgresql+psycopg2://postgres@localhost/bisystem')
+                logger.debug("showSelection(idx=%s): engine → %s", idx, engine, extra={"event.action": "showSelection", "logrite.idx": idx})
                 con = engine.connect()
                 selbet = select([loonbetalingen]).where(loonbetalingen.c.betalingID == mbetaalnr)
+                logger.debug("showSelection(idx=%s): con → %s", idx, con, extra={"event.action": "showSelection", "logrite.idx": idx})
                 rpbet = con.execute(selbet).first()
                                  
+                logger.debug("showSelection(idx=%s): selbet → %s", idx, selbet, extra={"event.action": "showSelection", "logrite.idx": idx})
+                logger.debug("showSelection(idx=%s): rpbet → %s", idx, rpbet, extra={"event.action": "showSelection", "logrite.idx": idx})
                 class MainWindow(QDialog):
                     def __init__(self):
+                        logger.debug("<<< Exiting showSelection(idx=%s)", idx, extra={"event.action": "showSelection", "logrite.idx": idx})
                         QDialog.__init__(self)
                         
                         grid = QGridLayout()

@@ -1,21 +1,30 @@
 import re
+import logging
+logger = logging.getLogger(__name__)
 
 def _11check(zoekterm):
+    logger.warning(">>> Entering _11check(zoekterm=%s)", zoekterm, extra={"event.action": "_11check", "logrite.zoekterm": zoekterm})
     number = str(zoekterm)
+    logger.debug("_11check(zoekterm=%s): number → %s", zoekterm, number, extra={"event.action": "_11check", "logrite.zoekterm": zoekterm})
     total = 0       
     fullnumber = number                       
+    logger.debug("_11check(zoekterm=%s): total → %s", zoekterm, total, extra={"event.action": "_11check", "logrite.zoekterm": zoekterm})
     for i in range(8):
         total += int(fullnumber[i])*(9-i)
+        logger.debug("_11check(zoekterm=%s): fullnumber → %s", zoekterm, fullnumber, extra={"event.action": "_11check", "logrite.zoekterm": zoekterm})
         checkdigit = total %11 %10
     if checkdigit == int(fullnumber[8]):
         return True
     else:
+        logger.debug("<<< Exiting _11check(zoekterm=%s)", zoekterm, extra={"event.action": "_11check", "logrite.zoekterm": zoekterm})
         return False
 
 def zt(zoekterm, valnr):
+    logger.warning(">>> Entering zt(zoekterm=%s,valnr=%s)", zoekterm, valnr, extra={"event.action": "zt", "logrite.zoekterm": zoekterm, "logrite.valnr": valnr})
     if valnr == 1:
         #accountnr
         ab = re.compile("^([1]{1}[0-9]{8})+$")
+        logger.debug("zt(zoekterm=%s,valnr=%s): ab → %s", zoekterm, valnr, ab, extra={"event.action": "zt", "logrite.zoekterm": zoekterm, "logrite.valnr": valnr})
         if ab.match(zoekterm) and _11check(zoekterm):
             return(True)
         else:
@@ -186,6 +195,7 @@ def zt(zoekterm, valnr):
     elif valnr == 24:
         #categorie loonuren 
         item = False
+        logger.debug("zt(zoekterm=%s,valnr=%s): item → %s", zoekterm, valnr, item, extra={"event.action": "zt", "logrite.zoekterm": zoekterm, "logrite.valnr": valnr})
         if zoekterm.upper().startswith(('10','12','15','2','F','D','Z','V','E','R','G','O')):
             item = True
         return(item)
@@ -202,4 +212,5 @@ def zt(zoekterm, valnr):
         if ab.match(zoekterm):
             return(True)
         else:
+            logger.debug("<<< Exiting zt(zoekterm=%s,valnr=%s)", zoekterm, valnr, extra={"event.action": "zt", "logrite.zoekterm": zoekterm, "logrite.valnr": valnr})
             return(False)       

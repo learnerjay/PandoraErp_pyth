@@ -4,33 +4,47 @@ from PyQt5.QtWidgets import QLabel, QGridLayout, QDialog, QLineEdit, QMessageBox
 from PyQt5.QtGui import QFont, QPixmap, QRegExpValidator, QIcon, QMovie
 from PyQt5.QtCore import Qt, QRegExp, QSize
 from sqlalchemy import MetaData, Integer, Table, Column, String, create_engine, select, update
+import logging
+logger = logging.getLogger(__name__)
            
 def foutAccountnr():
+    logger.warning(">>> Entering foutAccountnr()", extra={"event.action": "foutAccountnr"})
     msg = QMessageBox()
+    logger.debug("foutAccountnr(): msg → %s", msg, extra={"event.action": "foutAccountnr"})
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setIcon(QMessageBox.Critical)
     msg.setText('Account number not present!')
     msg.setWindowTitle('Account')
+    logger.debug("<<< Exiting foutAccountnr()", extra={"event.action": "foutAccountnr"})
     msg.exec_()
     
 def windowSluit(self, m_email):
+    logger.warning(">>> Entering windowSluit(m_email=%s)", m_email, extra={"event.action": "windowSluit"})
     self.close()
     hoofdMenu(m_email) 
+    logger.debug("<<< Exiting windowSluit(m_email=%s)", m_email, extra={"event.action": "windowSluit"})
     
 def winSluit(self, m_email):
+    logger.warning(">>> Entering winSluit(m_email=%s)", m_email, extra={"event.action": "winSluit"})
     self.close()
     zoekAccount(m_email)
+    logger.debug("<<< Exiting winSluit(m_email=%s)", m_email, extra={"event.action": "winSluit"})
 
 def updateOK(self):
+    logger.warning(">>> Entering updateOK()", extra={"event.action": "updateOK"})
     msg = QMessageBox()
+    logger.debug("updateOK(): msg → %s", msg, extra={"event.action": "updateOK"})
+    logger.debug("updateOK(self=%s): msg → %s", self, msg, extra={"event.action": "updateOK"})
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setIcon(QMessageBox.Information)
     msg.setFont(QFont("Arial",10))
     msg.setText('The authorisations of: \n'+self.mvoorn+' '+self.mtussen+' '+self.machtern+'\nhave been adjusted!')
     msg.setWindowTitle('Authorisation')
+    logger.debug("<<< Exiting updateOK()", extra={"event.action": "updateOK"})
     msg.exec_()
 
 def info():
+    logger.warning(">>> Entering info()", extra={"event.action": "info"})
     class Widget(QDialog):
         def __init__(self, parent=None):
             super(Widget, self).__init__(parent)
@@ -108,6 +122,7 @@ def info():
     window.exec_()
     
 def zoekAccount(m_email):     
+    logger.warning(">>> Entering zoekAccount(m_email=%s)", m_email, extra={"event.action": "zoekAccount"})
     class Widget(QDialog):
         def __init__(self, parent=None):
             super(Widget, self).__init__(parent)
@@ -166,17 +181,77 @@ def zoekAccount(m_email):
             
             self.setLayout(grid)
             self.setGeometry(500, 400, 150, 150)
+            logger.warning(">>> Entering __init__(parent=%s)", parent, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): grid → %s", parent, grid, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): grid → %s", self, parent, grid, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): self.mvoorn → %s", self, parent, self.mvoorn, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): self.mtussen → %s", self, parent, self.mtussen, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): self.machtern → %s", self, parent, self.machtern, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): self.astr → %s", self, parent, self.astr, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): pyqt → %s", parent, pyqt, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): pyqt → %s", self, parent, pyqt, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): movie → %s", parent, movie, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): movie → %s", self, parent, movie, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): logo → %s", parent, logo, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): logo → %s", self, parent, logo, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): pixmap → %s", parent, pixmap, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): pixmap → %s", self, parent, pixmap, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): accEdit → %s", parent, accEdit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): accEdit → %s", self, parent, accEdit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): lbl0 → %s", parent, lbl0, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): lbl0 → %s", self, parent, lbl0, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): lbl1 → %s", parent, lbl1, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): lbl1 → %s", self, parent, lbl1, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): lbl2 → %s", parent, lbl2, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): lbl2 → %s", self, parent, lbl2, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): lbl3 → %s", parent, lbl3, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): lbl3 → %s", self, parent, lbl3, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): lbl4 → %s", parent, lbl4, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): lbl4 → %s", self, parent, lbl4, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): lbl5 → %s", parent, lbl5, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): lbl5 → %s", self, parent, lbl5, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): lbl6 → %s", parent, lbl6, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): lbl6 → %s", self, parent, lbl6, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): lbl7 → %s", parent, lbl7, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): lbl7 → %s", self, parent, lbl7, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): lbl8 → %s", parent, lbl8, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): lbl8 → %s", self, parent, lbl8, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): lbl9 → %s", parent, lbl9, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): lbl9 → %s", self, parent, lbl9, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): lbl10 → %s", parent, lbl10, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): lbl10 → %s", self, parent, lbl10, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): lbl11 → %s", parent, lbl11, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): lbl11 → %s", self, parent, lbl11, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): lbl12 → %s", parent, lbl12, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): lbl12 → %s", self, parent, lbl12, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): lbl13 → %s", parent, lbl13, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): lbl13 → %s", self, parent, lbl13, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): lbl14 → %s", parent, lbl14, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): lbl14 → %s", self, parent, lbl14, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): lbl15 → %s", parent, lbl15, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): lbl15 → %s", self, parent, lbl15, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): self.xlist → %s", self, parent, self.xlist, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): cBox → %s", parent, cBox, extra={"event.action": "__init__"})
+            logger.debug("<<< Exiting __init__(parent=%s)", parent, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): cBox → %s", self, parent, cBox, extra={"event.action": "__init__"})
     
         def accChanged(self, text):
+            logger.warning(">>> Entering accChanged(text=%s)", text, extra={"event.action": "accChanged", "logrite.text": text})
             self.Accountnummer.setText(text)
+            logger.debug("<<< Exiting accChanged(text=%s)", text, extra={"event.action": "accChanged", "logrite.text": text})
     
         def returnAccountnummer(self):
+            logger.warning(">>> Entering returnAccountnummer()", extra={"event.action": "returnAccountnummer"})
+            logger.debug("<<< Exiting returnAccountnummer()", extra={"event.action": "returnAccountnummer"})
             return self.Accountnummer.text()
     
         @staticmethod
         def getData(parent=None):
+            logger.warning(">>> Entering getData(parent=%s)", parent, extra={"event.action": "getData"})
             dialog = Widget(parent)
+            logger.debug("getData(parent=%s): dialog → %s", parent, dialog, extra={"event.action": "getData"})
             dialog.exec_()
+            logger.debug("<<< Exiting getData(parent=%s)", parent, extra={"event.action": "getData"})
             return [dialog.returnAccountnummer()]
     
     window = Widget()
@@ -204,10 +279,15 @@ def zoekAccount(m_email):
         zoekAccount(m_email)
   
 def geefAuth(rpacc, m_email):
+    logger.warning(">>> Entering geefAuth(rpacc=%s,m_email=%s)", rpacc, m_email, extra={"event.action": "geefAuth", "logrite.rpacc": rpacc})
     maccountnr = int(rpacc[0])
+    logger.debug("geefAuth(rpacc=%s,m_email=%s): maccountnr → %s", rpacc, m_email, maccountnr, extra={"event.action": "geefAuth", "logrite.rpacc": rpacc})
     mvoorn = rpacc[1]
     mtussen = rpacc[2]
+    logger.debug("geefAuth(rpacc=%s,m_email=%s): mvoorn → %s", rpacc, m_email, mvoorn, extra={"event.action": "geefAuth", "logrite.rpacc": rpacc})
+    logger.debug("geefAuth(rpacc=%s,m_email=%s): mtussen → %s", rpacc, m_email, mtussen, extra={"event.action": "geefAuth", "logrite.rpacc": rpacc})
     machtern = rpacc[3]      
+    logger.debug("geefAuth(rpacc=%s,m_email=%s): machtern → %s", rpacc, m_email, machtern, extra={"event.action": "geefAuth", "logrite.rpacc": rpacc})
     metadata = MetaData()
     accounts = Table('accounts', metadata,
         Column('p1', String),
@@ -227,15 +307,21 @@ def geefAuth(rpacc, m_email):
         Column('p15', String),
         Column('p16', String),
         Column('accountID', Integer(), primary_key=True))
+    logger.debug("geefAuth(rpacc=%s,m_email=%s): metadata → %s", rpacc, m_email, metadata, extra={"event.action": "geefAuth", "logrite.rpacc": rpacc})
 
     engine = create_engine('postgresql+psycopg2://postgres@localhost/bisystem')
+    logger.debug("geefAuth(rpacc=%s,m_email=%s): engine → %s", rpacc, m_email, engine, extra={"event.action": "geefAuth", "logrite.rpacc": rpacc})
     con = engine.connect()
     sel = select([accounts]).where(accounts.c.accountID == maccountnr)
+    logger.debug("geefAuth(rpacc=%s,m_email=%s): con → %s", rpacc, m_email, con, extra={"event.action": "geefAuth", "logrite.rpacc": rpacc})
     rpa = con.execute(sel).first()
 
+    logger.debug("geefAuth(rpacc=%s,m_email=%s): sel → %s", rpacc, m_email, sel, extra={"event.action": "geefAuth", "logrite.rpacc": rpacc})
+    logger.debug("geefAuth(rpacc=%s,m_email=%s): rpa → %s", rpacc, m_email, rpa, extra={"event.action": "geefAuth", "logrite.rpacc": rpacc})
     class Widget(QDialog):
         def __init__(self, parent=None):
             super(Widget, self).__init__(parent)
+            logger.debug("<<< Exiting geefAuth(rpacc=%s,m_email=%s)", rpacc, m_email, extra={"event.action": "geefAuth", "logrite.rpacc": rpacc})
             self.setWindowIcon(QIcon('./images/logos/logo.jpg'))
             self.setWindowFlags(self.windowFlags() | Qt.WindowSystemMenuHint |
                                 Qt.WindowMinMaxButtonsHint)
@@ -357,18 +443,24 @@ def geefAuth(rpacc, m_email):
                cBox.clicked.connect(lambda checked , mindex = x : getindex(mindex))
                                               
             def getindex(mindex):
+                logger.warning(">>> Entering getindex(mindex=%s)", mindex, extra={"event.action": "getindex", "logrite.mindex": mindex})
                 #compile list with changes
                 self.xlist.append(mindex)
+                logger.debug("<<< Exiting getindex(mindex=%s)", mindex, extra={"event.action": "getindex", "logrite.mindex": mindex})
                                          
             def writeValues(self):
+                logger.warning(">>> Entering writeValues()", extra={"event.action": "writeValues"})
                 #remove unnessary paired changes (enable, disable) or (disable, enable) and sort
                 self.xlist = [value for value, count in Counter(self.xlist).items() if count%2 == 1]
+                logger.debug("writeValues(): self.xlist → %s", self.xlist, extra={"event.action": "writeValues"})
                 self.xlist.sort()
                 for x in self.xlist:
                     if self.astr[x] == '0':
                         self.astr=self.astr[0:x]+'1'+self.astr[x+1:]
+                        logger.debug("writeValues(): self.astr → %s", self.astr, extra={"event.action": "writeValues"})
                     else:
                         self.astr=self.astr[0:x]+'0'+self.astr[x+1:]
+                        logger.debug("writeValues(self=%s): self.astr → %s", self, self.astr, extra={"event.action": "writeValues"})
                                                            
                 updper=update(accounts).where(accounts.c.accountID==maccountnr).values\
                  (p1=self.astr[0:8],
@@ -387,9 +479,11 @@ def geefAuth(rpacc, m_email):
                   p14=self.astr[104:112],
                   p15=self.astr[112:120],
                   p16=self.astr[120:128])
+                logger.debug("writeValues(): updper → %s", updper, extra={"event.action": "writeValues"})
                 con.execute(updper)
                 updateOK(self)
                 self.close()
+                logger.debug("<<< Exiting writeValues()", extra={"event.action": "writeValues"})
                                                                           
             applyBtn = QPushButton('Update')
             applyBtn.clicked.connect(lambda: writeValues(self))

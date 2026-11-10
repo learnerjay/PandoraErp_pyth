@@ -7,42 +7,71 @@ from PyQt5.QtWidgets import QLineEdit, QGridLayout, QDialog, QLabel, QPushButton
         QMessageBox, QSpinBox, QTextEdit
 from sqlalchemy import (Table, Column, Integer, String, MetaData, create_engine, Float,\
                         select, update,insert, delete, func, and_, Boolean)
+import logging
+logger = logging.getLogger(__name__)
 
 def geenGegevens():
+    logger.warning(">>> Entering geenGegevens()", extra={"event.action": "geenGegevens"})
     msg = QMessageBox()
+    logger.debug("geenGegevens(): msg → %s", msg, extra={"event.action": "geenGegevens"})
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     msg.setFont(QFont("Arial", 10))
     msg.setIcon(QMessageBox.Warning)
     msg.setText('There are no transactions yet!')
     msg.setWindowTitle('Transactions')
+    logger.debug("<<< Exiting geenGegevens()", extra={"event.action": "geenGegevens"})
     msg.exec_() 
 
 def info():
+    logger.warning(">>> Entering info()", extra={"event.action": "info"})
     class Widget(QDialog):
         def __init__(self, parent=None):
             super(Widget, self).__init__(parent)
+            logger.warning(">>> Entering __init__(parent=%s)", parent, extra={"event.action": "__init__"})
             self.setWindowTitle("Barcode Scanning Information")
             self.setWindowIcon(QIcon('./images/logos/logo.jpg'))
             self.setFont(QFont('Arial', 10))
             grid = QGridLayout()
+            logger.debug("__init__(parent=%s): grid → %s", parent, grid, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): grid → %s", self, parent, grid, extra={"event.action": "__init__"})
             grid.setSpacing(20)
             
             lblinfo = QLabel('Pandora ERP Information')
+            logger.debug("__init__(parent=%s): lblinfo → %s", parent, lblinfo, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): lblinfo → %s", self, parent, lblinfo, extra={"event.action": "__init__"})
             grid.addWidget(lblinfo, 0, 0, 1, 2, Qt.AlignCenter)
             lblinfo.setStyleSheet("color:rgba(45, 83, 115, 255); font: 25pt Comic Sans MS")
             
             logo = QLabel()
+            logger.debug("__init__(parent=%s): logo → %s", parent, logo, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): logo → %s", self, parent, logo, extra={"event.action": "__init__"})
             pixmap = QPixmap('./images/logos/logo.jpg')
+            logger.debug("__init__(self=%s,parent=%s): pixmap → %s", self, parent, pixmap, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): pixmap → %s", parent, pixmap, extra={"event.action": "__init__"})
             logo.setPixmap(pixmap)
             grid.addWidget(logo , 0, 0, 1, 1, Qt.AlignRight)
         
             lbl = QLabel()
+            logger.debug("__init__(parent=%s): lbl → %s", parent, lbl, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): lbl → %s", self, parent, lbl, extra={"event.action": "__init__"})
             pixmap = QPixmap('./images/logos/verbinding.jpg')
             lbl.setPixmap(pixmap)
             grid.addWidget(lbl, 0, 0)
+            logger.debug("<<< Exiting __init__(parent=%s)", parent, extra={"event.action": "__init__"})
             
             infolbl = QLabel('''\t\t\t\t\t\t\t\t\t\t
+            logger.debug("__init__(self=%s,parent=%s): infolbl → %s", self, parent, infolbl, extra={"event.action": "__init__"})
+            logger.warning(">>> Entering __init__()", extra={"event.action": "__init__"})
+            logger.debug("__init__(): self.q1Edit → %s", self.q1Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): q1Edit → %s", self, q1Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): reg_ex → %s", reg_ex, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): reg_ex → %s", self, reg_ex, extra={"event.action": "__init__"})
+            logger.debug("__init__(): input_validator → %s", input_validator, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): input_validator → %s", self, input_validator, extra={"event.action": "__init__"})
+            logger.debug("__init__(): self.qspin → <redacted>", extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): qspin → <redacted>", self, extra={"event.action": "__init__"})
+            logger.debug("<<< Exiting __init__()", extra={"event.action": "__init__"})
 
         Barcode scanning instructions. 
         
@@ -94,25 +123,34 @@ def info():
     window.exec_()
 
 def printing():
+    logger.warning(">>> Entering printing()", extra={"event.action": "printing"})
     msg = QMessageBox()
+    logger.debug("printing(): msg → %s", msg, extra={"event.action": "printing"})
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg')) 
     msg.setIcon(QMessageBox.Information)
     msg.setFont(QFont("Arial", 10))
     msg.setText('Just a moment printing is starting!')
     msg.setWindowTitle('Printing web sales orders')
+    logger.debug("<<< Exiting printing()", extra={"event.action": "printing"})
     msg.exec_()
     
 def heading(mblad, mbonnr):
+    logger.warning(">>> Entering heading(mblad=%s,mbonnr=%s)", mblad, mbonnr, extra={"event.action": "heading", "logrite.mblad": mblad, "logrite.mbonnr": mbonnr})
     kop=\
     ('Counter Sales- Order number: '+ str(mbonnr)+' Date : '+str(datetime.now())[0:10]+' page      '+str(mblad)+' \n'+
     '==============================================================================================\n'+
     'Articlenr  Description                              Number       Price   Subtotal      VAT 21%\n'+
     '==============================================================================================\n')
+    logger.debug("heading(mblad=%s,mbonnr=%s): kop → %s", mblad, mbonnr, kop, extra={"event.action": "heading", "logrite.mblad": mblad, "logrite.mbonnr": mbonnr})
+    logger.debug("<<< Exiting heading(mblad=%s,mbonnr=%s)", mblad, mbonnr, extra={"event.action": "heading", "logrite.mblad": mblad, "logrite.mbonnr": mbonnr})
     return(kop)
 
 def printBon(self):
+    logger.warning(">>> Entering printBon()", extra={"event.action": "printBon"})
     msgBox=QMessageBox()
+    logger.debug("printBon(): msgBox → %s", msgBox, extra={"event.action": "printBon"})
+    logger.debug("printBon(self=%s): msgBox → %s", self, msgBox, extra={"event.action": "printBon"})
     msgBox.setStyleSheet("color: black;  background-color: gainsboro")
     msgBox.setWindowIcon(QIcon('./images/logos/logo.jpg')) 
     msgBox.setWindowTitle("Print order form")
@@ -125,6 +163,8 @@ def printBon(self):
     msgBox.setDefaultButton(QMessageBox.Yes)
     if(msgBox.exec_() == QMessageBox.Yes):
         metadata = MetaData()
+        logger.debug("printBon(): metadata → %s", metadata, extra={"event.action": "printBon"})
+        logger.debug("printBon(self=%s): metadata → %s", self, metadata, extra={"event.action": "printBon"})
         balieverkoop = Table('balieverkoop', metadata,
             Column('ID', Integer(), primary_key=True),
             Column('bonnummer', Integer),
@@ -140,10 +180,25 @@ def printBon(self):
             Column('system_value', Integer),
             Column('lock', Boolean))
         engine = create_engine('postgresql+psycopg2://postgres@localhost/bisystem')
+        logger.debug("printBon(): engine → %s", engine, extra={"event.action": "printBon"})
+        logger.debug("printBon(self=%s): engine → %s", self, engine, extra={"event.action": "printBon"})
+        logger.debug("printBon(): selb → %s", selb, extra={"event.action": "printBon"})
+        logger.debug("printBon(self=%s): rpb → %s", self, rpb, extra={"event.action": "printBon"})
+        logger.debug("printBon(): rpb → %s", rpb, extra={"event.action": "printBon"})
+        logger.debug("printBon(self=%s): mblad → %s", self, mblad, extra={"event.action": "printBon"})
+        logger.debug("printBon(): fbarc → %s", fbarc, extra={"event.action": "printBon"})
+        logger.debug("printBon(self=%s): fbarc → %s", self, fbarc, extra={"event.action": "printBon"})
         con = engine.connect()
+        logger.debug("printBon(self=%s): con → %s", self, con, extra={"event.action": "printBon"})
+        logger.debug("printBon(): con → %s", con, extra={"event.action": "printBon"})
         selpar = select([params_system]).where(params_system.c.systemID == 2)
+        logger.debug("printBon(): selpar → %s", selpar, extra={"event.action": "printBon"})
         rppar = con.execute(selpar).first()
+        logger.debug("printBon(): rppar → %s", rppar, extra={"event.action": "printBon"})
+        logger.debug("printBon(self=%s): rppar → %s", self, rppar, extra={"event.action": "printBon"})
         mbonnr = int(rppar[1])
+        logger.debug("printBon(): mbonnr → %s", mbonnr, extra={"event.action": "printBon"})
+        logger.debug("printBon(self=%s): mbonnr → %s", self, mbonnr, extra={"event.action": "printBon"})
         delbal = delete(balieverkoop).where(and_(balieverkoop.c.aantal == 0,\
                        balieverkoop.c.bonnummer == mbonnr))
         con.execute(delbal)
@@ -166,11 +221,17 @@ def printBon(self):
                 open(fbarc, 'a').write(heading(mblad, mbonnr))
                 
             martnr = row[2]
+            logger.debug("printBon(self=%s): martnr → %s", self, martnr, extra={"event.action": "printBon"})
             momschr = row[4]
+            logger.debug("printBon(self=%s): momschr → %s", self, momschr, extra={"event.action": "printBon"})
             maantal = row[5]
+            logger.debug("printBon(self=%s): maantal → %s", self, maantal, extra={"event.action": "printBon"})
             mprijs = row[6]
+            logger.debug("printBon(self=%s): mprijs → %s", self, mprijs, extra={"event.action": "printBon"})
             msubtotaal = row[7]
+            logger.debug("printBon(self=%s): msubtotaal → %s", self, msubtotaal, extra={"event.action": "printBon"})
             msubtotbtw = row[8]
+            logger.debug("printBon(self=%s): msubtotbtw → %s", self, msubtotbtw, extra={"event.action": "printBon"})
             open(fbarc,'a').write(str(martnr) +'  '+'{:<40.40s}'.format(momschr)+' '+'{:>6d}'\
                      .format(int(maantal))+'{:>12.2f}'.format(float(mprijs))+'{:>12.2f}'\
                      .format(float(msubtotaal))+'{:>12.2f}'\
@@ -180,6 +241,7 @@ def printBon(self):
         ('==============================================================================================\n'+
         'Total amount  to be settled including VAT and amount VAT 21%          '+'{:>12.2f}'.format(self.mtotaal)+'{:>12.2f}'.format(self.mtotbtw)+' \n'+
         '==============================================================================================\n')
+        logger.debug("printBon(self=%s): tail → %s", self, tail, extra={"event.action": "printBon"})
         if rgl > 0:
             open(fbarc,'a').write(tail) 
             if platform == 'win32':
@@ -191,13 +253,19 @@ def printBon(self):
             printing()
         else:
             geenGegevens()
+            logger.debug("<<< Exiting printBon()", extra={"event.action": "printBon"})
         
 def windowSluit(self, m_email):
+    logger.warning(">>> Entering windowSluit(m_email=%s)", m_email, extra={"event.action": "windowSluit"})
     self.close()
     hoofdMenu(m_email)
+    logger.debug("<<< Exiting windowSluit(m_email=%s)", m_email, extra={"event.action": "windowSluit"})
     
 def nextClient(self):
+    logger.warning(">>> Entering nextClient()", extra={"event.action": "nextClient"})
     mboekd = str(datetime.now())[0:10]
+    logger.debug("nextClient(): mboekd → %s", mboekd, extra={"event.action": "nextClient"})
+    logger.debug("nextClient(self=%s): mboekd → %s", self, mboekd, extra={"event.action": "nextClient"})
     metadata = MetaData()
     balieverkoop = Table('balieverkoop', metadata,
         Column('ID', Integer(), primary_key=True),
@@ -209,6 +277,7 @@ def nextClient(self):
         Column('prijs', Float),
         Column('subtotaal', Float),
         Column('subbtw', Float))
+    logger.debug("nextClient(self=%s): metadata → %s", self, metadata, extra={"event.action": "nextClient"})
     artikelmutaties = Table('artikelmutaties', metadata,
         Column('mutatieID', Integer, primary_key=True),
         Column('artikelID', Integer),
@@ -217,28 +286,42 @@ def nextClient(self):
         Column('baliebonID', Integer),
         Column('tot_mag_prijs', Float),
         Column('btw_hoog', Float))
+    logger.debug("nextClient(): metadata → %s", metadata, extra={"event.action": "nextClient"})
     params_system = Table('params_system', metadata,
         Column('systemID', Integer(), primary_key=True),
         Column('system_value', Integer),
         Column('lock', Boolean))
     engine = create_engine('postgresql+psycopg2://postgres@localhost/bisystem')
+    logger.debug("nextClient(): engine → %s", engine, extra={"event.action": "nextClient"})
+    logger.debug("nextClient(self=%s): engine → %s", self, engine, extra={"event.action": "nextClient"})
     con = engine.connect()
+    logger.debug("nextClient(): con → %s", con, extra={"event.action": "nextClient"})
+    logger.debug("nextClient(self=%s): con → %s", self, con, extra={"event.action": "nextClient"})
     selpar = select([params_system]).where(params_system.c.systemID == 2)
+    logger.debug("nextClient(): selpar → %s", selpar, extra={"event.action": "nextClient"})
     rppar = con.execute(selpar).first()
+    logger.debug("nextClient(): rppar → %s", rppar, extra={"event.action": "nextClient"})
+    logger.debug("nextClient(self=%s): rppar → %s", self, rppar, extra={"event.action": "nextClient"})
     mbonnr = rppar[1]
+    logger.debug("nextClient(self=%s): mbonnr → %s", self, mbonnr, extra={"event.action": "nextClient"})
     delbal = delete(balieverkoop).where(and_(balieverkoop.c.aantal == 0,\
                balieverkoop.c.bonnummer == mbonnr))
     con.execute(delbal)
 
     selb = select([balieverkoop]).where(balieverkoop.c.bonnummer == mbonnr)\
                       .order_by(balieverkoop.c.barcode)
+    logger.debug("nextClient(): selb → %s", selb, extra={"event.action": "nextClient"})
     rpb = con.execute(selb)
+    logger.debug("nextClient(self=%s): rpb → %s", self, rpb, extra={"event.action": "nextClient"})
+    logger.debug("nextClient(): rpb → %s", rpb, extra={"event.action": "nextClient"})
     for row in rpb:
         try:
             mmutnr = con.execute(select([func.max(artikelmutaties.c.mutatieID, type_=Integer)])).scalar()
+            logger.debug("nextClient(self=%s): mmutnr → %s", self, mmutnr, extra={"event.action": "nextClient"})
             mmutnr += 1
         except:
             mmutnr = 1
+            logger.error("Exception in nextClient()", exc_info=True, extra={"event.action": "nextClient", "event.category": "process"})
             
         insmut = insert(artikelmutaties).values(mutatieID = mmutnr, artikelID = row[2],\
                 hoeveelheid = row[5], boekdatum = mboekd, baliebonID = mbonnr,\
@@ -261,37 +344,53 @@ def nextClient(self):
         try:
             mafdrnr = (con.execute(select([func.max(afdrachten.c.afdrachtID,\
                       type_=Integer)])).scalar())
+            logger.debug("nextClient(): type_ → %s", type_, extra={"event.action": "nextClient"})
             mafdrnr += 1
         except:
+            logger.debug("nextClient(): soort → %s", soort, extra={"event.action": "nextClient"})
             mafdrnr = 1
+            logger.debug("nextClient(self=%s): mafdrnr → %s", self, mafdrnr, extra={"event.action": "nextClient"})
             
         insdr = insert(afdrachten).values(afdrachtID = mafdrnr, boekdatum = mboekd,\
              soort = 'VAT remittance 21%', bedrag = self.mtotbtw, instantie = 'Tax authorities',\
              ovbestelID = int(mbonnr), rekeningnummer= 'NL10 ABNA 9999999977')
+        logger.debug("nextClient(): ovbestelID → %s", ovbestelID, extra={"event.action": "nextClient"})
         con.execute(insdr)
         self.closeBtn.setEnabled(True)
+        logger.debug("nextClient(self=%s): closeBtn → %s", self, closeBtn, extra={"event.action": "nextClient"})
         self.closeBtn.setStyleSheet("color: black; background-color: gainsboro")
         self.printBtn.setDisabled(True)
+        logger.debug("nextClient(self=%s): printBtn → %s", self, printBtn, extra={"event.action": "nextClient"})
         self.printBtn.setStyleSheet("color: grey; background-color: gainsboro")
         self.nextBtn.setDisabled(True)
+        logger.debug("nextClient(self=%s): nextBtn → %s", self, nextBtn, extra={"event.action": "nextClient"})
         self.nextBtn.setStyleSheet("color: grey; background-color: gainsboro")
         mbonnr += 1
         updpar = update(params_system).where(params_system.c.systemID == 2).values(system_value = mbonnr, lock = False)
+        logger.debug("nextClient(): updpar → %s", updpar, extra={"event.action": "nextClient"})
         con.execute(updpar)
         self.mtotaal = 0.00
+        logger.debug("nextClient(self=%s): self.mtotaal → %s", self, self.mtotaal, extra={"event.action": "nextClient"})
+        logger.debug("nextClient(self=%s): view → %s", self, view, extra={"event.action": "nextClient"})
+        logger.debug("nextClient(): self.qtailtext → %s", self.qtailtext, extra={"event.action": "nextClient"})
         self.mtotbtw = 0.00
+        logger.debug("nextClient(self=%s): self.mtotbtw → %s", self, self.mtotbtw, extra={"event.action": "nextClient"})
         self.mlist = []
+        logger.debug("nextClient(self=%s): self.mlist → %s", self, self.mlist, extra={"event.action": "nextClient"})
         self.view.setText('')
         self.qtailtext = 'Total incl.  VAT  '+'{:\u2000>12.2f}'.format(self.mtotaal)+'{:\u2000>12.2f}'.format(self.mtotbtw)+' VAT'
         self.qtailEdit.setText(self.qtailtext)
     else:
+        logger.debug("nextClient(self=%s): qtailEdit → %s", self, qtailEdit, extra={"event.action": "nextClient"})
         updpar = update(params_system).where(params_system.c.systemID == 2).values(lock = False)
         con.execute(updpar)
         geenGegevens()
+        logger.debug("<<< Exiting nextClient()", extra={"event.action": "nextClient"})
         self.closeBtn.setEnabled(True)
         self.closeBtn.setStyleSheet("color: black; background-color: gainsboro")
 
 def geefAlarm():
+    logger.warning(">>> Entering geefAlarm()", extra={"event.action": "geefAlarm"})
     if platform == 'win32':
         import winsound
         winsound.Beep(2300,250)
@@ -301,27 +400,42 @@ def geefAlarm():
         from os import system
         system('play -nq -t alsa synth {} sine {}'.format(0.25, 2300))
         system('play -nq -t alsa synth {} sine {}'.format(0.25, 2300))
+        logger.debug("<<< Exiting geefAlarm()", extra={"event.action": "geefAlarm"})
 
 def plusminChange(self):
+    logger.warning(">>> Entering plusminChange()", extra={"event.action": "plusminChange"})
     if self.plusminBtn.isChecked():
         self.plusminBtn.setText('-')
+        logger.debug("plusminChange(self=%s): plusminBtn → %s", self, plusminBtn, extra={"event.action": "plusminChange"})
         self.qspin.setRange(-99, -1)
     else:
+        logger.debug("plusminChange(self=%s): qspin → <redacted>", self, extra={"event.action": "plusminChange"})
         self.plusminBtn.setText('+')
+        logger.debug("<<< Exiting plusminChange()", extra={"event.action": "plusminChange"})
         self.qspin.setRange(1, 99)
         
 def checkBarcode(c):
+    logger.warning(">>> Entering checkBarcode(c=%s)", c, extra={"event.action": "checkBarcode", "logrite.c": c})
     checksum = int(c[0])+int(c[2])+int(c[4])+int(c[6])+int(c[8])+int(c[10])+(int(c[1])+
                 int(c[3])+int(c[5])+int(c[7])+int(c[9])+int(c[11]))*3
+    logger.debug("checkBarcode(c=%s): checksum → %s", c, checksum, extra={"event.action": "checkBarcode", "logrite.c": c})
     checkdigit = (10-(checksum%10))%10
     if checkdigit == int(c[12]):
+        logger.debug("checkBarcode(c=%s): checkdigit → %s", c, checkdigit, extra={"event.action": "checkBarcode", "logrite.c": c})
         return True
     else:
+        logger.debug("<<< Exiting checkBarcode(c=%s)", c, extra={"event.action": "checkBarcode", "logrite.c": c})
         return False
     
 def set_barcodenr(self):
+    logger.warning(">>> Entering set_barcodenr()", extra={"event.action": "set_barcodenr"})
+    logger.debug("set_barcodenr(self=%s): albl → %s", self, albl, extra={"event.action": "set_barcodenr"})
     barcodenr = self.q1Edit.text()
+    logger.debug("set_barcodenr(): barcodenr → %s", barcodenr, extra={"event.action": "set_barcodenr"})
+    logger.debug("set_barcodenr(self=%s): barcodenr → %s", self, barcodenr, extra={"event.action": "set_barcodenr"})
     maantal = self.qspin.value()
+    logger.debug("set_barcodenr(): maantal → %s", maantal, extra={"event.action": "set_barcodenr"})
+    logger.debug("set_barcodenr(self=%s): maantal → %s", self, maantal, extra={"event.action": "set_barcodenr"})
     self.albl.setText('')
     if len(barcodenr) == 13 and checkBarcode(barcodenr):
         metadata = MetaData()
@@ -331,6 +445,7 @@ def set_barcodenr(self):
             Column('artikelomschrijving', String),
             Column('artikelprijs', Float),
             Column('art_voorraad', Float))
+        logger.debug("set_barcodenr(self=%s): metadata → %s", self, metadata, extra={"event.action": "set_barcodenr"})
         balieverkoop = Table('balieverkoop', metadata,
             Column('ID', Integer(), primary_key=True),
             Column('bonnummer', Integer),
@@ -341,6 +456,7 @@ def set_barcodenr(self):
             Column('prijs', Float),
             Column('subtotaal', Float),
             Column('subbtw', Float))
+        logger.debug("set_barcodenr(): metadata → %s", metadata, extra={"event.action": "set_barcodenr"})
         params_system = Table('params_system', metadata,
             Column('systemID', Integer(), primary_key=True),
             Column('system)_value', Integer),
@@ -349,13 +465,32 @@ def set_barcodenr(self):
             Column('financeID', Integer(), primary_key=True),
             Column('factor', Float))
         engine = create_engine('postgresql+psycopg2://postgres@localhost/bisystem')
+        logger.debug("set_barcodenr(): engine → %s", engine, extra={"event.action": "set_barcodenr"})
+        logger.debug("set_barcodenr(self=%s): engine → %s", self, engine, extra={"event.action": "set_barcodenr"})
+        logger.debug("set_barcodenr(): updpar → %s", updpar, extra={"event.action": "set_barcodenr"})
+        logger.debug("set_barcodenr(): selbal → %s", selbal, extra={"event.action": "set_barcodenr"})
+        logger.debug("set_barcodenr(): selart → %s", selart, extra={"event.action": "set_barcodenr"})
+        logger.debug("set_barcodenr(): rpart → %s", rpart, extra={"event.action": "set_barcodenr"})
+        logger.debug("set_barcodenr(self=%s): rpart → %s", self, rpart, extra={"event.action": "set_barcodenr"})
+        logger.debug("set_barcodenr(self=%s): rpbal → %s", self, rpbal, extra={"event.action": "set_barcodenr"})
+        logger.debug("set_barcodenr(): rpbal → %s", rpbal, extra={"event.action": "set_barcodenr"})
         con = engine.connect()
+        logger.debug("set_barcodenr(self=%s): con → %s", self, con, extra={"event.action": "set_barcodenr"})
+        logger.debug("set_barcodenr(): con → %s", con, extra={"event.action": "set_barcodenr"})
         selpar = select([params_system]).where(params_system.c.systemID == 2)
+        logger.debug("set_barcodenr(): selpar → %s", selpar, extra={"event.action": "set_barcodenr"})
         rppar = con.execute(selpar).first()
+        logger.debug("set_barcodenr(): rppar → %s", rppar, extra={"event.action": "set_barcodenr"})
+        logger.debug("set_barcodenr(self=%s): rppar → %s", self, rppar, extra={"event.action": "set_barcodenr"})
         selpar1 = select([params_finance]).where(params_finance.c.financeID == 1)
+        logger.debug("set_barcodenr(): selpar1 → %s", selpar1, extra={"event.action": "set_barcodenr"})
         rppar1 = con.execute(selpar1).first()
+        logger.debug("set_barcodenr(): rppar1 → %s", rppar1, extra={"event.action": "set_barcodenr"})
+        logger.debug("set_barcodenr(self=%s): rppar1 → %s", self, rppar1, extra={"event.action": "set_barcodenr"})
         mbtw = rppar1[1]
+        logger.debug("set_barcodenr(self=%s): mbtw → %s", self, mbtw, extra={"event.action": "set_barcodenr"})
         mbonnr = rppar[1]
+        logger.debug("set_barcodenr(self=%s): mbonnr → %s", self, mbonnr, extra={"event.action": "set_barcodenr"})
         mklant = rppar[2]
         if mklant == False:
             updpar = update(params_system).where(params_system.c.systemID == 2).values(lock = True)
@@ -370,21 +505,29 @@ def set_barcodenr(self):
             geefAlarm()
         elif rpart:
             martnr = rpart[0]
+            logger.debug("set_barcodenr(self=%s): martnr → %s", self, martnr, extra={"event.action": "set_barcodenr"})
+            logger.debug("set_barcodenr(): updbal → %s", updbal, extra={"event.action": "set_barcodenr"})
             momschr = rpart[2]
             momschr = momschr[:40] if len(momschr) > 40 else momschr
+            logger.debug("set_barcodenr(): momschr → %s", momschr, extra={"event.action": "set_barcodenr"})
+            logger.debug("set_barcodenr(self=%s): momschr → %s", self, momschr, extra={"event.action": "set_barcodenr"})
             mprijs = rpart[3]
+            logger.debug("set_barcodenr(self=%s): mprijs → %s", self, mprijs, extra={"event.action": "set_barcodenr"})
             if rpbal:
                 updbal = update(balieverkoop).where(and_(balieverkoop.c.barcode == barcodenr,\
                   balieverkoop.c.bonnummer == mbonnr)).values(aantal = balieverkoop.c.aantal+maantal,\
                   subtotaal = (balieverkoop.c.aantal+maantal)*mprijs,\
                   subbtw = (balieverkoop.c.aantal+maantal)*mprijs*mbtw)
+                logger.debug("set_barcodenr(): subbtw → %s", subbtw, extra={"event.action": "set_barcodenr"})
                 con.execute(updbal)
             else:
                 try:
                     midnr = (con.execute(select([func.max(balieverkoop.c.ID, type_=Integer)])).scalar()) 
+                    logger.debug("set_barcodenr(self=%s): midnr → %s", self, midnr, extra={"event.action": "set_barcodenr"})
                     midnr += 1
                 except:
                     midnr = 1
+                    logger.error("Exception in set_barcodenr()", exc_info=True, extra={"event.action": "set_barcodenr", "event.category": "process"})
                     
                 insbal = insert(balieverkoop).values(ID = midnr, bonnummer = mbonnr, artikelID = martnr,\
                   barcode = barcodenr, omschrijving = momschr, aantal = maantal, prijs = mprijs,\
@@ -393,6 +536,7 @@ def set_barcodenr(self):
                 
             updart = update(artikelen).where(artikelen.c.artikelID == rpart[0])\
                 .values(art_voorraad = artikelen.c.art_voorraad - float(maantal))
+            logger.debug("set_barcodenr(): updart → %s", updart, extra={"event.action": "set_barcodenr"})
             con.execute(updart)
             
             self.mlist.append('{:\u2000<10d}'.format(martnr)+'{:\u2000<40.40s}'.format(momschr)+'\n'+'{:\u2000>6d}'\
@@ -402,6 +546,8 @@ def set_barcodenr(self):
             self.mtotaal += float(mprijs)*float(maantal)
             self.mtotbtw += float(mprijs)*float(maantal)*mbtw
             self.qtailtext = 'Total  incl. VAT  '+'{:\u2000>12.2f}'.format(self.mtotaal)+'{:\u2000>12.2f}'.format(self.mtotbtw)+' VAT'
+            logger.debug("set_barcodenr(): self.qtailtext → %s", self.qtailtext, extra={"event.action": "set_barcodenr"})
+            logger.debug("set_barcodenr(self=%s): qtailEdit → %s", self, qtailEdit, extra={"event.action": "set_barcodenr"})
             self.qtailEdit.setText(self.qtailtext)
             
             self.view.append(self.mlist[-1])
@@ -410,20 +556,27 @@ def set_barcodenr(self):
             geefAlarm()
                   
         self.closeBtn.setDisabled(True)
+        logger.debug("set_barcodenr(self=%s): closeBtn → %s", self, closeBtn, extra={"event.action": "set_barcodenr"})
         self.closeBtn.setStyleSheet("color: grey; background-color: gainsboro")
         self.printBtn.setEnabled(True)
+        logger.debug("set_barcodenr(self=%s): printBtn → %s", self, printBtn, extra={"event.action": "set_barcodenr"})
         self.printBtn.setStyleSheet("color: black; background-color: gainsboro")
         self.nextBtn.setEnabled(True)
+        logger.debug("set_barcodenr(self=%s): nextBtn → %s", self, nextBtn, extra={"event.action": "set_barcodenr"})
         self.nextBtn.setStyleSheet("font: 12pt Arial; color: black; background-color: gainsboro")
     else:
         #alarm if barcode scan failed
         self.albl.setText('Error message: Barcode scan error!')
         geefAlarm()
     
+        logger.debug("<<< Exiting set_barcodenr()", extra={"event.action": "set_barcodenr"})
+        logger.debug("set_barcodenr(self=%s): q1Edit → %s", self, q1Edit, extra={"event.action": "set_barcodenr"})
+        logger.debug("set_barcodenr(self=%s): qspin → <redacted>", self, extra={"event.action": "set_barcodenr"})
     self.q1Edit.setSelection(0,13)
     self.qspin.setValue(1)
       
 def barcodeScan(m_email, mret):
+    logger.warning(">>> Entering barcodeScan(m_email=%s,mret=%s)", m_email, mret, extra={"event.action": "barcodeScan", "logrite.mret": mret})
     class widget(QDialog):
         def __init__(self):
             super(widget,self).__init__()
@@ -458,6 +611,8 @@ def barcodeScan(m_email, mret):
             self.qspin.setFixedSize(60, 30)
              
             def valuechange():
+                logger.warning(">>> Entering valuechange()", extra={"event.action": "valuechange"})
+                logger.debug("valuechange(): qspin → <redacted>", extra={"event.action": "valuechange"})
                 self.qspin.setValue(self.qspin.value())
             self.qspin.valueChanged.connect(valuechange)
             

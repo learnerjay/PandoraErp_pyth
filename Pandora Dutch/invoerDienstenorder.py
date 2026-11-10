@@ -7,89 +7,123 @@ from PyQt5.QtCore import Qt, QRegExp
 from sqlalchemy import (Table, Column, Integer, String, Float, ForeignKey, \
                         MetaData, create_engine, func)
 from sqlalchemy.sql import select, insert, and_
+import logging
+logger = logging.getLogger(__name__)
 
 def invoerGelukt():
+    logger.warning(">>> Entering invoerGelukt()", extra={"event.action": "invoerGelukt"})
     msg = QMessageBox()
+    logger.debug("invoerGelukt(): msg → %s", msg, extra={"event.action": "invoerGelukt"})
     msg.setFont(QFont("Arial", 10))
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))        
     msg.setIcon(QMessageBox.Information)
     msg.setText('Imvoer stelpost order gelukt!')
     msg.setWindowTitle('Inkoop order stelposten')
+    logger.debug("<<< Exiting invoerGelukt()", extra={"event.action": "invoerGelukt"})
     msg.exec_()
     
 def foutInvoer():
+    logger.warning(">>> Entering foutInvoer()", extra={"event.action": "foutInvoer"})
     msg = QMessageBox()
+    logger.debug("foutInvoer(): msg → %s", msg, extra={"event.action": "foutInvoer"})
     msg.setFont(QFont("Arial", 10))
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))        
     msg.setIcon(QMessageBox.Warning)
     msg.setText('Foutieve invoer. Voer opnieuw in!')
     msg.setWindowTitle('Inkoop order stelposten')
+    logger.debug("<<< Exiting foutInvoer()", extra={"event.action": "foutInvoer"})
     msg.exec_() 
     
 def invoerBestaat():
+    logger.warning(">>> Entering invoerBestaat()", extra={"event.action": "invoerBestaat"})
     msg = QMessageBox()
+    logger.debug("invoerBestaat(): msg → %s", msg, extra={"event.action": "invoerBestaat"})
     msg.setFont(QFont("Arial", 10))
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))        
     msg.setIcon(QMessageBox.Warning)
     msg.setText('Deze stelpost is al verwerkt!')
     msg.setWindowTitle('Inkoop order stelposten')
+    logger.debug("<<< Exiting invoerBestaat()", extra={"event.action": "invoerBestaat"})
     msg.exec_() 
 
 def geenRegels():
+    logger.warning(">>> Entering geenRegels()", extra={"event.action": "geenRegels"})
     msg = QMessageBox()
+    logger.debug("geenRegels(): msg → %s", msg, extra={"event.action": "geenRegels"})
     msg.setFont(QFont("Arial", 10))
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))        
     msg.setIcon(QMessageBox.Warning)
     msg.setText('Geen calculatie regels voor deze stelpost aanwezig!')
     msg.setWindowTitle('Inkoop order stelposten')
+    logger.debug("<<< Exiting geenRegels()", extra={"event.action": "geenRegels"})
     msg.exec_()     
     
 def sluitRegels(m_email, mlevnr, mwerknr, mregel, self):
+    logger.warning(">>> Entering sluitRegels(m_email=%s,mlevnr=%s,mwerknr=%s,mregel=%s)", m_email, mlevnr, mwerknr, mregel, extra={"event.action": "sluitRegels", "logrite.mlevnr": mlevnr, "logrite.mwerknr": mwerknr, "logrite.mregel": mregel})
     self.close()
     zoekLeverancier(m_email, mlevnr, mwerknr, mregel)
+    logger.debug("<<< Exiting sluitRegels(m_email=%s,mlevnr=%s,mwerknr=%s,mregel=%s)", m_email, mlevnr, mwerknr, mregel, extra={"event.action": "sluitRegels", "logrite.mlevnr": mlevnr, "logrite.mwerknr": mwerknr, "logrite.mregel": mregel})
 
 def foutLeverancier():
+    logger.warning(">>> Entering foutLeverancier()", extra={"event.action": "foutLeverancier"})
     msg = QMessageBox()
+    logger.debug("foutLeverancier(): msg → %s", msg, extra={"event.action": "foutLeverancier"})
     msg.setFont(QFont("Arial", 10))
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))        
     msg.setIcon(QMessageBox.Warning)
     msg.setText('Leverancier/Werknummer\nniet gevonden!')
     msg.setWindowTitle('Inkoop order stelposten')
+    logger.debug("<<< Exiting foutLeverancier()", extra={"event.action": "foutLeverancier"})
     msg.exec_()
         
 def windowSluit(self, m_email):
+    logger.warning(">>> Entering windowSluit(m_email=%s)", m_email, extra={"event.action": "windowSluit"})
     self.close()
     hoofdMenu(m_email)
+    logger.debug("<<< Exiting windowSluit(m_email=%s)", m_email, extra={"event.action": "windowSluit"})
                  
 def _11check(mlevnr):
+    logger.warning(">>> Entering _11check(mlevnr=%s)", mlevnr, extra={"event.action": "_11check", "logrite.mlevnr": mlevnr})
     number = str(mlevnr)
+    logger.debug("_11check(mlevnr=%s): number → %s", mlevnr, number, extra={"event.action": "_11check", "logrite.mlevnr": mlevnr})
     total = 0       
     fullnumber = number                       
+    logger.debug("_11check(mlevnr=%s): total → %s", mlevnr, total, extra={"event.action": "_11check", "logrite.mlevnr": mlevnr})
     for i in range(8):
         total += int(fullnumber[i])*(9-i)
+        logger.debug("_11check(mlevnr=%s): fullnumber → %s", mlevnr, fullnumber, extra={"event.action": "_11check", "logrite.mlevnr": mlevnr})
         checkdigit = total % 11 % 10
     if checkdigit == int(fullnumber[8]):
         return True
     else:
+        logger.debug("<<< Exiting _11check(mlevnr=%s)", mlevnr, extra={"event.action": "_11check", "logrite.mlevnr": mlevnr})
         return False
  
 def maak11proef(basisnr):
+   logger.warning(">>> Entering maak11proef(basisnr=%s)", basisnr, extra={"event.action": "maak11proef", "logrite.basisnr": basisnr})
    basisnr = str(basisnr)
    basisnr = str((int(basisnr[0:8]))+int(1))
+   logger.debug("maak11proef(basisnr=%s): basisnr → %s", basisnr, basisnr, extra={"event.action": "maak11proef", "logrite.basisnr": basisnr})
    total = 0                       
+   logger.debug("maak11proef(basisnr=%s): total → %s", basisnr, total, extra={"event.action": "maak11proef", "logrite.basisnr": basisnr})
    for i in range(int(8)):
        total += int(basisnr[i])*(int(9)-i)
    checkdigit = total % 11 % 10
+   logger.debug("maak11proef(basisnr=%s): checkdigit → %s", basisnr, checkdigit, extra={"event.action": "maak11proef", "logrite.basisnr": basisnr})
    basisuitnr = basisnr+str(checkdigit)
+   logger.debug("maak11proef(basisnr=%s): basisuitnr → %s", basisnr, basisuitnr, extra={"event.action": "maak11proef", "logrite.basisnr": basisnr})
+   logger.debug("<<< Exiting maak11proef(basisnr=%s)", basisnr, extra={"event.action": "maak11proef", "logrite.basisnr": basisnr})
    return basisuitnr
 
 def zoekLeverancier(m_email, mlevnr, mwerknr, mregel):
+    logger.warning(">>> Entering zoekLeverancier(m_email=%s,mlevnr=%s,mwerknr=%s,mregel=%s)", m_email, mlevnr, mwerknr, mregel, extra={"event.action": "zoekLeverancier", "logrite.mlevnr": mlevnr, "logrite.mwerknr": mwerknr, "logrite.mregel": mregel})
     metadata = MetaData()
+    logger.debug("zoekLeverancier(m_email=%s,mlevnr=%s,mwerknr=%s,mregel=%s): metadata → %s", m_email, mlevnr, mwerknr, mregel, metadata, extra={"event.action": "zoekLeverancier", "logrite.mlevnr": mlevnr, "logrite.mwerknr": mwerknr, "logrite.mregel": mregel})
     leveranciers = Table('leveranciers', metadata,
         Column('leverancierID', Integer(), primary_key=True),
         Column('bedrijfsnaam', String),
@@ -101,9 +135,12 @@ def zoekLeverancier(m_email, mlevnr, mwerknr, mregel):
         Column('werknummerID', Integer, primary_key=True))
             
     engine = create_engine('postgresql+psycopg2://postgres@localhost/bisystem')
+    logger.debug("zoekLeverancier(m_email=%s,mlevnr=%s,mwerknr=%s,mregel=%s): engine → %s", m_email, mlevnr, mwerknr, mregel, engine, extra={"event.action": "zoekLeverancier", "logrite.mlevnr": mlevnr, "logrite.mwerknr": mwerknr, "logrite.mregel": mregel})
     conn = engine.connect()
+    logger.debug("zoekLeverancier(m_email=%s,mlevnr=%s,mwerknr=%s,mregel=%s): conn → %s", m_email, mlevnr, mwerknr, mregel, conn, extra={"event.action": "zoekLeverancier", "logrite.mlevnr": mlevnr, "logrite.mwerknr": mwerknr, "logrite.mregel": mregel})
 
     class Widget(QDialog):
+        logger.debug("<<< Exiting zoekLeverancier(m_email=%s,mlevnr=%s,mwerknr=%s,mregel=%s)", m_email, mlevnr, mwerknr, mregel, extra={"event.action": "zoekLeverancier", "logrite.mlevnr": mlevnr, "logrite.mwerknr": mwerknr, "logrite.mregel": mregel})
         def __init__(self, parent=None):
             super(Widget, self).__init__(parent)
             self.setWindowTitle("Invoer inkooporders stelposten")
@@ -171,23 +208,85 @@ def zoekLeverancier(m_email, mlevnr, mwerknr, mregel):
             
             self.setLayout(grid)
             self.setGeometry(600, 400, 150, 150)
+            logger.warning(">>> Entering __init__(parent=%s)", parent, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.Inkoopordernummer → %s", parent, self.Inkoopordernummer, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): inkorderEdit → %s", parent, inkorderEdit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): inkorderEdit → %s", self, parent, inkorderEdit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.Werknummer → %s", parent, self.Werknummer, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): werknEdit → %s", parent, werknEdit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): werknEdit → %s", self, parent, werknEdit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.Diensten → %s", parent, self.Diensten, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): k0Edit → %s", parent, k0Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): k0Edit → %s", self, parent, k0Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.OrderregelPrijs → %s", parent, self.OrderregelPrijs, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): q1Edit → %s", parent, q1Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): q1Edit → %s", self, parent, q1Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): reg_ex → %s", parent, reg_ex, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): reg_ex → %s", self, parent, reg_ex, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): input_validator → %s", parent, input_validator, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): input_validator → %s", self, parent, input_validator, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.Omschrijving → %s", parent, self.Omschrijving, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): q2Edit → %s", parent, q2Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): q2Edit → %s", self, parent, q2Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.GeplandeStart → %s", parent, self.GeplandeStart, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): q3Edit → %s", parent, q3Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): q3Edit → %s", self, parent, q3Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.GeplandGereed → %s", parent, self.GeplandGereed, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): q4Edit → %s", parent, q4Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): q4Edit → %s", self, parent, q4Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): grid → %s", parent, grid, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): grid → %s", self, parent, grid, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): lbl → %s", parent, lbl, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): lbl → %s", self, parent, lbl, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): pixmap → %s", parent, pixmap, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): pixmap → %s", self, parent, pixmap, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): lbl1 → %s", parent, lbl1, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): lbl1 → %s", self, parent, lbl1, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): lbl8 → %s", parent, lbl8, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): lbl8 → %s", self, parent, lbl8, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): lbl4 → %s", parent, lbl4, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): lbl4 → %s", self, parent, lbl4, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): lbl5 → %s", parent, lbl5, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): lbl5 → %s", self, parent, lbl5, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): lbl6 → %s", parent, lbl6, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): lbl6 → %s", self, parent, lbl6, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): lbl7 → %s", parent, lbl7, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): lbl7 → %s", self, parent, lbl7, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): logo → %s", parent, logo, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): logo → %s", self, parent, logo, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): applyBtn → %s", parent, applyBtn, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): applyBtn → %s", self, parent, applyBtn, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): sluitBtn → %s", parent, sluitBtn, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): sluitBtn → %s", self, parent, sluitBtn, extra={"event.action": "__init__"})
+            logger.debug("<<< Exiting __init__(parent=%s)", parent, extra={"event.action": "__init__"})
     
         def levChanged(self, text):
+            logger.warning(">>> Entering levChanged(text=%s)", text, extra={"event.action": "levChanged", "logrite.text": text})
             self.Leveranciernummer.setText(text)
+            logger.debug("<<< Exiting levChanged(text=%s)", text, extra={"event.action": "levChanged", "logrite.text": text})
             
         def werknChanged(self, text):
             self.Werknummer.setText(text)
+            logger.warning(">>> Entering werknChanged(text=%s)", text, extra={"event.action": "werknChanged", "logrite.text": text})
+            logger.debug("<<< Exiting werknChanged(text=%s)", text, extra={"event.action": "werknChanged", "logrite.text": text})
     
         def returnLeveranciernummer(self):
+            logger.warning(">>> Entering returnLeveranciernummer()", extra={"event.action": "returnLeveranciernummer"})
+            logger.debug("<<< Exiting returnLeveranciernummer()", extra={"event.action": "returnLeveranciernummer"})
             return self.Leveranciernummer.text()
         
         def returnWerknummer(self):
             return self.Werknummer.text()
     
+        logger.warning(">>> Entering returnWerknummer()", extra={"event.action": "returnWerknummer"})
+        logger.debug("<<< Exiting returnWerknummer()", extra={"event.action": "returnWerknummer"})
         @staticmethod
         def getData(parent=None):
             dialog = Widget(parent)
             dialog.exec_()
+            logger.warning(">>> Entering getData(parent=%s)", parent, extra={"event.action": "getData"})
+            logger.debug("getData(parent=%s): dialog → %s", parent, dialog, extra={"event.action": "getData"})
+            logger.debug("<<< Exiting getData(parent=%s)", parent, extra={"event.action": "getData"})
             return [dialog.returnLeveranciernummer(), dialog.returnWerknummer()]
        
     window = Widget()
@@ -207,47 +306,71 @@ def zoekLeverancier(m_email, mlevnr, mwerknr, mregel):
         zoekLeverancier(m_email, mlevnr, mwerknr , mregel)
             
 def bepaalInkoopOrdernr(mregel):
+    logger.warning(">>> Entering bepaalInkoopOrdernr(mregel=%s)", mregel, extra={"event.action": "bepaalInkoopOrdernr", "logrite.mregel": mregel})
     metadata = MetaData()
+    logger.debug("bepaalInkoopOrdernr(mregel=%s): metadata → %s", mregel, metadata, extra={"event.action": "bepaalInkoopOrdernr", "logrite.mregel": mregel})
     orders_inkoop = Table('orders_inkoop', metadata,
         Column('orderinkoopID', Integer, primary_key=True),
         Column('leverancierID', None, ForeignKey('leveranciers.c.leverancierID')))
     
     engine = create_engine('postgresql+psycopg2://postgres@localhost/bisystem')
+    logger.debug("bepaalInkoopOrdernr(mregel=%s): engine → %s", mregel, engine, extra={"event.action": "bepaalInkoopOrdernr", "logrite.mregel": mregel})
     conn = engine.connect()
+    logger.debug("bepaalInkoopOrdernr(mregel=%s): conn → %s", mregel, conn, extra={"event.action": "bepaalInkoopOrdernr", "logrite.mregel": mregel})
     
     morderinkoopnr=(conn.execute(select([func.max(orders_inkoop.c.orderinkoopID, type_=Integer)\
                                    .label('morderinkoopnr')])).scalar())
     if mregel == 1:
        morderinkoopnr=int(maak11proef(morderinkoopnr))
+       logger.debug("bepaalInkoopOrdernr(mregel=%s): morderinkoopnr → %s", mregel, morderinkoopnr, extra={"event.action": "bepaalInkoopOrdernr", "logrite.mregel": mregel})
+    logger.debug("<<< Exiting bepaalInkoopOrdernr(mregel=%s)", mregel, extra={"event.action": "bepaalInkoopOrdernr", "logrite.mregel": mregel})
     return(morderinkoopnr)
    
 def Inkooporder(m_email, rplev, mregel):
+    logger.warning(">>> Entering Inkooporder(m_email=%s,rplev=%s,mregel=%s)", m_email, rplev, mregel, extra={"event.action": "Inkooporder", "logrite.rplev": rplev, "logrite.mregel": mregel})
     mlevnr = int(rplev[0])
+    logger.debug("Inkooporder(m_email=%s,rplev=%s,mregel=%s): mlevnr → %s", m_email, rplev, mregel, mlevnr, extra={"event.action": "Inkooporder", "logrite.rplev": rplev, "logrite.mregel": mregel})
     mwerknr = int(rplev[6])
     mbedrnaam = rplev[1]
+    logger.debug("Inkooporder(m_email=%s,rplev=%s,mregel=%s): mwerknr → %s", m_email, rplev, mregel, mwerknr, extra={"event.action": "Inkooporder", "logrite.rplev": rplev, "logrite.mregel": mregel})
     mrechtsvorm = rplev[2]
     mpostcode = rplev[3]
+    logger.debug("Inkooporder(m_email=%s,rplev=%s,mregel=%s): mbedrnaam → %s", m_email, rplev, mregel, mbedrnaam, extra={"event.action": "Inkooporder", "logrite.rplev": rplev, "logrite.mregel": mregel})
+    logger.debug("Inkooporder(m_email=%s,rplev=%s,mregel=%s): mrechtsvorm → %s", m_email, rplev, mregel, mrechtsvorm, extra={"event.action": "Inkooporder", "logrite.rplev": rplev, "logrite.mregel": mregel})
+    logger.debug("Inkooporder(m_email=%s,rplev=%s,mregel=%s): mpostcode → %s", m_email, rplev, mregel, mpostcode, extra={"event.action": "Inkooporder", "logrite.rplev": rplev, "logrite.mregel": mregel})
     mhuisnr = int(rplev[4])
     if rplev[5]:
         mtoev = rplev[5]
     else:
+        logger.debug("Inkooporder(m_email=%s,rplev=%s,mregel=%s): mhuisnr → %s", m_email, rplev, mregel, mhuisnr, extra={"event.action": "Inkooporder", "logrite.rplev": rplev, "logrite.mregel": mregel})
         mtoev=''
+        logger.debug("Inkooporder(m_email=%s,rplev=%s,mregel=%s): mtoev → %s", m_email, rplev, mregel, mtoev, extra={"event.action": "Inkooporder", "logrite.rplev": rplev, "logrite.mregel": mregel})
     import postcode
     mstrplts = postcode.checkpostcode(mpostcode, mhuisnr)
     mstraat = mstrplts[0]
     mplaats = mstrplts[1]
+    logger.debug("Inkooporder(m_email=%s,rplev=%s,mregel=%s): mstrplts → %s", m_email, rplev, mregel, mstrplts, extra={"event.action": "Inkooporder", "logrite.rplev": rplev, "logrite.mregel": mregel})
+    logger.debug("Inkooporder(m_email=%s,rplev=%s,mregel=%s): mplaats → %s", m_email, rplev, mregel, mplaats, extra={"event.action": "Inkooporder", "logrite.rplev": rplev, "logrite.mregel": mregel})
     minkordnr = bepaalInkoopOrdernr(mregel)
+    logger.debug("Inkooporder(m_email=%s,rplev=%s,mregel=%s): mstraat → %s", m_email, rplev, mregel, mstraat, extra={"event.action": "Inkooporder", "logrite.rplev": rplev, "logrite.mregel": mregel})
+    logger.debug("<<< Exiting Inkooporder(m_email=%s,rplev=%s,mregel=%s)", m_email, rplev, mregel, extra={"event.action": "Inkooporder", "logrite.rplev": rplev, "logrite.mregel": mregel})
     return(minkordnr, mlevnr, mbedrnaam, mrechtsvorm, mstraat, mhuisnr,\
                mtoev, mpostcode, mplaats, mwerknr)
       
 def inkoopRegels(m_email, rplev, mregel):
+    logger.warning(">>> Entering inkoopRegels(m_email=%s,rplev=%s,mregel=%s)", m_email, rplev, mregel, extra={"event.action": "inkoopRegels", "logrite.rplev": rplev, "logrite.mregel": mregel})
     minkgeg = Inkooporder(m_email, rplev, mregel)
+    logger.debug("inkoopRegels(m_email=%s,rplev=%s,mregel=%s): minkgeg → %s", m_email, rplev, mregel, minkgeg, extra={"event.action": "inkoopRegels", "logrite.rplev": rplev, "logrite.mregel": mregel})
     minkordnr = minkgeg[0]
     mlevnr = minkgeg[1]
+    logger.debug("inkoopRegels(m_email=%s,rplev=%s,mregel=%s): minkordnr → %s", m_email, rplev, mregel, minkordnr, extra={"event.action": "inkoopRegels", "logrite.rplev": rplev, "logrite.mregel": mregel})
+    logger.debug("inkoopRegels(m_email=%s,rplev=%s,mregel=%s): mlevnr → %s", m_email, rplev, mregel, mlevnr, extra={"event.action": "inkoopRegels", "logrite.rplev": rplev, "logrite.mregel": mregel})
     mwerknr = minkgeg[9]
+    logger.debug("inkoopRegels(m_email=%s,rplev=%s,mregel=%s): mwerknr → %s", m_email, rplev, mregel, mwerknr, extra={"event.action": "inkoopRegels", "logrite.rplev": rplev, "logrite.mregel": mregel})
     class Widget(QDialog):
         def __init__(self, parent=None):
             super(Widget, self).__init__(parent)
+            logger.debug("<<< Exiting inkoopRegels(m_email=%s,rplev=%s,mregel=%s)", m_email, rplev, mregel, extra={"event.action": "inkoopRegels", "logrite.rplev": rplev, "logrite.mregel": mregel})
             self.setWindowTitle("Invoer inkooporder stelposten werk")
             self.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     
@@ -398,45 +521,70 @@ def inkoopRegels(m_email, rplev, mregel):
             sluitBtn.setStyleSheet("color: black;  background-color: gainsboro")
                                                                                                         
         def inkorderChanged(self, text):
+            logger.warning(">>> Entering inkorderChanged(text=%s)", text, extra={"event.action": "inkorderChanged", "logrite.text": text})
             self.Inkoopordernummer.setText(text)
+            logger.debug("<<< Exiting inkorderChanged(text=%s)", text, extra={"event.action": "inkorderChanged", "logrite.text": text})
             
         def werknChanged(self, text):
             self.Werknummer.setText(text)
          
         def q1Changed(self,text):
+            logger.warning(">>> Entering q1Changed(text=%s)", text, extra={"event.action": "q1Changed", "logrite.text": text})
             self.OrderregelPrijs.setText(text)
+            logger.debug("<<< Exiting q1Changed(text=%s)", text, extra={"event.action": "q1Changed", "logrite.text": text})
             
         def q2Changed(self,text):
+            logger.warning(">>> Entering q2Changed(text=%s)", text, extra={"event.action": "q2Changed", "logrite.text": text})
             self.Omschrijving.setText(text)
+            logger.debug("<<< Exiting q2Changed(text=%s)", text, extra={"event.action": "q2Changed", "logrite.text": text})
         
         def q3Changed(self,text):
+            logger.warning(">>> Entering q3Changed(text=%s)", text, extra={"event.action": "q3Changed", "logrite.text": text})
             self.GeplandeStart.setText(text)
+            logger.debug("<<< Exiting q3Changed(text=%s)", text, extra={"event.action": "q3Changed", "logrite.text": text})
             
         def q4Changed(self,text):
+            logger.warning(">>> Entering q4Changed(text=%s)", text, extra={"event.action": "q4Changed", "logrite.text": text})
             self.GeplandGereed.setText(text)
+            logger.debug("<<< Exiting q4Changed(text=%s)", text, extra={"event.action": "q4Changed", "logrite.text": text})
                   
         def k0Changed(self,text):
+            logger.warning(">>> Entering k0Changed(text=%s)", text, extra={"event.action": "k0Changed", "logrite.text": text})
             self.Diensten.setText(text)  
+            logger.debug("<<< Exiting k0Changed(text=%s)", text, extra={"event.action": "k0Changed", "logrite.text": text})
                        
         def returninkorder(self):
+            logger.warning(">>> Entering returninkorder()", extra={"event.action": "returninkorder"})
+            logger.debug("<<< Exiting returninkorder()", extra={"event.action": "returninkorder"})
             return self.Inkoopordernummer.text()
         
         def returnWerknummer(self):
+            logger.warning(">>> Entering returnWerknummer()", extra={"event.action": "returnWerknummer"})
             return self.Werknummer.text()    
                  
         def returnq1(self):
+            logger.warning(">>> Entering returnq1()", extra={"event.action": "returnq1"})
+            logger.debug("<<< Exiting returnq1()", extra={"event.action": "returnq1"})
             return self.Omschrijving.text()
         
         def returnq2(self):
+            logger.warning(">>> Entering returnq2()", extra={"event.action": "returnq2"})
+            logger.debug("<<< Exiting returnq2()", extra={"event.action": "returnq2"})
             return self.OrderregelPrijs.text()
         
         def returnq3(self):
+            logger.warning(">>> Entering returnq3()", extra={"event.action": "returnq3"})
+            logger.debug("<<< Exiting returnq3()", extra={"event.action": "returnq3"})
             return self.GeplandeStart.text()
         
         def returnq4(self):
+            logger.warning(">>> Entering returnq4()", extra={"event.action": "returnq4"})
+            logger.debug("<<< Exiting returnq4()", extra={"event.action": "returnq4"})
             return self.GeplandGereed.text()
                       
         def returnk0(self):
+            logger.warning(">>> Entering returnk0()", extra={"event.action": "returnk0"})
+            logger.debug("<<< Exiting returnk0()", extra={"event.action": "returnk0"})
             return self.Diensten.text() 
        
         @staticmethod

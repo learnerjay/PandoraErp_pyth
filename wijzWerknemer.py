@@ -6,43 +6,64 @@ from PyQt5.QtCore import Qt, QRegExp
 from sqlalchemy import (Table, Column, Integer, String, Float, Boolean,\
                         ForeignKey,  MetaData, create_engine)
 from sqlalchemy.sql import select, and_, update
+import logging
+logger = logging.getLogger(__name__)
 
 def geenBetaalgeg():
+    logger.warning(">>> Entering geenBetaalgeg()", extra={"event.action": "geenBetaalgeg"})
     msg = QMessageBox()
+    logger.debug("geenBetaalgeg(): msg → %s", msg, extra={"event.action": "geenBetaalgeg"})
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setIcon(QMessageBox.Warning)
     msg.setText('No payment details found for this period!')
     msg.setWindowTitle('Payment details!')
+    logger.debug("<<< Exiting geenBetaalgeg()", extra={"event.action": "geenBetaalgeg"})
     msg.exec_()
     
 def wijzSluit(self, m_email):
+    logger.warning(">>> Entering wijzSluit(m_email=%s)", m_email, extra={"event.action": "wijzSluit"})
     self.close()
     zoekWerknemer(m_email)
+    logger.debug("<<< Exiting wijzSluit(m_email=%s)", m_email, extra={"event.action": "wijzSluit"})
     
 def windowSluit(self, m_email):
+    logger.warning(">>> Entering windowSluit(m_email=%s)", m_email, extra={"event.action": "windowSluit"})
     self.close()
     hoofdMenu(m_email)
+    logger.debug("<<< Exiting windowSluit(m_email=%s)", m_email, extra={"event.action": "windowSluit"})
     
 def info():
+    logger.warning(">>> Entering info()", extra={"event.action": "info"})
     class Widget(QDialog):
         def __init__(self):
+            logger.warning(">>> Entering __init__()", extra={"event.action": "__init__"})
             QDialog.__init__(self)
             self.setWindowTitle("Information replacement work")
             self.setWindowIcon(QIcon('./images/logos/logo.jpg'))
             self.setFont(QFont("Arial", 10))
             grid = QGridLayout()
+            logger.debug("__init__(): grid → %s", grid, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): grid → %s", self, grid, extra={"event.action": "__init__"})
             grid.setSpacing(20)
             
             logo = QLabel()
+            logger.debug("__init__(): logo → %s", logo, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): logo → %s", self, logo, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): lblinfo → %s", self, lblinfo, extra={"event.action": "__init__"})
             pixmap = QPixmap('./images/logos/logo.jpg')
+            logger.debug("__init__(self=%s): pixmap → %s", self, pixmap, extra={"event.action": "__init__"})
+            logger.debug("__init__(): pixmap → %s", pixmap, extra={"event.action": "__init__"})
             logo.setPixmap(pixmap)
             grid.addWidget(logo , 0, 3, 1, 1, Qt.AlignRight)
             
+            logger.debug("<<< Exiting __init__()", extra={"event.action": "__init__"})
             lblinfo = QLabel('Replacement work.')
             grid.addWidget(lblinfo, 0, 0, 1, 4, Qt.AlignCenter)
             lblinfo.setStyleSheet("color:rgb(45, 83, 115); font: 25pt Comic Sans MS")
         
             lbl = QLabel()
+            logger.debug("__init__(): lbl → %s", lbl, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): lbl → %s", self, lbl, extra={"event.action": "__init__"})
             pixmap = QPixmap('./images/logos/verbinding.jpg')
             lbl.setPixmap(pixmap)
             grid.addWidget(lbl, 0, 0)
@@ -82,36 +103,48 @@ def info():
     window.exec_()
     
 def foutWerknemer():
+    logger.warning(">>> Entering foutWerknemer()", extra={"event.action": "foutWerknemer"})
     msg = QMessageBox()
+    logger.debug("foutWerknemer(): msg → %s", msg, extra={"event.action": "foutWerknemer"})
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setIcon(QMessageBox.Warning)
     msg.setText('Employee not found!')
     msg.setWindowTitle('EMPLOYEE')
+    logger.debug("<<< Exiting foutWerknemer()", extra={"event.action": "foutWerknemer"})
     msg.exec_()
                
 def updateOK():
+    logger.warning(">>> Entering updateOK()", extra={"event.action": "updateOK"})
     msg = QMessageBox()
+    logger.debug("updateOK(): msg → %s", msg, extra={"event.action": "updateOK"})
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setIcon(QMessageBox.Information)
     msg.setText('Your data have been adjusted!')
     msg.setWindowTitle('DATA!')
+    logger.debug("<<< Exiting updateOK()", extra={"event.action": "updateOK"})
     msg.exec_()
 
 def _11check(minput):
+    logger.warning(">>> Entering _11check(minput=%s)", minput, extra={"event.action": "_11check", "logrite.minput": minput})
     number = str(minput)
+    logger.debug("_11check(minput=%s): number → %s", minput, number, extra={"event.action": "_11check", "logrite.minput": minput})
     total = 0       
     fullnumber = number                       
+    logger.debug("_11check(minput=%s): total → %s", minput, total, extra={"event.action": "_11check", "logrite.minput": minput})
     for i in range(8):
         total += int(fullnumber[i])*(9-i)
+        logger.debug("_11check(minput=%s): fullnumber → %s", minput, fullnumber, extra={"event.action": "_11check", "logrite.minput": minput})
         checkdigit = total % 11
     if checkdigit == 10:
         checkdigit = 0
     if checkdigit == int(fullnumber[8]):
         return True
     else:
+        logger.debug("<<< Exiting _11check(minput=%s)", minput, extra={"event.action": "_11check", "logrite.minput": minput})
         return False 
     
 def zoekWerknemer(m_email):     
+    logger.warning(">>> Entering zoekWerknemer(m_email=%s)", m_email, extra={"event.action": "zoekWerknemer"})
     class Widget(QDialog):
         def __init__(self, parent=None):
             super(Widget, self).__init__(parent)
@@ -167,11 +200,74 @@ def zoekWerknemer(m_email):
             
             self.setLayout(grid)
             self.setGeometry(400, 300, 150, 150)
+            logger.warning(">>> Entering __init__(parent=%s)", parent, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.Accountnummer → %s", parent, self.Accountnummer, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): q2Edit → %s", parent, q2Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): q2Edit → %s", self, parent, q2Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.Loontabelnummer → %s", parent, self.Loontabelnummer, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): q4Edit → %s", parent, q4Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): q4Edit → %s", self, parent, q4Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): reg_ex → %s", parent, reg_ex, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): reg_ex → %s", self, parent, reg_ex, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): input_validator → %s", parent, input_validator, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): input_validator → %s", self, parent, input_validator, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.wnrTabelnummer → %s", parent, self.wnrTabelnummer, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): o4Edit → %s", parent, o4Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): o4Edit → %s", self, parent, o4Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.Loontrede → %s", parent, self.Loontrede, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): q5Edit → %s", parent, q5Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): q5Edit → %s", self, parent, q5Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.Reiskostenvergoeding → %s", parent, self.Reiskostenvergoeding, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): q8Edit → %s", parent, q8Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): q8Edit → %s", self, parent, q8Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.Auto → %s", parent, self.Auto, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): q18Edit → %s", parent, q18Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): q18Edit → %s", self, parent, q18Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.Periodiekeuitkering → %s", parent, self.Periodiekeuitkering, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): q12Edit → %s", parent, q12Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): q12Edit → %s", self, parent, q12Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.Overigeinhoudingen → %s", parent, self.Overigeinhoudingen, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): q13Edit → %s", parent, q13Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): q13Edit → %s", self, parent, q13Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.Overigevergoedingen → %s", parent, self.Overigevergoedingen, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): q19Edit → %s", self, parent, q19Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): q19Edit → %s", parent, q19Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.Indienst → %s", parent, self.Indienst, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): q14Edit → %s", self, parent, q14Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): q14Edit → %s", parent, q14Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.Brutoloon → %s", parent, self.Brutoloon, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): q15Edit → %s", self, parent, q15Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): q15Edit → %s", parent, q15Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.Verlofsaldo → %s", parent, self.Verlofsaldo, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): q16Edit → %s", self, parent, q16Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): q16Edit → %s", parent, q16Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.ExtraVerlof → %s", parent, self.ExtraVerlof, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): q17Edit → %s", self, parent, q17Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): q17Edit → %s", parent, q17Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): grid → %s", self, parent, grid, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): grid → %s", parent, grid, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): lbl → %s", self, parent, lbl, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): lbl → %s", parent, lbl, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): pixmap → %s", self, parent, pixmap, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): pixmap → %s", parent, pixmap, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): logo → %s", self, parent, logo, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): logo → %s", parent, logo, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): applyBtn → %s", parent, applyBtn, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): applyBtn → %s", self, parent, applyBtn, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): cancelBtn → %s", parent, cancelBtn, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): cancelBtn → %s", self, parent, cancelBtn, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): infoBtn → %s", parent, infoBtn, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): infoBtn → %s", self, parent, infoBtn, extra={"event.action": "__init__"})
+            logger.debug("<<< Exiting __init__(parent=%s)", parent, extra={"event.action": "__init__"})
     
         def werknemerChanged(self, text):
+            logger.warning(">>> Entering werknemerChanged(text=%s)", text, extra={"event.action": "werknemerChanged", "logrite.text": text})
             self.Werknemer.setText(text)
+            logger.debug("<<< Exiting werknemerChanged(text=%s)", text, extra={"event.action": "werknemerChanged", "logrite.text": text})
          
         def returnWerknemer(self):
+            logger.warning(">>> Entering returnWerknemer()", extra={"event.action": "returnWerknemer"})
+            logger.debug("<<< Exiting returnWerknemer()", extra={"event.action": "returnWerknemer"})
             return self.Werknemer.text()
         
   
@@ -179,6 +275,9 @@ def zoekWerknemer(m_email):
         def getData(parent=None):
             dialog = Widget(parent)
             dialog.exec_()
+            logger.warning(">>> Entering getData(parent=%s)", parent, extra={"event.action": "getData"})
+            logger.debug("getData(parent=%s): dialog → %s", parent, dialog, extra={"event.action": "getData"})
+            logger.debug("<<< Exiting getData(parent=%s)", parent, extra={"event.action": "getData"})
             return [dialog.returnWerknemer()]
     
     window = Widget()
@@ -209,7 +308,9 @@ def zoekWerknemer(m_email):
         zoekWerknemer(m_email)
 
 def updateWerknemer(m_email, mwerknmr):
+    logger.warning(">>> Entering updateWerknemer(m_email=%s,mwerknmr=%s)", m_email, mwerknmr, extra={"event.action": "updateWerknemer", "logrite.mwerknmr": mwerknmr})
     metadata = MetaData()   
+    logger.debug("updateWerknemer(m_email=%s,mwerknmr=%s): metadata → %s", m_email, mwerknmr, metadata, extra={"event.action": "updateWerknemer", "logrite.mwerknmr": mwerknmr})
     werknemers = Table('werknemers', metadata,
         Column('werknemerID', Integer(), primary_key=True),
         Column('accountID', None, ForeignKey('accounts.accountID')),
@@ -237,6 +338,7 @@ def updateWerknemer(m_email, mwerknmr):
         Column('soort', String),
         Column('meerwerkstatus', Boolean),
         Column('bruto_loonbedrag', Float))
+    logger.debug("updateWerknemer(m_email=%s,mwerknmr=%s): sel → %s", m_email, mwerknmr, sel, extra={"event.action": "updateWerknemer", "logrite.mwerknmr": mwerknmr})
     accounts = Table('accounts', metadata,
         Column('accountID', Integer, primary_key=True),
         Column('voornaam', String),
@@ -244,43 +346,65 @@ def updateWerknemer(m_email, mwerknmr):
         Column('geboortedatum', String))
          
     engine = create_engine('postgresql+psycopg2://postgres@localhost/bisystem')
+    logger.debug("updateWerknemer(m_email=%s,mwerknmr=%s): engine → %s", m_email, mwerknmr, engine, extra={"event.action": "updateWerknemer", "logrite.mwerknmr": mwerknmr})
     conn = engine.connect()
+    logger.debug("updateWerknemer(m_email=%s,mwerknmr=%s): conn → %s", m_email, mwerknmr, conn, extra={"event.action": "updateWerknemer", "logrite.mwerknmr": mwerknmr})
     sel = select([werknemers, lonen, wrkwnrln, accounts]).where(and_\
       (werknemers.c.werknemerID == mwerknmr, werknemers.c.loonID ==\
        lonen.c.loonID, accounts.c.accountID == werknemers.c.accountID))
     rpwerkn = conn.execute(sel).first()
+    logger.debug("updateWerknemer(m_email=%s,mwerknmr=%s): rpwerkn → %s", m_email, mwerknmr, rpwerkn, extra={"event.action": "updateWerknemer", "logrite.mwerknmr": mwerknmr})
     mwerknmr = rpwerkn[0]
     maccountnr = rpwerkn[1]
+    logger.debug("updateWerknemer(m_email=%s,mwerknmr=%s): maccountnr → %s", m_email, mwerknmr, maccountnr, extra={"event.action": "updateWerknemer", "logrite.mwerknmr": mwerknmr})
     mloonnr = rpwerkn[2]
+    logger.debug("updateWerknemer(m_email=%s,mwerknmr=%s): mloonnr → %s", m_email, mwerknmr, mloonnr, extra={"event.action": "updateWerknemer", "logrite.mwerknmr": mwerknmr})
     if not rpwerkn[12]:
         mwnrloonnr = mloonnr
     else:
         mwnrloonnr = rpwerkn[12]
+        logger.debug("updateWerknemer(m_email=%s,mwerknmr=%s): mwnrloonnr → %s", m_email, mwerknmr, mwnrloonnr, extra={"event.action": "updateWerknemer", "logrite.mwerknmr": mwerknmr})
     mtrede = rpwerkn[3]*0.03
+    logger.debug("updateWerknemer(m_email=%s,mwerknmr=%s): mtrede → %s", m_email, mwerknmr, mtrede, extra={"event.action": "updateWerknemer", "logrite.mwerknmr": mwerknmr})
     mreisk = rpwerkn[4]
+    logger.debug("updateWerknemer(m_email=%s,mwerknmr=%s): mreisk → %s", m_email, mwerknmr, mreisk, extra={"event.action": "updateWerknemer", "logrite.mwerknmr": mwerknmr})
     mauto = rpwerkn[8]      
+    logger.debug("updateWerknemer(m_email=%s,mwerknmr=%s): mauto → %s", m_email, mwerknmr, mauto, extra={"event.action": "updateWerknemer", "logrite.mwerknmr": mwerknmr})
     mperiodiek = rpwerkn[5]
+    logger.debug("updateWerknemer(m_email=%s,mwerknmr=%s): mperiodiek → %s", m_email, mwerknmr, mperiodiek, extra={"event.action": "updateWerknemer", "logrite.mwerknmr": mwerknmr})
     moveriginh = rpwerkn[6]
+    logger.debug("updateWerknemer(m_email=%s,mwerknmr=%s): moveriginh → %s", m_email, mwerknmr, moveriginh, extra={"event.action": "updateWerknemer", "logrite.mwerknmr": mwerknmr})
     moverigverg = rpwerkn[7]
+    logger.debug("updateWerknemer(m_email=%s,mwerknmr=%s): moverigverg → %s", m_email, mwerknmr, moverigverg, extra={"event.action": "updateWerknemer", "logrite.mwerknmr": mwerknmr})
     mindienst = rpwerkn[9]
+    logger.debug("updateWerknemer(m_email=%s,mwerknmr=%s): mindienst → %s", m_email, mwerknmr, mindienst, extra={"event.action": "updateWerknemer", "logrite.mwerknmr": mwerknmr})
     mverlofsaldo = rpwerkn[10]
+    logger.debug("updateWerknemer(m_email=%s,mwerknmr=%s): mverlofsaldo → %s", m_email, mwerknmr, mverlofsaldo, extra={"event.action": "updateWerknemer", "logrite.mwerknmr": mwerknmr})
     mextraverlof = rpwerkn[11]
+    logger.debug("updateWerknemer(m_email=%s,mwerknmr=%s): mextraverlof → %s", m_email, mwerknmr, mextraverlof, extra={"event.action": "updateWerknemer", "logrite.mwerknmr": mwerknmr})
     mvoorn = rpwerkn[25]
+    logger.debug("updateWerknemer(m_email=%s,mwerknmr=%s): mvoorn → %s", m_email, mwerknmr, mvoorn, extra={"event.action": "updateWerknemer", "logrite.mwerknmr": mwerknmr})
     machtern = rpwerkn[26]
+    logger.debug("updateWerknemer(m_email=%s,mwerknmr=%s): machtern → %s", m_email, mwerknmr, machtern, extra={"event.action": "updateWerknemer", "logrite.mwerknmr": mwerknmr})
     mgeboren = rpwerkn[27]
+    logger.debug("updateWerknemer(m_email=%s,mwerknmr=%s): mgeboren → %s", m_email, mwerknmr, mgeboren, extra={"event.action": "updateWerknemer", "logrite.mwerknmr": mwerknmr})
         
     if rpwerkn[2] < 37:
         mbruto = rpwerkn[14]*520/3*(1+mtrede)
+        logger.debug("updateWerknemer(m_email=%s,mwerknmr=%s): mbruto → %s", m_email, mwerknmr, mbruto, extra={"event.action": "updateWerknemer", "logrite.mwerknmr": mwerknmr})
         muurl = rpwerkn[14]*(1+mtrede)
     else:
         mbruto =  rpwerkn[16]*(1+mtrede)
         muurl = mbruto*3/520
+        logger.debug("updateWerknemer(m_email=%s,mwerknmr=%s): muurl → %s", m_email, mwerknmr, muurl, extra={"event.action": "updateWerknemer", "logrite.mwerknmr": mwerknmr})
     if rpwerkn[14]:
         mreisuurl = round(rpwerkn[14],2)
     else:
         mreisuurl = 0
+        logger.debug("updateWerknemer(m_email=%s,mwerknmr=%s): mreisuurl → %s", m_email, mwerknmr, mreisuurl, extra={"event.action": "updateWerknemer", "logrite.mwerknmr": mwerknmr})
                                          
     class Widget(QDialog):
+         logger.debug("<<< Exiting updateWerknemer(m_email=%s,mwerknmr=%s)", m_email, mwerknmr, extra={"event.action": "updateWerknemer", "logrite.mwerknmr": mwerknmr})
          def __init__(self, parent=None):
             super(Widget, self).__init__(parent)
             self.setWindowTitle("Modify employee data")
@@ -501,81 +625,134 @@ def updateWerknemer(m_email, mwerknmr):
             infoBtn.setStyleSheet("color: black;  background-color: gainsboro")
                                                 
          def q2Changed(self, text):
+            logger.warning(">>> Entering q2Changed(text=%s)", text, extra={"event.action": "q2Changed", "logrite.text": text})
             self.Accountnummer.setText(text)
+            logger.debug("<<< Exiting q2Changed(text=%s)", text, extra={"event.action": "q2Changed", "logrite.text": text})
                        
          def q4Changed(self, text):
+            logger.warning(">>> Entering q4Changed(text=%s)", text, extra={"event.action": "q4Changed", "logrite.text": text})
             self.Loontabelnummer.setText(text)
+            logger.debug("<<< Exiting q4Changed(text=%s)", text, extra={"event.action": "q4Changed", "logrite.text": text})
 
          def o4Changed(self, text):
+            logger.warning(">>> Entering o4Changed(text=%s)", text, extra={"event.action": "o4Changed", "logrite.text": text})
+            logger.debug("o4Changed(self=%s,text=%s): wnrTabelnummer → %s", self, text, wnrTabelnummer, extra={"event.action": "o4Changed", "logrite.text": text})
             self.wnrTabelnummer.setText(text)
+            logger.debug("<<< Exiting o4Changed(text=%s)", text, extra={"event.action": "o4Changed", "logrite.text": text})
             
          def q5Changed(self, text):
+            logger.warning(">>> Entering q5Changed(text=%s)", text, extra={"event.action": "q5Changed", "logrite.text": text})
             self.Loontrede.setText(text)
+            logger.debug("<<< Exiting q5Changed(text=%s)", text, extra={"event.action": "q5Changed", "logrite.text": text})
                               
          def q8Changed(self, text):
+            logger.warning(">>> Entering q8Changed(text=%s)", text, extra={"event.action": "q8Changed", "logrite.text": text})
             self.Reiskostenvergoeding.setText(text)
+            logger.debug("<<< Exiting q8Changed(text=%s)", text, extra={"event.action": "q8Changed", "logrite.text": text})
         
          def q12Changed(self, text):
+            logger.warning(">>> Entering q12Changed(text=%s)", text, extra={"event.action": "q12Changed", "logrite.text": text})
             self.Periodiekeuitkering.setText(text)
+            logger.debug("<<< Exiting q12Changed(text=%s)", text, extra={"event.action": "q12Changed", "logrite.text": text})
             
          def q13Changed(self, text):
+            logger.warning(">>> Entering q13Changed(text=%s)", text, extra={"event.action": "q13Changed", "logrite.text": text})
             self.Overigeinhoudingen.setText(text)
+            logger.debug("<<< Exiting q13Changed(text=%s)", text, extra={"event.action": "q13Changed", "logrite.text": text})
             
          def q14Changed(self, text):
+            logger.warning(">>> Entering q14Changed(text=%s)", text, extra={"event.action": "q14Changed", "logrite.text": text})
             self.Indienst.setText(text)
+            logger.debug("<<< Exiting q14Changed(text=%s)", text, extra={"event.action": "q14Changed", "logrite.text": text})
         
          def q15Changed(self, text):
+            logger.warning(">>> Entering q15Changed(text=%s)", text, extra={"event.action": "q15Changed", "logrite.text": text})
             self.Brutoloon.setText(text)
+            logger.debug("<<< Exiting q15Changed(text=%s)", text, extra={"event.action": "q15Changed", "logrite.text": text})
             
          def q16Changed(self, text):
+            logger.warning(">>> Entering q16Changed(text=%s)", text, extra={"event.action": "q16Changed", "logrite.text": text})
             self.Verlofsaldo.setText(text)
+            logger.debug("<<< Exiting q16Changed(text=%s)", text, extra={"event.action": "q16Changed", "logrite.text": text})
             
          def q17Changed(self, text):
+            logger.warning(">>> Entering q17Changed(text=%s)", text, extra={"event.action": "q17Changed", "logrite.text": text})
             self.ExtraVerlof.setText(text)
+            logger.debug("<<< Exiting q17Changed(text=%s)", text, extra={"event.action": "q17Changed", "logrite.text": text})
        
          def q18Changed(self, text):
+            logger.warning(">>> Entering q18Changed(text=%s)", text, extra={"event.action": "q18Changed", "logrite.text": text})
             self.Auto.setText(text)
+            logger.debug("<<< Exiting q18Changed(text=%s)", text, extra={"event.action": "q18Changed", "logrite.text": text})
             
          def q19Changed(self, text):
+            logger.warning(">>> Entering q19Changed(text=%s)", text, extra={"event.action": "q19Changed", "logrite.text": text})
             self.Overigevergoedingen.setText(text)
+            logger.debug("<<< Exiting q19Changed(text=%s)", text, extra={"event.action": "q19Changed", "logrite.text": text})
             
          def returnAccountnummer(self):
+            logger.warning(">>> Entering returnAccountnummer()", extra={"event.action": "returnAccountnummer"})
+            logger.debug("<<< Exiting returnAccountnummer()", extra={"event.action": "returnAccountnummer"})
             return self.Accountnummer.text()
         
          def returnLoontabelnummer(self):
+            logger.warning(">>> Entering returnLoontabelnummer()", extra={"event.action": "returnLoontabelnummer"})
+            logger.debug("<<< Exiting returnLoontabelnummer()", extra={"event.action": "returnLoontabelnummer"})
             return self.Loontabelnummer.text()
         
          def returnWnrLoonnummer(self):
+            logger.warning(">>> Entering returnWnrLoonnummer()", extra={"event.action": "returnWnrLoonnummer"})
+            logger.debug("<<< Exiting returnWnrLoonnummer()", extra={"event.action": "returnWnrLoonnummer"})
             return self.wnrTabelnummer.text()
     
          def returnLoontrede(self):
+            logger.warning(">>> Entering returnLoontrede()", extra={"event.action": "returnLoontrede"})
+            logger.debug("<<< Exiting returnLoontrede()", extra={"event.action": "returnLoontrede"})
             return self.Loontrede.text()
      
          def returnReiskostenvergoeding(self):
+            logger.warning(">>> Entering returnReiskostenvergoeding()", extra={"event.action": "returnReiskostenvergoeding"})
+            logger.debug("<<< Exiting returnReiskostenvergoeding()", extra={"event.action": "returnReiskostenvergoeding"})
             return self.Reiskostenvergoeding.text()
                               
          def returnPeriodiekeuitkering(self):
+            logger.warning(">>> Entering returnPeriodiekeuitkering()", extra={"event.action": "returnPeriodiekeuitkering"})
+            logger.debug("<<< Exiting returnPeriodiekeuitkering()", extra={"event.action": "returnPeriodiekeuitkering"})
             return self.Periodiekeuitkering.text()
     
          def returnOverigeinhoudingen(self):
+            logger.warning(">>> Entering returnOverigeinhoudingen()", extra={"event.action": "returnOverigeinhoudingen"})
+            logger.debug("<<< Exiting returnOverigeinhoudingen()", extra={"event.action": "returnOverigeinhoudingen"})
             return self.Overigeinhoudingen.text()   
  
          def returnIndienst(self):
+            logger.warning(">>> Entering returnIndienst()", extra={"event.action": "returnIndienst"})
+            logger.debug("<<< Exiting returnIndienst()", extra={"event.action": "returnIndienst"})
             return self.Indienst.text()   
     
          def returnBrutoloon(self):
+            logger.warning(">>> Entering returnBrutoloon()", extra={"event.action": "returnBrutoloon"})
+            logger.debug("<<< Exiting returnBrutoloon()", extra={"event.action": "returnBrutoloon"})
             return self.Brutoloon.text() 
         
          def returnVerlofsaldo(self):
+            logger.warning(">>> Entering returnVerlofsaldo()", extra={"event.action": "returnVerlofsaldo"})
+            logger.debug("<<< Exiting returnVerlofsaldo()", extra={"event.action": "returnVerlofsaldo"})
             return self.Verlofsaldo.text() 
 
          def returnExtraVerlof(self):
+            logger.warning(">>> Entering returnExtraVerlof()", extra={"event.action": "returnExtraVerlof"})
+            logger.debug("<<< Exiting returnExtraVerlof()", extra={"event.action": "returnExtraVerlof"})
             return self.ExtraVerlof.text() 
         
          def returnAuto(self):
+            logger.warning(">>> Entering returnAuto()", extra={"event.action": "returnAuto"})
+            logger.debug("<<< Exiting returnAuto()", extra={"event.action": "returnAuto"})
             return self.Auto.text() 
         
          def returnOverigevergoedingen(self):
+            logger.warning(">>> Entering returnOverigevergoedingen()", extra={"event.action": "returnOverigevergoedingen"})
+            logger.debug("<<< Exiting returnOverigevergoedingen()", extra={"event.action": "returnOverigevergoedingen"})
             return self.Overigevergoedingen.text() 
                 
          @staticmethod

@@ -10,41 +10,60 @@ from sqlalchemy import (Table, Column, Integer, String, MetaData,\
                         create_engine, Float)
 from sqlalchemy.sql import select
 import datetime
+import logging
+logger = logging.getLogger(__name__)
 
 def windowSluit(self, m_email):
+    logger.warning(">>> Entering windowSluit(m_email=%s)", m_email, extra={"event.action": "windowSluit"})
     self.close()
     hoofdMenu(m_email)
+    logger.debug("<<< Exiting windowSluit(m_email=%s)", m_email, extra={"event.action": "windowSluit"})
     
 def sluit(self, m_email):
+    logger.warning(">>> Entering sluit(m_email=%s)", m_email, extra={"event.action": "sluit"})
     self.close()
     zoekwk(m_email)   
+    logger.debug("<<< Exiting sluit(m_email=%s)", m_email, extra={"event.action": "sluit"})
     
 def ongInvoer():
+    logger.warning(">>> Entering ongInvoer()", extra={"event.action": "ongInvoer"})
     msg = QMessageBox()
+    logger.debug("ongInvoer(): msg → %s", msg, extra={"event.action": "ongInvoer"})
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     msg.setIcon(QMessageBox.Warning)
     msg.setText('Foutieve invoer\nzoekterm opnieuw invoeren s.v.p.!')
     msg.setWindowTitle('Voortgangsgrafieken')               
+    logger.debug("<<< Exiting ongInvoer()", extra={"event.action": "ongInvoer"})
     msg.exec_()
 
 def jaarweek():
+    logger.warning(">>> Entering jaarweek()", extra={"event.action": "jaarweek"})
     dt = datetime.datetime.now()
+    logger.debug("jaarweek(): dt → %s", dt, extra={"event.action": "jaarweek"})
     week = str('0'+str(dt.isocalendar()[1]))[-2:]
+    logger.debug("jaarweek(): week → %s", week, extra={"event.action": "jaarweek"})
     jaar = str(dt.isocalendar()[0])
     jrwk = jaar+week
+    logger.debug("jaarweek(): jaar → %s", jaar, extra={"event.action": "jaarweek"})
+    logger.debug("jaarweek(): jrwk → %s", jrwk, extra={"event.action": "jaarweek"})
+    logger.debug("<<< Exiting jaarweek()", extra={"event.action": "jaarweek"})
     return(jrwk)
     
 def geenWeek():
+    logger.warning(">>> Entering geenWeek()", extra={"event.action": "geenWeek"})
     msg = QMessageBox()
+    logger.debug("geenWeek(): msg → %s", msg, extra={"event.action": "geenWeek"})
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     msg.setIcon(QMessageBox.Information)
     msg.setText('Weeknummer is niet aanwezig!')
     msg.setWindowTitle('Voortgangsgrafieken')               
+    logger.debug("<<< Exiting geenWeek()", extra={"event.action": "geenWeek"})
     msg.exec_() 
     
 def info(self):
+    logger.warning(">>> Entering info()", extra={"event.action": "info"})
     class Widget(QDialog):
         def __init__(self, parent=None):
             super(Widget, self).__init__(parent)
@@ -65,6 +84,32 @@ def info(self):
             lbl.setPixmap(pixmap)
             grid.addWidget(lbl, 0, 0)
             
+            logger.warning(">>> Entering __init__(parent=%s)", parent, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.Keuze → %s", parent, self.Keuze, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): kEdit → %s", parent, kEdit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): kEdit → %s", self, parent, kEdit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.Zoekterm → %s", parent, self.Zoekterm, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): zktermEdit → %s", parent, zktermEdit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): zktermEdit → %s", self, parent, zktermEdit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): reg_ex → %s", parent, reg_ex, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): reg_ex → %s", self, parent, reg_ex, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): input_validator → %s", parent, input_validator, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): input_validator → %s", self, parent, input_validator, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): grid → %s", parent, grid, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): grid → %s", self, parent, grid, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): lbl → %s", parent, lbl, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): lbl → %s", self, parent, lbl, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): pixmap → %s", parent, pixmap, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): pixmap → %s", self, parent, pixmap, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): lbl1 → %s", parent, lbl1, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): lbl1 → %s", self, parent, lbl1, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): logo → %s", parent, logo, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): logo → %s", self, parent, logo, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): applyBtn → %s", parent, applyBtn, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): applyBtn → %s", self, parent, applyBtn, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): sluitBtn → %s", parent, sluitBtn, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): sluitBtn → %s", self, parent, sluitBtn, extra={"event.action": "__init__"})
+            logger.debug("<<< Exiting __init__(parent=%s)", parent, extra={"event.action": "__init__"})
             infolbl = QLabel(
     '''
     
@@ -101,6 +146,7 @@ def info(self):
     window.exec_()
                 
 def zoekwk(m_email):
+    logger.warning(">>> Entering zoekwk(m_email=%s)", m_email, extra={"event.action": "zoekwk"})
     class Widget(QDialog):
         def __init__(self, parent=None):
             super(Widget, self).__init__(parent)
@@ -170,21 +216,32 @@ def zoekwk(m_email):
             sluitBtn.setStyleSheet("color: black;  background-color: gainsboro")
                    
         def kChanged(self, text):
+            logger.warning(">>> Entering kChanged(text=%s)", text, extra={"event.action": "kChanged", "logrite.text": text})
             self.Keuze.setText(text)
+            logger.debug("<<< Exiting kChanged(text=%s)", text, extra={"event.action": "kChanged", "logrite.text": text})
             
         def zktermChanged(self, text):
+            logger.warning(">>> Entering zktermChanged(text=%s)", text, extra={"event.action": "zktermChanged", "logrite.text": text})
             self.Zoekterm.setText(text)
+            logger.debug("<<< Exiting zktermChanged(text=%s)", text, extra={"event.action": "zktermChanged", "logrite.text": text})
  
         def returnk(self):
+            logger.warning(">>> Entering returnk()", extra={"event.action": "returnk"})
+            logger.debug("<<< Exiting returnk()", extra={"event.action": "returnk"})
             return self.Keuze.text()
         
         def returnzkterm(self):
+            logger.warning(">>> Entering returnzkterm()", extra={"event.action": "returnzkterm"})
+            logger.debug("<<< Exiting returnzkterm()", extra={"event.action": "returnzkterm"})
             return self.Zoekterm.text()
         
         @staticmethod
         def getData(parent=None):
+            logger.warning(">>> Entering getData(parent=%s)", parent, extra={"event.action": "getData"})
             dialog = Widget(parent)
+            logger.debug("getData(parent=%s): dialog → %s", parent, dialog, extra={"event.action": "getData"})
             dialog.exec_()
+            logger.debug("<<< Exiting getData(parent=%s)", parent, extra={"event.action": "getData"})
             return [dialog.returnk(),dialog.returnzkterm()]       
 
     window = Widget()
@@ -210,7 +267,9 @@ def zoekwk(m_email):
     zoekwk(m_email)
        
 def barGrafiek(keuze, jrwk, m_email):
+    logger.warning(">>> Entering barGrafiek(keuze=%s,jrwk=%s,m_email=%s)", keuze, jrwk, m_email, extra={"event.action": "barGrafiek", "logrite.keuze": keuze, "logrite.jrwk": jrwk})
     metadata = MetaData()      
+    logger.debug("barGrafiek(keuze=%s,jrwk=%s,m_email=%s): metadata → %s", keuze, jrwk, m_email, metadata, extra={"event.action": "barGrafiek", "logrite.keuze": keuze, "logrite.jrwk": jrwk})
     resultaten_status = Table('resultaten_status', metadata,
         Column('rID', Integer, primary_key=True),
         Column('status', String),
@@ -221,14 +280,20 @@ def barGrafiek(keuze, jrwk, m_email):
         Column('betaald', Float),
         Column('meerminderwerk', Float))
     
+    logger.debug("barGrafiek(keuze=%s,jrwk=%s,m_email=%s): resultaten_status → %s", keuze, jrwk, m_email, resultaten_status, extra={"event.action": "barGrafiek", "logrite.keuze": keuze, "logrite.jrwk": jrwk})
     engine = create_engine('postgresql+psycopg2://postgres@localhost/bisystem')
+    logger.debug("barGrafiek(keuze=%s,jrwk=%s,m_email=%s): engine → %s", keuze, jrwk, m_email, engine, extra={"event.action": "barGrafiek", "logrite.keuze": keuze, "logrite.jrwk": jrwk})
     con = engine.connect()
     
+    logger.debug("barGrafiek(keuze=%s,jrwk=%s,m_email=%s): con → %s", keuze, jrwk, m_email, con, extra={"event.action": "barGrafiek", "logrite.keuze": keuze, "logrite.jrwk": jrwk})
     selsr = select([resultaten_status]).where(resultaten_status.c.boekweek == jrwk).order_by\
          (resultaten_status.c.status)
+    logger.debug("barGrafiek(keuze=%s,jrwk=%s,m_email=%s): selsr → %s", keuze, jrwk, m_email, selsr, extra={"event.action": "barGrafiek", "logrite.keuze": keuze, "logrite.jrwk": jrwk})
     rpsr = con.execute(selsr).fetchall()
+    logger.debug("barGrafiek(keuze=%s,jrwk=%s,m_email=%s): rpsr → %s", keuze, jrwk, m_email, rpsr, extra={"event.action": "barGrafiek", "logrite.keuze": keuze, "logrite.jrwk": jrwk})
     if not rpsr:
         geenWeek()
+        logger.debug("<<< Exiting barGrafiek(keuze=%s,jrwk=%s,m_email=%s)", keuze, jrwk, m_email, extra={"event.action": "barGrafiek", "logrite.keuze": keuze, "logrite.jrwk": jrwk})
         return
     
     class Window(QDialog):
@@ -297,6 +362,11 @@ def barGrafiek(keuze, jrwk, m_email):
             printer.setOrientation(QPrinter.Landscape)
             if dialog.exec_() == QPrintDialog.Accepted:
                 self.handle_paint_request(printer)
+                logger.warning(">>> Entering handle_print()", extra={"event.action": "handle_print"})
+                logger.debug("handle_print(self=%s): printer → %s", self, printer, extra={"event.action": "handle_print"})
+                logger.debug("handle_print(): printer → %s", printer, extra={"event.action": "handle_print"})
+                logger.debug("handle_print(self=%s): dialog → %s", self, dialog, extra={"event.action": "handle_print"})
+                logger.debug("<<< Exiting handle_print()", extra={"event.action": "handle_print"})
     
         def handle_preview(self):
             dialog = QPrintPreviewDialog()
@@ -307,35 +377,52 @@ def barGrafiek(keuze, jrwk, m_email):
             #dialog.setMinimumSize(1485, 990)
             dialog.paintRequested.connect(self.handle_paint_request)
             dialog.exec_()
+            logger.warning(">>> Entering handle_preview()", extra={"event.action": "handle_preview"})
+            logger.debug("handle_preview(self=%s): dialog → %s", self, dialog, extra={"event.action": "handle_preview"})
+            logger.debug("handle_preview(): dialog → %s", dialog, extra={"event.action": "handle_preview"})
+            logger.debug("<<< Exiting handle_preview()", extra={"event.action": "handle_preview"})
     
         def handle_paint_request(self, printer):
+            logger.warning(">>> Entering handle_paint_request(printer=%s)", printer, extra={"event.action": "handle_paint_request", "logrite.printer": printer})
             painter = QPainter(printer)
+            logger.debug("handle_paint_request(printer=%s): painter → %s", printer, painter, extra={"event.action": "handle_paint_request", "logrite.printer": printer})
+            logger.debug("handle_paint_request(self=%s,printer=%s): painter → %s", self, printer, painter, extra={"event.action": "handle_paint_request", "logrite.printer": printer})
             painter.setViewport(self.chart_view.rect())
             painter.setWindow(self.chart_view.rect()) 
             printer.setPageOrientation(QPageLayout.Landscape)                       
             self.chart_view.render(painter)
+            logger.debug("handle_paint_request(self=%s,printer=%s): printer → %s", self, printer, printer, extra={"event.action": "handle_paint_request", "logrite.printer": printer})
             painter.end()
+            logger.debug("<<< Exiting handle_paint_request(printer=%s)", printer, extra={"event.action": "handle_paint_request", "logrite.printer": printer})
          
     window = Window()
     window.resize(1350, 900)
     window.exec_()
     
 def statusGrafiek(keuze, jrwk, m_email):
+    logger.warning(">>> Entering statusGrafiek(keuze=%s,jrwk=%s,m_email=%s)", keuze, jrwk, m_email, extra={"event.action": "statusGrafiek", "logrite.keuze": keuze, "logrite.jrwk": jrwk})
     metadata = MetaData()      
+    logger.debug("statusGrafiek(keuze=%s,jrwk=%s,m_email=%s): metadata → %s", keuze, jrwk, m_email, metadata, extra={"event.action": "statusGrafiek", "logrite.keuze": keuze, "logrite.jrwk": jrwk})
     resultaten_status = Table('resultaten_status', metadata,
         Column('rID', Integer, primary_key=True),
         Column('status', String),
         Column('aantal', Integer),
         Column('boekweek', String))
    
+    logger.debug("statusGrafiek(keuze=%s,jrwk=%s,m_email=%s): resultaten_status → %s", keuze, jrwk, m_email, resultaten_status, extra={"event.action": "statusGrafiek", "logrite.keuze": keuze, "logrite.jrwk": jrwk})
     engine = create_engine('postgresql+psycopg2://postgres@localhost/bisystem')
+    logger.debug("statusGrafiek(keuze=%s,jrwk=%s,m_email=%s): engine → %s", keuze, jrwk, m_email, engine, extra={"event.action": "statusGrafiek", "logrite.keuze": keuze, "logrite.jrwk": jrwk})
     con = engine.connect()
     
+    logger.debug("statusGrafiek(keuze=%s,jrwk=%s,m_email=%s): con → %s", keuze, jrwk, m_email, con, extra={"event.action": "statusGrafiek", "logrite.keuze": keuze, "logrite.jrwk": jrwk})
     selr = select([resultaten_status]).where(resultaten_status.c.boekweek == jrwk).order_by\
          (resultaten_status.c.status)
+    logger.debug("statusGrafiek(keuze=%s,jrwk=%s,m_email=%s): selr → %s", keuze, jrwk, m_email, selr, extra={"event.action": "statusGrafiek", "logrite.keuze": keuze, "logrite.jrwk": jrwk})
     rpr = con.execute(selr).fetchall()
+    logger.debug("statusGrafiek(keuze=%s,jrwk=%s,m_email=%s): rpr → %s", keuze, jrwk, m_email, rpr, extra={"event.action": "statusGrafiek", "logrite.keuze": keuze, "logrite.jrwk": jrwk})
     if not rpr:
         geenWeek()
+        logger.debug("<<< Exiting statusGrafiek(keuze=%s,jrwk=%s,m_email=%s)", keuze, jrwk, m_email, extra={"event.action": "statusGrafiek", "logrite.keuze": keuze, "logrite.jrwk": jrwk})
         return
     
     class Window(QDialog):
@@ -368,6 +455,21 @@ def statusGrafiek(keuze, jrwk, m_email):
             layout.addWidget(self.buttonPrint, 1, 2)
             layout.addWidget(self.buttonPreview, 1, 3) 
             self.create_chart()
+            logger.warning(">>> Entering __init__()", extra={"event.action": "__init__"})
+            logger.debug("__init__(): self.chart → %s", self.chart, extra={"event.action": "__init__"})
+            logger.debug("__init__(): self.view → %s", self.view, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): view → %s", self, view, extra={"event.action": "__init__"})
+            logger.debug("__init__(): self.buttonPreview → %s", self.buttonPreview, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): buttonPreview → %s", self, buttonPreview, extra={"event.action": "__init__"})
+            logger.debug("__init__(): self.buttonPrint → %s", self.buttonPrint, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): buttonPrint → %s", self, buttonPrint, extra={"event.action": "__init__"})
+            logger.debug("__init__(): self.buttonSluit → %s", self.buttonSluit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): buttonSluit → %s", self, buttonSluit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): self.buttonInfo → %s", self.buttonInfo, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): buttonInfo → %s", self, buttonInfo, extra={"event.action": "__init__"})
+            logger.debug("__init__(): layout → %s", layout, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): layout → %s", self, layout, extra={"event.action": "__init__"})
+            logger.debug("<<< Exiting __init__()", extra={"event.action": "__init__"})
     
         def create_chart(self):
             self.chart.setTitle('Grafiek aantal externe werken per status - opnameweek '+jrwk) 
@@ -391,12 +493,23 @@ def statusGrafiek(keuze, jrwk, m_email):
             axisX.append(categories)
             self.chart.setAxisX(axisX, barseries)
             axisX.setRange(str("Status A"), str("Status H"))
+            logger.warning(">>> Entering create_chart()", extra={"event.action": "create_chart"})
+            logger.debug("create_chart(self=%s): chart → %s", self, chart, extra={"event.action": "create_chart"})
+            logger.debug("create_chart(self=%s): font → %s", self, font, extra={"event.action": "create_chart"})
+            logger.debug("create_chart(): font → %s", font, extra={"event.action": "create_chart"})
+            logger.debug("create_chart(self=%s): series → %s", self, series, extra={"event.action": "create_chart"})
+            logger.debug("create_chart(): series → %s", series, extra={"event.action": "create_chart"})
+            logger.debug("create_chart(self=%s): slice_ → %s", self, slice_, extra={"event.action": "create_chart"})
+            logger.debug("<<< Exiting create_chart()", extra={"event.action": "create_chart"})
+            logger.debug("create_chart(): slice_ → %s", slice_, extra={"event.action": "create_chart"})
                            
         def handle_print(self):
+            logger.warning(">>> Entering handle_print()", extra={"event.action": "handle_print"})
             printer = QPrinter(QPrinter.HighResolution)
             printer.setOrientation(QPrinter.Landscape) 
             dialog = QPrintDialog(printer, self)
             if dialog.exec_() == QPrintDialog.Accepted:
+                logger.debug("handle_print(): dialog → %s", dialog, extra={"event.action": "handle_print"})
                 self.handle_paint_request(printer)
     
         def handle_preview(self):
@@ -422,21 +535,29 @@ def statusGrafiek(keuze, jrwk, m_email):
     window.exec_()
     
 def statusPie(keuze, jrwk, m_email):
+    logger.warning(">>> Entering statusPie(keuze=%s,jrwk=%s,m_email=%s)", keuze, jrwk, m_email, extra={"event.action": "statusPie", "logrite.keuze": keuze, "logrite.jrwk": jrwk})
     metadata = MetaData()      
+    logger.debug("statusPie(keuze=%s,jrwk=%s,m_email=%s): metadata → %s", keuze, jrwk, m_email, metadata, extra={"event.action": "statusPie", "logrite.keuze": keuze, "logrite.jrwk": jrwk})
     resultaten_status = Table('resultaten_status', metadata,
         Column('rID', Integer, primary_key=True),
         Column('status', String),
         Column('aantal', Integer),
         Column('boekweek', String))
    
+    logger.debug("statusPie(keuze=%s,jrwk=%s,m_email=%s): resultaten_status → %s", keuze, jrwk, m_email, resultaten_status, extra={"event.action": "statusPie", "logrite.keuze": keuze, "logrite.jrwk": jrwk})
     engine = create_engine('postgresql+psycopg2://postgres@localhost/bisystem')
+    logger.debug("statusPie(keuze=%s,jrwk=%s,m_email=%s): engine → %s", keuze, jrwk, m_email, engine, extra={"event.action": "statusPie", "logrite.keuze": keuze, "logrite.jrwk": jrwk})
     con = engine.connect()
     
+    logger.debug("statusPie(keuze=%s,jrwk=%s,m_email=%s): con → %s", keuze, jrwk, m_email, con, extra={"event.action": "statusPie", "logrite.keuze": keuze, "logrite.jrwk": jrwk})
     selr = select([resultaten_status]).where(resultaten_status.c.boekweek == jrwk).order_by\
          (resultaten_status.c.status)
+    logger.debug("statusPie(keuze=%s,jrwk=%s,m_email=%s): selr → %s", keuze, jrwk, m_email, selr, extra={"event.action": "statusPie", "logrite.keuze": keuze, "logrite.jrwk": jrwk})
     rpr = con.execute(selr).fetchall()
+    logger.debug("statusPie(keuze=%s,jrwk=%s,m_email=%s): rpr → %s", keuze, jrwk, m_email, rpr, extra={"event.action": "statusPie", "logrite.keuze": keuze, "logrite.jrwk": jrwk})
     if not rpr:
         geenWeek()
+        logger.debug("<<< Exiting statusPie(keuze=%s,jrwk=%s,m_email=%s)", keuze, jrwk, m_email, extra={"event.action": "statusPie", "logrite.keuze": keuze, "logrite.jrwk": jrwk})
         return
     
     class Window(QDialog):
