@@ -7,44 +7,64 @@ from PyQt5.QtCore import Qt
 from sqlalchemy import (Table, Column, Integer, String, MetaData,\
                                 create_engine)
 from sqlalchemy.sql import select
+import logging
+logger = logging.getLogger(__name__)
 
 def windowSluit(self, m_email):
+    logger.warning(">>> Entering windowSluit(m_email=%s)", m_email, extra={"event.action": "windowSluit"})
     self.close()
     hoofdMenu(m_email)
+    logger.debug("<<< Exiting windowSluit(m_email=%s)", m_email, extra={"event.action": "windowSluit"})
 
 def foutEmail():
+    logger.warning(">>> Entering foutEmail()", extra={"event.action": "foutEmail"})
     msg = QMessageBox()
+    logger.debug("foutEmail(): msg → %s", msg, extra={"event.action": "foutEmail"})
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     msg.setIcon(QMessageBox.Warning)
     msg.setText('Emailadres onjuist!')
     msg.setWindowTitle('EMAILFOUT')
+    logger.debug("<<< Exiting foutEmail()", extra={"event.action": "foutEmail"})
     msg.exec_()
 
 def zoekEmailadres(m_email, klmail):
+    logger.warning(">>> Entering zoekEmailadres(m_email=%s,klmail=%s)", m_email, klmail, extra={"event.action": "zoekEmailadres", "logrite.klmail": klmail})
     class Widget(QDialog):
         def __init__(self, parent=None):
             super(Widget, self).__init__(parent)
+            logger.warning(">>> Entering __init__(parent=%s)", parent, extra={"event.action": "__init__"})
             self.setWindowTitle("Web artikelen retourboeken.")
             self.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     
             self.setFont(QFont('Arial', 10))
     
             self.Email = QLabel()
+            logger.debug("__init__(parent=%s): self.Email → %s", parent, self.Email, extra={"event.action": "__init__"})
             emailEdit = QLineEdit()
+            logger.debug("__init__(self=%s,parent=%s): emailEdit → %s", self, parent, emailEdit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): emailEdit → %s", parent, emailEdit, extra={"event.action": "__init__"})
             emailEdit.setFixedWidth(220)
             emailEdit.setFont(QFont("Arial",10))
             emailEdit.textChanged.connect(self.emailChanged)
                                         
             grid = QGridLayout()
+            logger.debug("__init__(parent=%s): grid → %s", parent, grid, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): grid → %s", self, parent, grid, extra={"event.action": "__init__"})
             grid.setSpacing(20)
     
             lbl = QLabel()
+            logger.debug("__init__(parent=%s): lbl → %s", parent, lbl, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): lbl → %s", self, parent, lbl, extra={"event.action": "__init__"})
             pixmap = QPixmap('./images/logos/verbinding.jpg')
+            logger.debug("__init__(self=%s,parent=%s): pixmap → %s", self, parent, pixmap, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): pixmap → %s", parent, pixmap, extra={"event.action": "__init__"})
             lbl.setPixmap(pixmap)
             grid.addWidget(lbl , 0, 0, 1, 2)
             
             logo = QLabel()
+            logger.debug("__init__(parent=%s): logo → %s", parent, logo, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): logo → %s", self, parent, logo, extra={"event.action": "__init__"})
             pixmap = QPixmap('./images/logos/logo.jpg')
             logo.setPixmap(pixmap)
             grid.addWidget(logo , 0, 1, 1, 1, Qt.AlignRight)
@@ -55,6 +75,8 @@ def zoekEmailadres(m_email, klmail):
             grid.addWidget(emailEdit, 1, 1)
            
             applyBtn = QPushButton('Zoeken')
+            logger.debug("__init__(parent=%s): applyBtn → %s", parent, applyBtn, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): applyBtn → %s", self, parent, applyBtn, extra={"event.action": "__init__"})
             applyBtn.clicked.connect(self.accept)
     
             grid.addWidget(applyBtn, 2, 1, 1, 1, Qt.AlignRight)
@@ -63,6 +85,8 @@ def zoekEmailadres(m_email, klmail):
             applyBtn.setStyleSheet("color: black;  background-color: gainsboro") 
 
             closeBtn = QPushButton('Sluiten')
+            logger.debug("__init__(parent=%s): closeBtn → %s", parent, closeBtn, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): closeBtn → %s", self, parent, closeBtn, extra={"event.action": "__init__"})
             closeBtn.clicked.connect(lambda: windowSluit(self, m_email))
     
             grid.addWidget(closeBtn, 2, 1)
@@ -74,17 +98,25 @@ def zoekEmailadres(m_email, klmail):
                   
             self.setLayout(grid)
             self.setGeometry(500, 100, 150, 150)
+            logger.debug("<<< Exiting __init__(parent=%s)", parent, extra={"event.action": "__init__"})
     
         def emailChanged(self, text):
+            logger.warning(">>> Entering emailChanged(text=%s)", text, extra={"event.action": "emailChanged", "logrite.text": text})
             self.Email.setText(text)
+            logger.debug("<<< Exiting emailChanged(text=%s)", text, extra={"event.action": "emailChanged", "logrite.text": text})
     
         def returnEmail(self):
+            logger.warning(">>> Entering returnEmail()", extra={"event.action": "returnEmail"})
+            logger.debug("<<< Exiting returnEmail()", extra={"event.action": "returnEmail"})
             return self.Email.text()
     
         @staticmethod
         def getData(parent=None):
+            logger.warning(">>> Entering getData(parent=%s)", parent, extra={"event.action": "getData"})
             dialog = Widget(parent)
+            logger.debug("getData(parent=%s): dialog → %s", parent, dialog, extra={"event.action": "getData"})
             dialog.exec_()
+            logger.debug("<<< Exiting getData(parent=%s)", parent, extra={"event.action": "getData"})
             return [dialog.returnEmail()]
        
     window = Widget()

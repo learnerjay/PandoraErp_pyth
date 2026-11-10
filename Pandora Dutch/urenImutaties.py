@@ -6,49 +6,93 @@ from PyQt5.QtWidgets import QLabel, QPushButton,\
 from sqlalchemy import (Table, Column, Integer, String, Float, MetaData, \
                             ForeignKey, create_engine, Boolean)
 from sqlalchemy.sql import select, update, func, and_
+import logging
+logger = logging.getLogger(__name__)
          
 def _11check(mcontr):
+    logger.warning(">>> Entering _11check(mcontr=%s)", mcontr, extra={"event.action": "_11check", "logrite.mcontr": mcontr})
     number = str(mcontr)
+    logger.debug("_11check(mcontr=%s): number → %s", mcontr, number, extra={"event.action": "_11check", "logrite.mcontr": mcontr})
     total = 0       
     fullnumber = number                       
+    logger.debug("_11check(mcontr=%s): total → %s", mcontr, total, extra={"event.action": "_11check", "logrite.mcontr": mcontr})
     for i in range(8):
         total += int(fullnumber[i])*(9-i)
+        logger.debug("_11check(mcontr=%s): fullnumber → %s", mcontr, fullnumber, extra={"event.action": "_11check", "logrite.mcontr": mcontr})
         checkdigit = total % 11
     if checkdigit == 10:
         checkdigit = 0
     if checkdigit == int(fullnumber[8]):
         return True
     else:
+        logger.debug("<<< Exiting _11check(mcontr=%s)", mcontr, extra={"event.action": "_11check", "logrite.mcontr": mcontr})
         return False
     
 def windowSluit(self, m_email):
+    logger.warning(">>> Entering windowSluit(m_email=%s)", m_email, extra={"event.action": "windowSluit"})
     self.close()
     hoofdMenu(m_email)
+    logger.debug("<<< Exiting windowSluit(m_email=%s)", m_email, extra={"event.action": "windowSluit"})
     
 def info():
+    logger.warning(">>> Entering info()", extra={"event.action": "info"})
     class Widget(QDialog):
         def __init__(self, parent=None):
             super(Widget, self).__init__(parent)
+            logger.warning(">>> Entering __init__(parent=%s)", parent, extra={"event.action": "__init__"})
             self.setWindowTitle("Informatie ERP Systeem Pandora")
             self.setWindowIcon(QIcon('./images/logos/logo.jpg'))
             self.setFont(QFont('Arial', 10))
             grid = QGridLayout()
+            logger.debug("__init__(parent=%s): grid → %s", parent, grid, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): grid → %s", self, parent, grid, extra={"event.action": "__init__"})
             grid.setSpacing(20)
             
             lblinfo = QLabel('Informatie ERP Pandora')
+            logger.debug("__init__(parent=%s): lblinfo → %s", parent, lblinfo, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): lblinfo → %s", self, parent, lblinfo, extra={"event.action": "__init__"})
             grid.addWidget(lblinfo, 0, 0, 1, 2, Qt.AlignCenter)
             lblinfo.setStyleSheet("color:rgba(45, 83, 115, 255); font: 25pt Comic Sans MS")
             
             logo = QLabel()
+            logger.debug("__init__(parent=%s): logo → %s", parent, logo, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): logo → %s", self, parent, logo, extra={"event.action": "__init__"})
             pixmap = QPixmap('./images/logos/logo.jpg')
+            logger.debug("__init__(self=%s,parent=%s): pixmap → %s", self, parent, pixmap, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): pixmap → %s", parent, pixmap, extra={"event.action": "__init__"})
             logo.setPixmap(pixmap)
             grid.addWidget(logo , 0, 0, 1, 1, Qt.AlignRight)
         
             lbl = QLabel()
+            logger.debug("__init__(parent=%s): lbl → %s", parent, lbl, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): lbl → %s", self, parent, lbl, extra={"event.action": "__init__"})
             pixmap = QPixmap('./images/logos/verbinding.jpg')
             lbl.setPixmap(pixmap)
             grid.addWidget(lbl, 0, 0)
+            logger.debug("<<< Exiting __init__(parent=%s)", parent, extra={"event.action": "__init__"})
             
+            logger.warning(">>> Entering __init__()", extra={"event.action": "__init__"})
+            logger.debug("__init__(): self.zkaccEdit → %s", self.zkaccEdit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): zkaccEdit → %s", self, zkaccEdit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): reg_ex → %s", reg_ex, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): reg_ex → %s", self, reg_ex, extra={"event.action": "__init__"})
+            logger.debug("__init__(): input_validator → %s", input_validator, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): input_validator → %s", self, input_validator, extra={"event.action": "__init__"})
+            logger.debug("__init__(): self.zkwerknEdit → %s", self.zkwerknEdit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): zkwerknEdit → %s", self, zkwerknEdit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): self.k0Edit → %s", self.k0Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): k0Edit → %s", self, k0Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): self.cBox → %s", self.cBox, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): cBox → %s", self, cBox, extra={"event.action": "__init__"})
+            logger.debug("__init__(): self.urenEdit → %s", self.urenEdit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): urenEdit → %s", self, urenEdit, extra={"event.action": "__init__"})
+            logger.debug("<<< Exiting __init__()", extra={"event.action": "__init__"})
+            logger.debug("__init__(): self.urentotEdit → %s", self.urentotEdit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): urentotEdit → %s", self, urentotEdit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): self.urenbegrEdit → %s", self.urenbegrEdit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): urenbegrEdit → %s", self, urenbegrEdit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): self.boekdatumEdit → %s", self.boekdatumEdit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): boekdatumEdit → %s", self, boekdatumEdit, extra={"event.action": "__init__"})
             infolbl = QLabel(
       '''
         \t\t\t\t\t\t\t\t\t\t 
@@ -101,15 +145,24 @@ def info():
     window.exec_()
     
 def urenBoeking(self, m_email):
+    logger.warning(">>> Entering urenBoeking(m_email=%s)", m_email, extra={"event.action": "urenBoeking"})
     maccountnr = self.zkaccEdit.text()
+    logger.debug("urenBoeking(m_email=%s): maccountnr → %s", m_email, maccountnr, extra={"event.action": "urenBoeking"})
+    logger.debug("urenBoeking(self=%s,m_email=%s): maccountnr → %s", self, m_email, maccountnr, extra={"event.action": "urenBoeking"})
     mwerknr = self.zkwerknEdit.text()
+    logger.debug("urenBoeking(m_email=%s): mwerknr → %s", m_email, mwerknr, extra={"event.action": "urenBoeking"})
+    logger.debug("urenBoeking(self=%s,m_email=%s): mwerknr → %s", self, m_email, mwerknr, extra={"event.action": "urenBoeking"})
     mboekd = self.boekdatumEdit.text()
+    logger.debug("urenBoeking(self=%s,m_email=%s): mboekd → %s", self, m_email, mboekd, extra={"event.action": "urenBoeking"})
     mstatus = self.cBox.checkState()
     if mstatus == 0:
         mstatus = False
     else:
+        logger.debug("urenBoeking(m_email=%s): mboekd → %s", m_email, mboekd, extra={"event.action": "urenBoeking"})
         mstatus = True
     metadata = MetaData()
+    logger.debug("urenBoeking(m_email=%s): metadata → %s", m_email, metadata, extra={"event.action": "urenBoeking"})
+    logger.debug("urenBoeking(self=%s,m_email=%s): metadata → %s", self, m_email, metadata, extra={"event.action": "urenBoeking"})
     wrkwnrln = Table('wrkwnrln', metadata,
         Column('wrkwnrurenID', Integer, primary_key=True),
         Column('werknemerID', None, ForeignKey('werknemers.werknemerID')),
@@ -122,6 +175,7 @@ def urenBoeking(self, m_email):
         Column('bruto_loonbedrag', Float),
         Column('meerwerkstatus', Boolean),
         Column('soort', String))
+    logger.debug("urenBoeking(m_email=%s): selwnr → %s", m_email, selwnr, extra={"event.action": "urenBoeking"})
     werknemers = Table('werknemers', metadata,
         Column('werknemerID', Integer(), primary_key=True),
         Column('accountID', None, ForeignKey('accounts.accountID')),
@@ -197,7 +251,13 @@ def urenBoeking(self, m_email):
         Column('werkuur', Float),
         Column('reisuur', Float))
     engine = create_engine('postgresql+psycopg2://postgres@localhost/bisystem')
+    logger.debug("urenBoeking(m_email=%s): engine → %s", m_email, engine, extra={"event.action": "urenBoeking"})
+    logger.debug("urenBoeking(self=%s,m_email=%s): engine → %s", self, m_email, engine, extra={"event.action": "urenBoeking"})
+    logger.debug("urenBoeking(m_email=%s): rpwnr → %s", m_email, rpwnr, extra={"event.action": "urenBoeking"})
+    logger.debug("urenBoeking(self=%s,m_email=%s): rpwnr → %s", self, m_email, rpwnr, extra={"event.action": "urenBoeking"})
     con = engine.connect()
+    logger.debug("urenBoeking(self=%s,m_email=%s): con → %s", self, m_email, con, extra={"event.action": "urenBoeking"})
+    logger.debug("urenBoeking(m_email=%s): con → %s", m_email, con, extra={"event.action": "urenBoeking"})
     selwnr = select([werknemers]).where(and_(werknemers.c.accountID==int(maccountnr),\
                     werknemers.c.loonID > 52))
     rpwnr = con.execute(selwnr).first()
@@ -205,9 +265,12 @@ def urenBoeking(self, m_email):
         maccountnr = int(maccountnr)
     else:
        self.urenEdit.setText('0')
+       logger.debug("urenBoeking(self=%s,m_email=%s): urenEdit → %s", self, m_email, urenEdit, extra={"event.action": "urenBoeking"})
+       logger.debug("urenBoeking(self=%s,m_email=%s): lblt → %s", self, m_email, lblt, extra={"event.action": "urenBoeking"})
        self.lblt.setStyleSheet("font: bold; color: red")
        self.lblt.setText('Persoon niet in deze arbeidspool!')
        self.applyBtn.setStyleSheet("color: black; background-color: #FF3333")
+       logger.debug("urenBoeking(self=%s,m_email=%s): applyBtn → %s", self, m_email, applyBtn, extra={"event.action": "urenBoeking"})
        return('', mwerknr, mboekd, m_email)
     if mwerknr and len(mwerknr)== 9  and _11check(mwerknr):
         mwerknr = int(mwerknr)
@@ -222,27 +285,45 @@ def urenBoeking(self, m_email):
     con = engine.connect()
     selwerk = select([orders_intern]).where(orders_intern.c.werkorderID == mwerknr)
     rpwerk = con.execute(selwerk).first()
+    logger.debug("urenBoeking(self=%s,m_email=%s): rpwerk → %s", self, m_email, rpwerk, extra={"event.action": "urenBoeking"})
     
     muren = 0
+    logger.debug("urenBoeking(self=%s,m_email=%s): muren → %s", self, m_email, muren, extra={"event.action": "urenBoeking"})
     mu125 = 0
+    logger.debug("urenBoeking(self=%s,m_email=%s): mu125 → %s", self, m_email, mu125, extra={"event.action": "urenBoeking"})
     mu150 = 0
+    logger.debug("urenBoeking(self=%s,m_email=%s): mu150 → %s", self, m_email, mu150, extra={"event.action": "urenBoeking"})
     mu200 = 0
+    logger.debug("urenBoeking(self=%s,m_email=%s): mu200 → %s", self, m_email, mu200, extra={"event.action": "urenBoeking"})
     mreis = 0
+    logger.debug("urenBoeking(self=%s,m_email=%s): mreis → %s", self, m_email, mreis, extra={"event.action": "urenBoeking"})
     mmeerw100 = 0
+    logger.debug("urenBoeking(self=%s,m_email=%s): mmeerw100 → %s", self, m_email, mmeerw100, extra={"event.action": "urenBoeking"})
     mmeerw125 = 0
+    logger.debug("urenBoeking(self=%s,m_email=%s): mmeerw125 → %s", self, m_email, mmeerw125, extra={"event.action": "urenBoeking"})
     mmeerw150 = 0
+    logger.debug("urenBoeking(self=%s,m_email=%s): mmeerw150 → %s", self, m_email, mmeerw150, extra={"event.action": "urenBoeking"})
     mmeerw200 = 0
+    logger.debug("urenBoeking(self=%s,m_email=%s): mmeerw200 → %s", self, m_email, mmeerw200, extra={"event.action": "urenBoeking"})
     mverlof = 0
+    logger.debug("urenBoeking(self=%s,m_email=%s): mverlof → %s", self, m_email, mverlof, extra={"event.action": "urenBoeking"})
     mextraverlof = 0
+    logger.debug("urenBoeking(self=%s,m_email=%s): mextraverlof → %s", self, m_email, mextraverlof, extra={"event.action": "urenBoeking"})
     mziek = 0
+    logger.debug("urenBoeking(self=%s,m_email=%s): mziek → %s", self, m_email, mziek, extra={"event.action": "urenBoeking"})
     mfeest = 0
+    logger.debug("urenBoeking(self=%s,m_email=%s): mfeest → %s", self, m_email, mfeest, extra={"event.action": "urenBoeking"})
     mdokter = 0
+    logger.debug("urenBoeking(self=%s,m_email=%s): mdokter → %s", self, m_email, mdokter, extra={"event.action": "urenBoeking"})
     mgverzuim = 0
+    logger.debug("urenBoeking(self=%s,m_email=%s): mgverzuim → %s", self, m_email, mgverzuim, extra={"event.action": "urenBoeking"})
     moverzuim = 0
+    logger.debug("urenBoeking(self=%s,m_email=%s): moverzuim → %s", self, m_email, moverzuim, extra={"event.action": "urenBoeking"})
             
     msoort = self.k0Edit.currentIndex()
     
     mboekuren = float(self.urenEdit.text())
+    logger.debug("urenBoeking(self=%s,m_email=%s): mboekuren → %s", self, m_email, mboekuren, extra={"event.action": "urenBoeking"})
     
     mlist = ['100%','125%','150%','200%','Reis','Verlof','Extra verlof','Ziekte',\
             'Feestdag','Dokter','Geoorl. verzuim','Ong. verzuim']
@@ -304,23 +385,36 @@ def urenBoeking(self, m_email):
         mwrkwnruren=(con.execute(select([func.max(wrkwnrln.c.wrkwnrurenID,\
                 type_=Integer)])).scalar())
     except:
+        logger.error("Exception in urenBoeking(m_email=%s)", m_email, exc_info=True, extra={"event.action": "urenBoeking", "event.category": "process"})
+        logger.debug("urenBoeking(self=%s,m_email=%s): wrkgr2 → %s", self, m_email, wrkgr2, extra={"event.action": "urenBoeking"})
         mwrkwnruren = 1
+        logger.debug("urenBoeking(self=%s,m_email=%s): mwrkwnruren → %s", self, m_email, mwrkwnruren, extra={"event.action": "urenBoeking"})
     wrkgr = rpwnr[2]
+    logger.debug("urenBoeking(self=%s,m_email=%s): wrkgr → %s", self, m_email, wrkgr, extra={"event.action": "urenBoeking"})
     wrkgr2 = rpwnr[5]
     loonsel = select([lonen]).where(lonen.c.loonID == wrkgr)    #loonID
     loonsel2 = select([lonen]).where(lonen.c.loonID == wrkgr2)
     loonres = con.execute(loonsel).first()
+    logger.debug("urenBoeking(self=%s,m_email=%s): loonres → %s", self, m_email, loonres, extra={"event.action": "urenBoeking"})
     loonres2 = con.execute(loonsel2).first()
+    logger.debug("urenBoeking(self=%s,m_email=%s): loonres2 → %s", self, m_email, loonres2, extra={"event.action": "urenBoeking"})
     muurloon = loonres2[1]
+    logger.debug("urenBoeking(self=%s,m_email=%s): muurloon → %s", self, m_email, muurloon, extra={"event.action": "urenBoeking"})
     mwerkuur = loonres[2]
+    logger.debug("urenBoeking(self=%s,m_email=%s): mwerkuur → %s", self, m_email, mwerkuur, extra={"event.action": "urenBoeking"})
     mreisuur = loonres[3]
+    logger.debug("urenBoeking(self=%s,m_email=%s): mreisuur → %s", self, m_email, mreisuur, extra={"event.action": "urenBoeking"})
     mwrku125 = mwerkuur*1.25
+    logger.debug("urenBoeking(self=%s,m_email=%s): mwrku125 → %s", self, m_email, mwrku125, extra={"event.action": "urenBoeking"})
     mwrku150 = mwerkuur*1.5
+    logger.debug("urenBoeking(self=%s,m_email=%s): mwrku150 → %s", self, m_email, mwrku150, extra={"event.action": "urenBoeking"})
     mwrku200 = mwerkuur*2
+    logger.debug("urenBoeking(self=%s,m_email=%s): mwrku200 → %s", self, m_email, mwrku200, extra={"event.action": "urenBoeking"})
  
     loonk = (muren*mwerkuur)+(mreis*mreisuur)+(mu125*mwrku125)+(mu150*mwrku150)+\
              (mu200*mwrku200)+(mmeerw100*mwerkuur)+(mmeerw125*mwerkuur)+(mmeerw150*\
              mwerkuur)+(mmeerw200*mwerkuur)
+    logger.debug("urenBoeking(self=%s,m_email=%s): loonk → %s", self, m_email, loonk, extra={"event.action": "urenBoeking"})
     meerk = (mmeerw100*mwerkuur)+(mmeerw125*mwrku125)+\
             (mmeerw150*mwrku150)+(mmeerw200*mwrku200)
     lonen = (muren*muurloon)+(mu125*muurloon*1.25)+(mu150*muurloon*1.5)+(mu200\
@@ -360,6 +454,12 @@ def urenBoeking(self, m_email):
         con.execute(stmt)
         sel = select([orders_intern]).where(orders_intern.c.werkorderID == mwerknr)
         rpsel = con.execute(sel).first()
+        logger.debug("urenBoeking(self=%s,m_email=%s): rpsel → %s", self, m_email, rpsel, extra={"event.action": "urenBoeking"})
+        logger.debug("urenBoeking(self=%s,m_email=%s): urenbegrEdit → %s", self, m_email, urenbegrEdit, extra={"event.action": "urenBoeking"})
+        logger.debug("urenBoeking(self=%s,m_email=%s): urentotEdit → %s", self, m_email, urentotEdit, extra={"event.action": "urenBoeking"})
+        logger.debug("urenBoeking(self=%s,m_email=%s): lblptext → %s", self, m_email, lblptext, extra={"event.action": "urenBoeking"})
+        logger.debug("urenBoeking(self=%s,m_email=%s): lbltext → %s", self, m_email, lbltext, extra={"event.action": "urenBoeking"})
+        logger.debug("urenBoeking(self=%s,m_email=%s): lblprof → %s", self, m_email, lblprof, extra={"event.action": "urenBoeking"})
         self.urenbegrEdit.setText('{:<12.2f}'.format(rpsel[11]))
         self.urentotEdit.setText('{:<12.2f}'.format(rpsel[12]))
         lblptext = 'Totalen: Werkelijk / Begroot\nUren Zagen'
@@ -760,10 +860,12 @@ def urenBoeking(self, m_email):
         self.lblt.setText(lbltext)
     else:
         msaldo = ''
+        logger.debug("urenBoeking(self=%s,m_email=%s): msaldo → %s", self, m_email, msaldo, extra={"event.action": "urenBoeking"})
         mboekuren = str(mboekuren)
         if msoort == 5 and wrkgr > 52:
             selsal = select([werknemers]).where(werknemers.c.accountID == maccountnr)
             rpsal = con.execute(selsal).first()
+            logger.debug("urenBoeking(self=%s,m_email=%s): rpsal → %s", self, m_email, rpsal, extra={"event.action": "urenBoeking"})
             msaldo = str(rpsal[3])
             lbltext = mboekuren+' Verlofuren ingevoerd, Saldo = '+msaldo+' uren.'
             lblptext = '\n'
@@ -815,9 +917,12 @@ def urenBoeking(self, m_email):
             
     self.urenEdit.setText('0')
     self.k0Edit.setCurrentIndex(0)
+    logger.debug("urenBoeking(self=%s,m_email=%s): k0Edit → %s", self, m_email, k0Edit, extra={"event.action": "urenBoeking"})
+    logger.debug("<<< Exiting urenBoeking(m_email=%s)", m_email, extra={"event.action": "urenBoeking"})
     return(maccountnr, mwerknr, mboekd, m_email) 
     
 def urenMut(maccountnr, mwerknr, mboekd, m_email):
+    logger.warning(">>> Entering urenMut(maccountnr=%s,mwerknr=%s,mboekd=%s,m_email=%s)", maccountnr, mwerknr, mboekd, m_email, extra={"event.action": "urenMut", "logrite.maccountnr": maccountnr, "logrite.mwerknr": mwerknr, "logrite.mboekd": mboekd})
     class Widget(QDialog):
         def __init__(self):
             super(Widget,self).__init__()
@@ -896,32 +1001,44 @@ def urenMut(maccountnr, mwerknr, mboekd, m_email):
             self.boekdatumEdit.setValidator(input_validator)
                                             
             def accChanged():
+                logger.warning(">>> Entering accChanged()", extra={"event.action": "accChanged"})
+                logger.debug("accChanged(): zkaccEdit → %s", zkaccEdit, extra={"event.action": "accChanged"})
                 self.zkaccEdit.setText(self.zkaccEdit.text())
             self.zkaccEdit.textChanged.connect(accChanged)
              
             def werknChanged():
+                logger.warning(">>> Entering werknChanged()", extra={"event.action": "werknChanged"})
+                logger.debug("werknChanged(): zkwerknEdit → %s", zkwerknEdit, extra={"event.action": "werknChanged"})
                 self.zkwerknEdit.setText(self.zkwerknEdit.text())
             self.zkwerknEdit.textChanged.connect(werknChanged)
              
             '''
             def k0Changed():
+                logger.warning(">>> Entering k0Changed()", extra={"event.action": "k0Changed"})
                 self.k0Edit.setCurrentText(self.k0Edit.currentText())
             self.k0Edit.currentTextChanged.connect(k0Changed)
             '''
             
             def k0Changed():
+                logger.debug("k0Changed(): k0Edit → %s", k0Edit, extra={"event.action": "k0Changed"})
                 self.k0Edit.setCurrentIndex(self.k0Edit.currentIndex())
             self.k0Edit.currentIndexChanged.connect(k0Changed)
                         
             def  cboxChanged():
+                 logger.warning(">>> Entering cboxChanged()", extra={"event.action": "cboxChanged"})
+                 logger.debug("cboxChanged(): cBox → %s", cBox, extra={"event.action": "cboxChanged"})
                  self.cBox.setCheckState(self.cBox.checkState())
             self.cBox.stateChanged.connect(cboxChanged)
             
             def urenChanged():
+                logger.warning(">>> Entering urenChanged()", extra={"event.action": "urenChanged"})
+                logger.debug("urenChanged(): urenEdit → %s", urenEdit, extra={"event.action": "urenChanged"})
                 self.urenEdit.setText(self.urenEdit.text())
             self.urenEdit.textChanged.connect(urenChanged)
             
             def boekdatumChanged():
+                logger.warning(">>> Entering boekdatumChanged()", extra={"event.action": "boekdatumChanged"})
+                logger.debug("boekdatumChanged(): boekdatumEdit → %s", boekdatumEdit, extra={"event.action": "boekdatumChanged"})
                 self.boekdatumEdit.setText(self.boekdatumEdit.text())
             self.boekdatumEdit.textChanged.connect(boekdatumChanged)
             

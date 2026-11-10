@@ -4,27 +4,40 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QMessageBox
 from sqlalchemy import (Table, Column, Integer, String, MetaData,\
                         create_engine, Float, select)
+import logging
+logger = logging.getLogger(__name__)
 
 def jaarweek():
+    logger.warning(">>> Entering jaarweek()", extra={"event.action": "jaarweek"})
     dt = datetime.datetime.now()
+    logger.debug("jaarweek(): dt → %s", dt, extra={"event.action": "jaarweek"})
     week = ('0'+str(dt.isocalendar()[1]))[-2:]
+    logger.debug("jaarweek(): week → %s", week, extra={"event.action": "jaarweek"})
     jaar = str(dt.isocalendar()[0])
     jrwk = jaar+week
+    logger.debug("jaarweek(): jrwk → %s", jrwk, extra={"event.action": "jaarweek"})
+    logger.debug("jaarweek(): jaar → %s", jaar, extra={"event.action": "jaarweek"})
+    logger.debug("<<< Exiting jaarweek()", extra={"event.action": "jaarweek"})
     return(jrwk)
     
 def printing():
+    logger.warning(">>> Entering printing()", extra={"event.action": "printing"})
     msg = QMessageBox()
+    logger.debug("printing(): msg → %s", msg, extra={"event.action": "printing"})
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     msg.setIcon(QMessageBox.Information)
     msg.setText('Ogenblik afdrukken wordt gestart!')
     msg.setWindowTitle('Printen Facturen')
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
+    logger.debug("<<< Exiting printing()", extra={"event.action": "printing"})
     msg.exec_()
 
 def printGeg(m_email, filename):
+    logger.warning(">>> Entering printGeg(m_email=%s,filename=%s)", m_email, filename, extra={"event.action": "printGeg", "logrite.filename": filename})
     from sys import platform
     msgBox=QMessageBox()
+    logger.debug("printGeg(m_email=%s,filename=%s): msgBox → %s", m_email, filename, msgBox, extra={"event.action": "printGeg", "logrite.filename": filename})
     msgBox.setStyleSheet("color: black;  background-color: gainsboro")
     msgBox.setWindowIcon(QIcon('./images/logos/logo.jpg')) 
     msgBox.setWindowTitle("Printlijst te factureren werken")
@@ -43,10 +56,13 @@ def printGeg(m_email, filename):
         hoofdMenu(m_email)
     else:
         hoofdMenu(m_email)
+        logger.debug("<<< Exiting printGeg(m_email=%s,filename=%s)", m_email, filename, extra={"event.action": "printGeg", "logrite.filename": filename})
 
 def maakLijst(m_email):
+    logger.warning(">>> Entering maakLijst(m_email=%s)", m_email, extra={"event.action": "maakLijst"})
     from sys import platform
     metadata = MetaData()
+    logger.debug("maakLijst(m_email=%s): metadata → %s", m_email, metadata, extra={"event.action": "maakLijst"})
     werken = Table('werken', metadata,
         Column('werknummerID', Integer(), primary_key=True),
         Column('werkomschrijving', String),
@@ -80,22 +96,35 @@ def maakLijst(m_email):
         Column('startweek', String))
         
     engine = create_engine('postgresql+psycopg2://postgres@localhost/bisystem')
+    logger.debug("maakLijst(m_email=%s): engine → %s", m_email, engine, extra={"event.action": "maakLijst"})
     con = engine.connect()
+    logger.debug("maakLijst(m_email=%s): con → %s", m_email, con, extra={"event.action": "maakLijst"})
     
     sel = select([werken]).order_by(werken.c.werknummerID)
+    logger.debug("maakLijst(m_email=%s): sel → %s", m_email, sel, extra={"event.action": "maakLijst"})
     rpwerken = con.execute(sel)
+    logger.debug("maakLijst(m_email=%s): rpwerken → %s", m_email, rpwerken, extra={"event.action": "maakLijst"})
     rgl = 0
     mblad = 0
+    logger.debug("maakLijst(m_email=%s): mblad → %s", m_email, mblad, extra={"event.action": "maakLijst"})
     for row in rpwerken:
         msom = row[2]
+        logger.debug("maakLijst(m_email=%s): msom → %s", m_email, msom, extra={"event.action": "maakLijst"})
         mktotal=row[3]+row[4]+row[5]+row[6]+row[7]+row[8]+row[9]+row[17]\
          +row[18]+row[19]+row[20]
+        logger.debug("maakLijst(m_email=%s): mktotal → %s", m_email, mktotal, extra={"event.action": "maakLijst"})
         mbetaald = row[13]
+        logger.debug("maakLijst(m_email=%s): mbetaald → %s", m_email, mbetaald, extra={"event.action": "maakLijst"})
         mvgangst = row[11]
+        logger.debug("maakLijst(m_email=%s): mvgangst → %s", m_email, mvgangst, extra={"event.action": "maakLijst"})
         mstatwk = row[12]
+        logger.debug("maakLijst(m_email=%s): mstatwk → %s", m_email, mstatwk, extra={"event.action": "maakLijst"})
         mfact = 0
+        logger.debug("maakLijst(m_email=%s): mfact → %s", m_email, mfact, extra={"event.action": "maakLijst"})
         mwerknr = row[0]
+        logger.debug("maakLijst(m_email=%s): mwerknr → %s", m_email, mwerknr, extra={"event.action": "maakLijst"})
         mmeerwerk = float(row[10])
+        logger.debug("maakLijst(m_email=%s): mmeerwerk → %s", m_email, mmeerwerk, extra={"event.action": "maakLijst"})
         if mvgangst == 'A':
             if mktotal > 0:
                 mvgangst = 'B'
@@ -129,11 +158,13 @@ def maakLijst(m_email):
                     filename = '.\\forms\\Facturen_Werken\\Factuur-Werken_'+str(datetime.datetime.now())[0:10]+'.txt'
                 else:
                     filename = './forms/Facturen_Werken/Factuur-Werken_'+str(datetime.datetime.now())[0:10]+'.txt'
+                    logger.debug("maakLijst(m_email=%s): filename → %s", m_email, filename, extra={"event.action": "maakLijst"})
                 kop =\
             ('Facturen Externe werken Datum: '+str(datetime.datetime.now())[0:10]+' Pagina '+str(mblad)+'\n'+
             "==============================================================================================\n"+
             "Werknummer      Omschrijving    Status   Aanneemsom nog-Factureren  reeds-Betaald     Meerwerk\n"+
             "==============================================================================================\n")
+                logger.debug("maakLijst(m_email=%s): kop → %s", m_email, kop, extra={"event.action": "maakLijst"})
                 if rgl == 0:
                     open(filename, 'w').write(kop)
                 elif rgl%57 == 0:
@@ -143,7 +174,9 @@ def maakLijst(m_email):
                  +str(mvgangst)+' '+str(mstatwk)+' '+"{:>12.2f}"\
                  .format(msom)+'   '+"{:>12.2f}".format(mfact)+'   '+"{:>12.2f}".format(mbetaald)\
                  +' '+"{:>12.2f}".format(mmeerwerk)
+            logger.debug("maakLijst(m_email=%s): gegevens → %s", m_email, gegevens, extra={"event.action": "maakLijst"})
             open(filename,'a').write (gegevens+'\n') 
             rgl += 1
     printGeg(m_email, filename)    
+    logger.debug("<<< Exiting maakLijst(m_email=%s)", m_email, extra={"event.action": "maakLijst"})
         

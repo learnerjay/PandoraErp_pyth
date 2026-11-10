@@ -4,39 +4,52 @@ from PyQt5.QtGui import QFont, QPixmap, QIcon
 from PyQt5.QtWidgets import QDialog, QLabel,\
          QGridLayout, QPushButton, QMessageBox, QComboBox
 from sqlalchemy import (Table, Column, Integer, String, MetaData, create_engine, insert, select)
+import logging
+logger = logging.getLogger(__name__)
 
 def windowSluit(self, m_email):
+    logger.warning(">>> Entering windowSluit(m_email=%s)", m_email, extra={"event.action": "windowSluit"})
     self.close()
     hoofdMenu(m_email)
+    logger.debug("<<< Exiting windowSluit(m_email=%s)", m_email, extra={"event.action": "windowSluit"})
 
 def insGelukt(mclusternr, momschr,m_email):
+    logger.warning(">>> Entering insGelukt(mclusternr=%s,momschr=%s,m_email=%s)", mclusternr, momschr, m_email, extra={"event.action": "insGelukt", "logrite.mclusternr": mclusternr, "logrite.momschr": momschr})
     msg = QMessageBox()
+    logger.debug("insGelukt(mclusternr=%s,momschr=%s,m_email=%s): msg → %s", mclusternr, momschr, m_email, msg, extra={"event.action": "insGelukt", "logrite.mclusternr": mclusternr, "logrite.momschr": momschr})
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     msg.setIcon(QMessageBox.Information)
     msg.setText('Cluster number: '+mclusternr+'\n"'+momschr+'" is created!')
     msg.setFont(QFont("Arial",10))
     msg.setWindowTitle('Create clusters')
+    logger.debug("<<< Exiting insGelukt(mclusternr=%s,momschr=%s,m_email=%s)", mclusternr, momschr, m_email, extra={"event.action": "insGelukt", "logrite.mclusternr": mclusternr, "logrite.momschr": momschr})
     msg.exec_()
 
 def insMislukt(mclusternr, momschr,m_email):
+    logger.warning(">>> Entering insMislukt(mclusternr=%s,momschr=%s,m_email=%s)", mclusternr, momschr, m_email, extra={"event.action": "insMislukt", "logrite.mclusternr": mclusternr, "logrite.momschr": momschr})
     msg = QMessageBox()
+    logger.debug("insMislukt(mclusternr=%s,momschr=%s,m_email=%s): msg → %s", mclusternr, momschr, m_email, msg, extra={"event.action": "insMislukt", "logrite.mclusternr": mclusternr, "logrite.momschr": momschr})
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     msg.setIcon(QMessageBox.Critical)
     msg.setText('Creation of cluster '+mclusternr+'\n"'+momschr+'" has failed!\nCluster number already exist!')
     msg.setFont(QFont("Arial",10))
     msg.setWindowTitle('Create clusters')
+    logger.debug("<<< Exiting insMislukt(mclusternr=%s,momschr=%s,m_email=%s)", mclusternr, momschr, m_email, extra={"event.action": "insMislukt", "logrite.mclusternr": mclusternr, "logrite.momschr": momschr})
     msg.exec_()
 
 def ongKeuze():
+    logger.warning(">>> Entering ongKeuze()", extra={"event.action": "ongKeuze"})
     msg = QMessageBox()
+    logger.debug("ongKeuze(): msg → %s", msg, extra={"event.action": "ongKeuze"})
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     msg.setIcon(QMessageBox.Warning)
     msg.setText('Invalid choice')
     msg.setFont(QFont("Arial",10))
     msg.setWindowTitle('Create clusters')
+    logger.debug("<<< Exiting ongKeuze()", extra={"event.action": "ongKeuze"})
     msg.exec_() 
 
 metadata = MetaData()
@@ -67,6 +80,7 @@ sel = select([cluster_structure_external]).order_by(cluster_structure_external.c
 rpa = con.execute(sel).fetchall()
 
 def kiesCluster(m_email):
+    logger.warning(">>> Entering kiesCluster(m_email=%s)", m_email, extra={"event.action": "kiesCluster"})
     class Widget(QDialog):
         def __init__(self, parent=None):
             super(Widget, self).__init__(parent)
@@ -129,15 +143,22 @@ def kiesCluster(m_email):
             cancelBtn.setStyleSheet("color: black;  background-color: gainsboro")
 
         def k0Changed(self, text):
+            logger.warning(">>> Entering k0Changed(text=%s)", text, extra={"event.action": "k0Changed", "logrite.text": text})
             self.Keuze.setText(text)
+            logger.debug("<<< Exiting k0Changed(text=%s)", text, extra={"event.action": "k0Changed", "logrite.text": text})
             
         def returnk0(self):
+            logger.warning(">>> Entering returnk0()", extra={"event.action": "returnk0"})
+            logger.debug("<<< Exiting returnk0()", extra={"event.action": "returnk0"})
             return self.Keuze.text()
                  
         @staticmethod
         def getData(parent=None):
+            logger.warning(">>> Entering getData(parent=%s)", parent, extra={"event.action": "getData"})
             dialog = Widget(parent)
+            logger.debug("getData(parent=%s): dialog → %s", parent, dialog, extra={"event.action": "getData"})
             dialog.exec_()
+            logger.debug("<<< Exiting getData(parent=%s)", parent, extra={"event.action": "getData"})
             return [dialog.returnk0()]       
 
     window = Widget()
@@ -170,6 +191,7 @@ def kiesCluster(m_email):
             kiesSubClusterJ(keuze, m_email)        
     
 def kiesSubClusterA(keuze, m_email):
+    logger.warning(">>> Entering kiesSubClusterA(keuze=%s,m_email=%s)", keuze, m_email, extra={"event.action": "kiesSubClusterA", "logrite.keuze": keuze})
     class Widget(QDialog):
         def __init__(self, parent=None):
             super(Widget, self).__init__(parent)
@@ -260,6 +282,7 @@ def kiesSubClusterA(keuze, m_email):
     maakCluster(keuze, momschr, m_email)
     
 def kiesSubClusterB(keuze, m_email):
+    logger.warning(">>> Entering kiesSubClusterB(keuze=%s,m_email=%s)", keuze, m_email, extra={"event.action": "kiesSubClusterB", "logrite.keuze": keuze})
     class Widget(QDialog):
         def __init__(self, parent=None):
             super(Widget, self).__init__(parent)
@@ -322,6 +345,23 @@ def kiesSubClusterB(keuze, m_email):
             cancelBtn.setFont(QFont("Arial",10))
             cancelBtn.setFixedWidth(100)
             cancelBtn.setStyleSheet("color: black;  background-color: gainsboro")
+            logger.warning(">>> Entering __init__(parent=%s)", parent, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.Keuze → %s", parent, self.Keuze, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): k0Edit → %s", parent, k0Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): k0Edit → %s", self, parent, k0Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): grid → %s", parent, grid, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): grid → %s", self, parent, grid, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): lbl → %s", parent, lbl, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): lbl → %s", self, parent, lbl, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): pixmap → %s", parent, pixmap, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): pixmap → %s", self, parent, pixmap, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): logo → %s", parent, logo, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): logo → %s", self, parent, logo, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): applyBtn → %s", parent, applyBtn, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): applyBtn → %s", self, parent, applyBtn, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): cancelBtn → %s", parent, cancelBtn, extra={"event.action": "__init__"})
+            logger.debug("<<< Exiting __init__(parent=%s)", parent, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): cancelBtn → %s", self, parent, cancelBtn, extra={"event.action": "__init__"})
            
         def k0Changed(self, text):
             self.Keuze.setText(text)
@@ -351,6 +391,7 @@ def kiesSubClusterB(keuze, m_email):
     maakCluster(keuze, momschr, m_email)
 
 def kiesSubClusterC(keuze, m_email):
+    logger.warning(">>> Entering kiesSubClusterC(keuze=%s,m_email=%s)", keuze, m_email, extra={"event.action": "kiesSubClusterC", "logrite.keuze": keuze})
     class Widget(QDialog):
         def __init__(self, parent=None):
             super(Widget, self).__init__(parent)
@@ -442,6 +483,7 @@ def kiesSubClusterC(keuze, m_email):
     maakCluster(keuze, momschr, m_email)
 
 def kiesSubClusterD(keuze, m_email):
+    logger.warning(">>> Entering kiesSubClusterD(keuze=%s,m_email=%s)", keuze, m_email, extra={"event.action": "kiesSubClusterD", "logrite.keuze": keuze})
     class Widget(QDialog):
         def __init__(self, parent=None):
             super(Widget, self).__init__(parent)
@@ -533,6 +575,7 @@ def kiesSubClusterD(keuze, m_email):
     maakCluster(keuze, momschr, m_email)
 
 def kiesSubClusterE(keuze, m_email):
+    logger.warning(">>> Entering kiesSubClusterE(keuze=%s,m_email=%s)", keuze, m_email, extra={"event.action": "kiesSubClusterE", "logrite.keuze": keuze})
     class Widget(QDialog):
         def __init__(self, parent=None):
             super(Widget, self).__init__(parent)
@@ -624,6 +667,7 @@ def kiesSubClusterE(keuze, m_email):
     maakCluster(keuze, momschr, m_email)
 
 def kiesSubClusterF(keuze, m_email):
+    logger.warning(">>> Entering kiesSubClusterF(keuze=%s,m_email=%s)", keuze, m_email, extra={"event.action": "kiesSubClusterF", "logrite.keuze": keuze})
     class Widget(QDialog):
         def __init__(self, parent=None):
             super(Widget, self).__init__(parent)
@@ -715,6 +759,7 @@ def kiesSubClusterF(keuze, m_email):
     maakCluster(keuze, momschr,m_email)
 
 def kiesSubClusterG(keuze, m_email):
+    logger.warning(">>> Entering kiesSubClusterG(keuze=%s,m_email=%s)", keuze, m_email, extra={"event.action": "kiesSubClusterG", "logrite.keuze": keuze})
     class Widget(QDialog):
         def __init__(self, parent=None):
             super(Widget, self).__init__(parent)
@@ -806,6 +851,7 @@ def kiesSubClusterG(keuze, m_email):
     maakCluster(keuze, momschr, m_email)
 
 def kiesSubClusterH(keuze, m_email):
+    logger.warning(">>> Entering kiesSubClusterH(keuze=%s,m_email=%s)", keuze, m_email, extra={"event.action": "kiesSubClusterH", "logrite.keuze": keuze})
     class Widget(QDialog):
         def __init__(self, parent=None):
             super(Widget, self).__init__(parent)
@@ -898,6 +944,7 @@ def kiesSubClusterH(keuze, m_email):
     maakCluster(keuze, momschr,m_email)
 
 def kiesSubClusterJ(keuze, m_email):
+    logger.warning(">>> Entering kiesSubClusterJ(keuze=%s,m_email=%s)", keuze, m_email, extra={"event.action": "kiesSubClusterJ", "logrite.keuze": keuze})
     class Widget(QDialog):
         def __init__(self, parent=None):
             super(Widget, self).__init__(parent)
@@ -989,26 +1036,36 @@ def kiesSubClusterJ(keuze, m_email):
     maakCluster(keuze, momschr,m_email)
 
 def maakCluster(keuze, momschr, m_email):
+    logger.warning(">>> Entering maakCluster(keuze=%s,momschr=%s,m_email=%s)", keuze, momschr, m_email, extra={"event.action": "maakCluster", "logrite.keuze": keuze, "logrite.momschr": momschr})
     metadata = MetaData()
+    logger.debug("maakCluster(keuze=%s,momschr=%s,m_email=%s): metadata → %s", keuze, momschr, m_email, metadata, extra={"event.action": "maakCluster", "logrite.keuze": keuze, "logrite.momschr": momschr})
     clusters = Table('clusters', metadata,
                      Column('clusterID', String, primary_key=True),
                      Column('omschrijving', String))
 
     engine = create_engine('postgresql+psycopg2://postgres@localhost/bisystem')
+    logger.debug("maakCluster(keuze=%s,momschr=%s,m_email=%s): engine → %s", keuze, momschr, m_email, engine, extra={"event.action": "maakCluster", "logrite.keuze": keuze, "logrite.momschr": momschr})
     con = engine.connect()
+    logger.debug("maakCluster(keuze=%s,momschr=%s,m_email=%s): con → %s", keuze, momschr, m_email, con, extra={"event.action": "maakCluster", "logrite.keuze": keuze, "logrite.momschr": momschr})
 
     try:
         selcllast = select([clusters]).where(clusters.c.clusterID.like(keuze + '%')).order_by(clusters.c.clusterID.desc())
+        logger.debug("maakCluster(keuze=%s,momschr=%s,m_email=%s): selcllast → %s", keuze, momschr, m_email, selcllast, extra={"event.action": "maakCluster", "logrite.keuze": keuze, "logrite.momschr": momschr})
         rpcllast = con.execute(selcllast).first()
+        logger.debug("maakCluster(keuze=%s,momschr=%s,m_email=%s): rpcllast → %s", keuze, momschr, m_email, rpcllast, extra={"event.action": "maakCluster", "logrite.keuze": keuze, "logrite.momschr": momschr})
         mclusternr = keuze + ('00000' + str(int(rpcllast[0][2:7]) + 1))[-5:]
     except:
         mclusternr = keuze + '00001'
+        logger.debug("maakCluster(keuze=%s,momschr=%s,m_email=%s): mclusternr → %s", keuze, momschr, m_email, mclusternr, extra={"event.action": "maakCluster", "logrite.keuze": keuze, "logrite.momschr": momschr})
+        logger.error("Exception in maakCluster(keuze=%s,momschr=%s,m_email=%s)", keuze, momschr, m_email, exc_info=True, extra={"event.action": "maakCluster", "event.category": "process", "logrite.keuze": keuze, "logrite.momschr": momschr})
 
     try:
         inscl = insert(clusters).values(clusterID=mclusternr, omschrijving=momschr)
         con.execute(inscl)
+        logger.debug("maakCluster(keuze=%s,momschr=%s,m_email=%s): inscl → %s", keuze, momschr, m_email, inscl, extra={"event.action": "maakCluster", "logrite.keuze": keuze, "logrite.momschr": momschr})
         insGelukt(mclusternr, momschr, m_email)
         kiesCluster(m_email)
     except:
         insMislukt(mclusternr, momschr,m_email)
+        logger.debug("<<< Exiting maakCluster(keuze=%s,momschr=%s,m_email=%s)", keuze, momschr, m_email, extra={"event.action": "maakCluster", "logrite.keuze": keuze, "logrite.momschr": momschr})
         kiesCluster(m_email)

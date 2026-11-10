@@ -7,119 +7,167 @@ from PyQt5.QtWidgets import QLabel, QPushButton, QCheckBox,\
      QMessageBox, QLineEdit, QGridLayout, QDialog, QComboBox, QWidget, QTableView
 from sqlalchemy import (Table, Column, String,  Integer, Float, MetaData, \
                             ForeignKey, create_engine, insert, select, update, func, and_, or_)
+import logging
+logger = logging.getLogger(__name__)
 
 def refresh(keuze, zoekterm, m_email, self):
+    logger.warning(">>> Entering refresh(keuze=%s,zoekterm=%s,m_email=%s)", keuze, zoekterm, m_email, extra={"event.action": "refresh", "logrite.keuze": keuze, "logrite.zoekterm": zoekterm})
     self.close()
     toonMutaties(keuze,zoekterm, m_email)
+    logger.debug("<<< Exiting refresh(keuze=%s,zoekterm=%s,m_email=%s)", keuze, zoekterm, m_email, extra={"event.action": "refresh", "logrite.keuze": keuze, "logrite.zoekterm": zoekterm})
 
 def _11check(mcontr):
+    logger.warning(">>> Entering _11check(mcontr=%s)", mcontr, extra={"event.action": "_11check", "logrite.mcontr": mcontr})
     number = str(mcontr)
+    logger.debug("_11check(mcontr=%s): number → %s", mcontr, number, extra={"event.action": "_11check", "logrite.mcontr": mcontr})
     total = 0       
     fullnumber = number                       
+    logger.debug("_11check(mcontr=%s): total → %s", mcontr, total, extra={"event.action": "_11check", "logrite.mcontr": mcontr})
     for i in range(8):
         total += int(fullnumber[i])*(9-i)
+        logger.debug("_11check(mcontr=%s): fullnumber → %s", mcontr, fullnumber, extra={"event.action": "_11check", "logrite.mcontr": mcontr})
         checkdigit = total % 11
     if checkdigit == 10:
         checkdigit = 0
     if checkdigit == int(fullnumber[8]):
         return True
     else:
+        logger.debug("<<< Exiting _11check(mcontr=%s)", mcontr, extra={"event.action": "_11check", "logrite.mcontr": mcontr})
         return False
            
 def windowSluit(self, m_email):
+    logger.warning(">>> Entering windowSluit(m_email=%s)", m_email, extra={"event.action": "windowSluit"})
     self.close()
     hoofdMenu(m_email)
+    logger.debug("<<< Exiting windowSluit(m_email=%s)", m_email, extra={"event.action": "windowSluit"})
     
 def invoerOK():
+    logger.warning(">>> Entering invoerOK()", extra={"event.action": "invoerOK"})
     msg = QMessageBox()
+    logger.debug("invoerOK(): msg → %s", msg, extra={"event.action": "invoerOK"})
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setIcon(QMessageBox.Information)
     msg.setText('Insert successful!')
     msg.setWindowTitle('Entry')
+    logger.debug("<<< Exiting invoerOK()", extra={"event.action": "invoerOK"})
     msg.exec_()
     
 def foutCombinatie():
+        logger.warning(">>> Entering foutCombinatie()", extra={"event.action": "foutCombinatie"})
         msg = QMessageBox()
+        logger.debug("foutCombinatie(): msg → %s", msg, extra={"event.action": "foutCombinatie"})
         msg.setStyleSheet("color: black;  background-color: gainsboro")
         msg.setIcon(QMessageBox.Warning)
         msg.setText('The combination of purchase order,\ncost type and order line\n does not occur!')
         msg.setWindowTitle('Entry incorrect')
+        logger.debug("<<< Exiting foutCombinatie()", extra={"event.action": "foutCombinatie"})
         msg.exec_()
        
 def foutInkooporder():
+        logger.warning(">>> Entering foutInkooporder()", extra={"event.action": "foutInkooporder"})
         msg = QMessageBox()
+        logger.debug("foutInkooporder(): msg → %s", msg, extra={"event.action": "foutInkooporder"})
         msg.setStyleSheet("color: black;  background-color: gainsboro")
         msg.setIcon(QMessageBox.Critical)
         msg.setText('Incorrect purchase order\nopted!')
         msg.setWindowTitle('Entry incorrect')
+        logger.debug("<<< Exiting foutInkooporder()", extra={"event.action": "foutInkooporder"})
         msg.exec_()
                
 def foutWerk():
+        logger.warning(">>> Entering foutWerk()", extra={"event.action": "foutWerk"})
         msg = QMessageBox()
+        logger.debug("foutWerk(): msg → %s", msg, extra={"event.action": "foutWerk"})
         msg.setStyleSheet("color: black;  background-color: gainsboro")
         msg.setIcon(QMessageBox.Critical)
         msg.setText('Incorrect work number\nopted!')
         msg.setWindowTitle('Entry incorrect')
+        logger.debug("<<< Exiting foutWerk()", extra={"event.action": "foutWerk"})
         msg.exec_()
  
 def geenSoort():
+    logger.warning(">>> Entering geenSoort()", extra={"event.action": "geenSoort"})
     msg = QMessageBox()
+    logger.debug("geenSoort(): msg → %s", msg, extra={"event.action": "geenSoort"})
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setIcon(QMessageBox.Warning)
     msg.setText('No cost type chosen')
     msg.setWindowTitle('Entry incorrect')
+    logger.debug("<<< Exiting geenSoort()", extra={"event.action": "geenSoort"})
     msg.exec_()
        
 def geenRegel():
+    logger.warning(">>> Entering geenRegel()", extra={"event.action": "geenRegel"})
     msg = QMessageBox()
+    logger.debug("geenRegel(): msg → %s", msg, extra={"event.action": "geenRegel"})
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setIcon(QMessageBox.Warning)
     msg.setText('No line number entered')
     msg.setWindowTitle('Entry incorrect')
+    logger.debug("<<< Exiting geenRegel()", extra={"event.action": "geenRegel"})
     msg.exec_()
     
 def geenRecord():
+    logger.warning(">>> Entering geenRecord()", extra={"event.action": "geenRecord"})
     msg = QMessageBox()
+    logger.debug("geenRecord(): msg → %s", msg, extra={"event.action": "geenRecord"})
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     msg.setIcon(QMessageBox.Warning)
     msg.setText('No record found\ncreate another selection please!')
     msg.setWindowTitle('Publishing/printing materials')
+    logger.debug("<<< Exiting geenRecord()", extra={"event.action": "geenRecord"})
     msg.exec_() 
   
 def geenKeuze():
+    logger.warning(">>> Entering geenKeuze()", extra={"event.action": "geenKeuze"})
     msg = QMessageBox()
+    logger.debug("geenKeuze(): msg → %s", msg, extra={"event.action": "geenKeuze"})
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setIcon(QMessageBox.Warning)
     msg.setText('No cost type\nchoice made')
     msg.setWindowTitle('Entry incorrect')
+    logger.debug("<<< Exiting geenKeuze()", extra={"event.action": "geenKeuze"})
     msg.exec_()    
     
 def werkGereed():
+    logger.warning(">>> Entering werkGereed()", extra={"event.action": "werkGereed"})
     msg = QMessageBox()
+    logger.debug("werkGereed(): msg → %s", msg, extra={"event.action": "werkGereed"})
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setIcon(QMessageBox.Warning)
     msg.setText('Work number is unsubscribed,\n bookings no longer possible!')
     msg.setWindowTitle('Data!')
+    logger.debug("<<< Exiting werkGereed()", extra={"event.action": "werkGereed"})
     msg.exec_()
     
 def ongInvoer():
+    logger.warning(">>> Entering ongInvoer()", extra={"event.action": "ongInvoer"})
     msg = QMessageBox()
+    logger.debug("ongInvoer(): msg → %s", msg, extra={"event.action": "ongInvoer"})
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     msg.setIcon(QMessageBox.Warning)
     msg.setText('Please re-enter incorrect input\nsearchterm!')
     msg.setWindowTitle('Request articles')
+    logger.debug("<<< Exiting ongInvoer()", extra={"event.action": "ongInvoer"})
     msg.exec_()
     
 def jaarweek():
+    logger.warning(">>> Entering jaarweek()", extra={"event.action": "jaarweek"})
     dt = datetime.datetime.now()
+    logger.debug("jaarweek(): dt → %s", dt, extra={"event.action": "jaarweek"})
     week = str('0'+str(dt.isocalendar()[1]))[-2:]
+    logger.debug("jaarweek(): week → %s", week, extra={"event.action": "jaarweek"})
     jaar = str(dt.isocalendar()[0])
     jrwk = jaar+week
+    logger.debug("jaarweek(): jrwk → %s", jrwk, extra={"event.action": "jaarweek"})
+    logger.debug("jaarweek(): jaar → %s", jaar, extra={"event.action": "jaarweek"})
+    logger.debug("<<< Exiting jaarweek()", extra={"event.action": "jaarweek"})
     return(jrwk)
     
 def mutatieKeuze(m_email):
+    logger.warning(">>> Entering mutatieKeuze(m_email=%s)", m_email, extra={"event.action": "mutatieKeuze"})
     class Widget(QDialog):
         def __init__(self, parent=None):
             super(Widget, self).__init__(parent)
@@ -189,17 +237,26 @@ def mutatieKeuze(m_email):
             cancelBtn.setFont(QFont("Arial",10))
             cancelBtn.setFixedWidth(100)
             cancelBtn.setStyleSheet("color: black;  background-color: gainsboro")
+            logger.debug("<<< Exiting __init__(data_list=%s,header=%s)", data_list, header, extra={"event.action": "__init__", "logrite.data_list": data_list})
                 
         def k0Changed(self, text):
+            logger.warning(">>> Entering k0Changed(text=%s)", text, extra={"event.action": "k0Changed", "logrite.text": text})
             self.Keuze.setText(text)
+            logger.debug("<<< Exiting k0Changed(text=%s)", text, extra={"event.action": "k0Changed", "logrite.text": text})
             
         def zktermChanged(self, text):
+            logger.warning(">>> Entering zktermChanged(text=%s)", text, extra={"event.action": "zktermChanged", "logrite.text": text})
             self.Zoekterm.setText(text)
+            logger.debug("<<< Exiting zktermChanged(text=%s)", text, extra={"event.action": "zktermChanged", "logrite.text": text})
  
         def returnk0(self):
+            logger.warning(">>> Entering returnk0()", extra={"event.action": "returnk0"})
+            logger.debug("<<< Exiting returnk0()", extra={"event.action": "returnk0"})
             return self.Keuze.text()
         
         def returnzkterm(self):
+            logger.warning(">>> Entering returnzkterm()", extra={"event.action": "returnzkterm"})
+            logger.debug("<<< Exiting returnzkterm()", extra={"event.action": "returnzkterm"})
             return self.Zoekterm.text()
         
         @staticmethod
@@ -223,8 +280,10 @@ def mutatieKeuze(m_email):
     toonMutaties(keuze, zoekterm, m_email)
 
 def toonMutaties(keuze,zoekterm, m_email):
+    logger.warning(">>> Entering toonMutaties(keuze=%s,zoekterm=%s,m_email=%s)", keuze, zoekterm, m_email, extra={"event.action": "toonMutaties", "logrite.keuze": keuze, "logrite.zoekterm": zoekterm})
     import validZt
     metadata = MetaData()
+    logger.debug("toonMutaties(keuze=%s,zoekterm=%s,m_email=%s): metadata → %s", keuze, zoekterm, m_email, metadata, extra={"event.action": "toonMutaties", "logrite.keuze": keuze, "logrite.zoekterm": zoekterm})
     orders_inkoop_diensten = Table('orders_inkoop_diensten', metadata,
         Column('orddienstlevID', Integer, primary_key=True),
         Column('werknummerID', None, ForeignKey('werken.werknummerID')),
@@ -236,6 +295,7 @@ def toonMutaties(keuze,zoekterm, m_email):
         Column('meerminderwerk', Integer),
         Column('aanneemsom', Float),
         Column('regel', Integer))
+    logger.error("Exception in toonMutaties(keuze=%s,zoekterm=%s,m_email=%s)", keuze, zoekterm, m_email, exc_info=True, extra={"event.action": "toonMutaties", "event.category": "process", "logrite.keuze": keuze, "logrite.zoekterm": zoekterm})
     werken = Table('werken', metadata,
         Column('werknummerID', Integer(), primary_key=True),
         Column('werkomschrijving', String(50)))
@@ -248,7 +308,9 @@ def toonMutaties(keuze,zoekterm, m_email):
         Column('rechtsvorm', String))
                     
     engine = create_engine('postgresql://postgres@localhost/bisystem')
+    logger.debug("toonMutaties(keuze=%s,zoekterm=%s,m_email=%s): engine → %s", keuze, zoekterm, m_email, engine, extra={"event.action": "toonMutaties", "logrite.keuze": keuze, "logrite.zoekterm": zoekterm})
     conn = engine.connect()
+    logger.debug("toonMutaties(keuze=%s,zoekterm=%s,m_email=%s): conn → %s", keuze, zoekterm, m_email, conn, extra={"event.action": "toonMutaties", "logrite.keuze": keuze, "logrite.zoekterm": zoekterm})
    
     if keuze == 1:
         sel = select([orders_inkoop_diensten, werken, orders_inkoop, leveranciers])\
@@ -301,11 +363,14 @@ def toonMutaties(keuze,zoekterm, m_email):
     if conn.execute(sel).fetchone():
         rp = conn.execute(sel)
     else:
+        logger.debug("toonMutaties(keuze=%s,zoekterm=%s,m_email=%s): rp → %s", keuze, zoekterm, m_email, rp, extra={"event.action": "toonMutaties", "logrite.keuze": keuze, "logrite.zoekterm": zoekterm})
         geenRecord()
         mutatieKeuze(m_email)
        
     class MyWindow(QDialog):
+        logger.debug("<<< Exiting toonMutaties(keuze=%s,zoekterm=%s,m_email=%s)", keuze, zoekterm, m_email, extra={"event.action": "toonMutaties", "logrite.keuze": keuze, "logrite.zoekterm": zoekterm})
         def __init__(self, data_list, header, *args):
+            logger.warning(">>> Entering __init__(data_list=%s,header=%s)", data_list, header, extra={"event.action": "__init__", "logrite.data_list": data_list})
             QWidget.__init__(self, *args,)
             self.setWindowTitle('Mutate costs services')
             self.setWindowIcon(QIcon('./images/logos/logo.jpg')) 
@@ -314,10 +379,18 @@ def toonMutaties(keuze,zoekterm, m_email):
             self.setFont(QFont('Arial', 10))
             
             grid = QGridLayout()
+            logger.debug("__init__(data_list=%s,header=%s): grid → %s", data_list, header, grid, extra={"event.action": "__init__", "logrite.data_list": data_list})
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): grid → %s", self, data_list, header, grid, extra={"event.action": "__init__", "logrite.data_list": data_list})
             grid.setSpacing(20)
             
             table_model = MyTableModel(self, data_list, header)
+            logger.debug("__init__(data_list=%s,header=%s): table_model → %s", data_list, header, table_model, extra={"event.action": "__init__", "logrite.data_list": data_list})
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): table_model → %s", self, data_list, header, table_model, extra={"event.action": "__init__", "logrite.data_list": data_list})
+            logger.debug("__init__(data_list=%s,header=%s): font → %s", data_list, header, font, extra={"event.action": "__init__", "logrite.data_list": data_list})
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): font → %s", self, data_list, header, font, extra={"event.action": "__init__", "logrite.data_list": data_list})
             table_view = QTableView()
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): table_view → %s", self, data_list, header, table_view, extra={"event.action": "__init__", "logrite.data_list": data_list})
+            logger.debug("__init__(data_list=%s,header=%s): table_view → %s", data_list, header, table_view, extra={"event.action": "__init__", "logrite.data_list": data_list})
             table_view.setModel(table_model)
             font = QFont("Arial", 10)
             table_view.setFont(font)
@@ -329,16 +402,24 @@ def toonMutaties(keuze,zoekterm, m_email):
             grid.addWidget(table_view, 0, 0, 1, 16)
             
             lbl = QLabel()
+            logger.debug("__init__(data_list=%s,header=%s): lbl → %s", data_list, header, lbl, extra={"event.action": "__init__", "logrite.data_list": data_list})
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): lbl → %s", self, data_list, header, lbl, extra={"event.action": "__init__", "logrite.data_list": data_list})
             pixmap = QPixmap('./images/logos/verbinding.jpg')
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): pixmap → %s", self, data_list, header, pixmap, extra={"event.action": "__init__", "logrite.data_list": data_list})
+            logger.debug("__init__(data_list=%s,header=%s): pixmap → %s", data_list, header, pixmap, extra={"event.action": "__init__", "logrite.data_list": data_list})
             lbl.setPixmap(pixmap)
             grid.addWidget(lbl, 1, 0, 1, 2)
        
             logo = QLabel()
+            logger.debug("__init__(data_list=%s,header=%s): logo → %s", data_list, header, logo, extra={"event.action": "__init__", "logrite.data_list": data_list})
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): logo → %s", self, data_list, header, logo, extra={"event.action": "__init__", "logrite.data_list": data_list})
             pixmap = QPixmap('./images/logos/logo.jpg')
             logo.setPixmap(pixmap)
             grid.addWidget(logo , 1, 15, 1, 1, Qt.AlignRight)
             
             freshBtn = QPushButton('Refresh')
+            logger.debug("__init__(data_list=%s,header=%s): freshBtn → %s", data_list, header, freshBtn, extra={"event.action": "__init__", "logrite.data_list": data_list})
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): freshBtn → %s", self, data_list, header, freshBtn, extra={"event.action": "__init__", "logrite.data_list": data_list})
             freshBtn.clicked.connect(lambda: refresh(keuze, zoekterm, m_email, self))
 
             freshBtn.setFont(QFont("Arial",10))
@@ -348,6 +429,8 @@ def toonMutaties(keuze,zoekterm, m_email):
             grid.addWidget(freshBtn, 1, 14, 1, 1, Qt.AlignRight)
         
             sluitBtn = QPushButton('Close')
+            logger.debug("__init__(data_list=%s,header=%s): sluitBtn → %s", data_list, header, sluitBtn, extra={"event.action": "__init__", "logrite.data_list": data_list})
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): sluitBtn → %s", self, data_list, header, sluitBtn, extra={"event.action": "__init__", "logrite.data_list": data_list})
             sluitBtn.clicked.connect(self.close)
 
             sluitBtn.setFont(QFont("Arial",10))
@@ -364,15 +447,76 @@ def toonMutaties(keuze,zoekterm, m_email):
     
     class MyTableModel(QAbstractTableModel):
         def __init__(self, parent, mylist, header, *args):
+            logger.warning(">>> Entering __init__(parent=%s,mylist=%s,header=%s)", parent, mylist, header, extra={"event.action": "__init__", "logrite.mylist": mylist})
+            logger.debug("__init__(self=%s,parent=%s,mylist=%s,header=%s): self.mylist → %s", self, parent, mylist, header, self.mylist, extra={"event.action": "__init__", "logrite.mylist": mylist})
+            logger.debug("__init__(self=%s,parent=%s,mylist=%s,header=%s): self.header → %s", self, parent, mylist, header, self.header, extra={"event.action": "__init__", "logrite.mylist": mylist})
             QAbstractTableModel.__init__(self, parent, *args)
+            logger.debug("<<< Exiting __init__(parent=%s,mylist=%s,header=%s)", parent, mylist, header, extra={"event.action": "__init__", "logrite.mylist": mylist})
             self.mylist = mylist
+            logger.warning(">>> Entering __init__(parent=%s)", parent, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.Werknummer → %s", parent, self.Werknummer, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): zkwerknEdit → %s", parent, zkwerknEdit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): zkwerknEdit → %s", self, parent, zkwerknEdit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.Inkoopordernummer → %s", parent, self.Inkoopordernummer, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): q1Edit → %s", parent, q1Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): q1Edit → %s", self, parent, q1Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.Soort → %s", parent, self.Soort, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): k0Edit → %s", parent, k0Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): k0Edit → %s", self, parent, k0Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.Bedrag → %s", parent, self.Bedrag, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): q2Edit → %s", parent, q2Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): q2Edit → %s", self, parent, q2Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): reg_ex → %s", parent, reg_ex, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): reg_ex → %s", self, parent, reg_ex, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): input_validator → %s", parent, input_validator, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): input_validator → %s", self, parent, input_validator, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.Regel → %s", parent, self.Regel, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): q3Edit → %s", parent, q3Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): q3Edit → %s", self, parent, q3Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.Omschrijving → %s", parent, self.Omschrijving, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): q4Edit → %s", parent, q4Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): q4Edit → %s", self, parent, q4Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): grid → %s", parent, grid, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): grid → %s", self, parent, grid, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): lbl → %s", parent, lbl, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): lbl → %s", self, parent, lbl, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): pixmap → %s", parent, pixmap, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): pixmap → %s", self, parent, pixmap, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): logo → %s", parent, logo, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): logo → %s", self, parent, logo, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): lblt → %s", parent, lblt, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): lblt → %s", self, parent, lblt, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): lbl1 → %s", parent, lbl1, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): lbl1 → %s", self, parent, lbl1, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): lbl2 → %s", parent, lbl2, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): lbl2 → %s", self, parent, lbl2, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): q1 → %s", parent, q1, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): q1 → %s", self, parent, q1, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): lbl3 → %s", parent, lbl3, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): lbl3 → %s", self, parent, lbl3, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): lbl4 → %s", parent, lbl4, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): lbl4 → %s", self, parent, lbl4, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): lbl5 → %s", parent, lbl5, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): lbl5 → %s", self, parent, lbl5, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): lbl6 → %s", parent, lbl6, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): lbl6 → %s", self, parent, lbl6, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): applyBtn → %s", parent, applyBtn, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): applyBtn → %s", self, parent, applyBtn, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): cBox → %s", parent, cBox, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): cBox → %s", self, parent, cBox, extra={"event.action": "__init__"})
+            logger.debug("<<< Exiting __init__(parent=%s)", parent, extra={"event.action": "__init__"})
             self.header = header
         def rowCount(self, parent):
+            logger.warning(">>> Entering rowCount(parent=%s)", parent, extra={"event.action": "rowCount"})
             return len(self.mylist)
         def columnCount(self, parent):
+            logger.warning(">>> Entering columnCount(parent=%s)", parent, extra={"event.action": "columnCount"})
             return len(self.mylist[0])
         def data(self, index, role):
+            logger.warning(">>> Entering data(index=%s,role=%s)", index, role, extra={"event.action": "data", "logrite.index": index, "logrite.role": role})
             veld = self.mylist[index.row()][index.column()]
+            logger.debug("data(index=%s,role=%s): veld → %s", index, role, veld, extra={"event.action": "data", "logrite.index": index, "logrite.role": role})
+            logger.debug("data(self=%s,index=%s,role=%s): veld → %s", self, index, role, veld, extra={"event.action": "data", "logrite.index": index, "logrite.role": role})
             if not index.isValid():
                 return None
             elif role == Qt.TextAlignmentRole and (type(veld) == float or type(veld) == int):
@@ -382,10 +526,13 @@ def toonMutaties(keuze,zoekterm, m_email):
             if type(veld) == float:
                 return '{:12.2f}'.format(veld)
             else:
+                logger.debug("<<< Exiting data(index=%s,role=%s)", index, role, extra={"event.action": "data", "logrite.index": index, "logrite.role": role})
                 return veld
         def headerData(self, col, orientation, role):
+            logger.warning(">>> Entering headerData(col=%s,orientation=%s,role=%s)", col, orientation, role, extra={"event.action": "headerData", "logrite.col": col, "logrite.orientation": orientation, "logrite.role": role})
             if orientation == Qt.Horizontal and role == Qt.DisplayRole:
                 return self.header[col]
+            logger.debug("<<< Exiting headerData(col=%s,orientation=%s,role=%s)", col, orientation, role, extra={"event.action": "headerData", "logrite.col": col, "logrite.orientation": orientation, "logrite.role": role})
             return None
   
     header = ['Mutation number','Work number', 'Order PurchaseID','Amount booking', 'Booking date', 'Category',\
@@ -397,7 +544,9 @@ def toonMutaties(keuze,zoekterm, m_email):
         data_list += [(row)] 
     
     def dienstenMut(idx):
+        logger.warning(">>> Entering dienstenMut(idx=%s)", idx, extra={"event.action": "dienstenMut", "logrite.idx": idx})
         mordinkdnst = idx.data()
+        logger.debug("dienstenMut(idx=%s): mordinkdnst → %s", idx, mordinkdnst, extra={"event.action": "dienstenMut", "logrite.idx": idx})
         metadata = MetaData()
         orders_inkoop_diensten = Table('orders_inkoop_diensten', metadata,
             Column('orddienstlevID', Integer, primary_key=True),
@@ -410,22 +559,32 @@ def toonMutaties(keuze,zoekterm, m_email):
             Column('meerminderwerk', Integer),
             Column('aanneemsom', Float),
             Column('regel', Integer))
+        logger.debug("dienstenMut(idx=%s): metadata → %s", idx, metadata, extra={"event.action": "dienstenMut", "logrite.idx": idx})
         
         engine = create_engine('postgresql+psycopg2://postgres@localhost/bisystem')
+        logger.debug("dienstenMut(idx=%s): engine → %s", idx, engine, extra={"event.action": "dienstenMut", "logrite.idx": idx})
         con = engine.connect()
         if idx.column() == 0:
+            logger.debug("dienstenMut(idx=%s): con → %s", idx, con, extra={"event.action": "dienstenMut", "logrite.idx": idx})
             selorddnst = select([orders_inkoop_diensten]).where(orders_inkoop_diensten.c.\
             orddienstlevID == mordinkdnst)
             rporddnst = con.execute(selorddnst).first() 
+            logger.debug("dienstenMut(idx=%s): selorddnst → %s", idx, selorddnst, extra={"event.action": "dienstenMut", "logrite.idx": idx})
             mwerknr = rporddnst[1]
             msoort = rporddnst[5]
+            logger.debug("dienstenMut(idx=%s): rporddnst → %s", idx, rporddnst, extra={"event.action": "dienstenMut", "logrite.idx": idx})
             momschr = rporddnst[6]
             mregel = rporddnst[9]
+            logger.debug("dienstenMut(idx=%s): mwerknr → %s", idx, mwerknr, extra={"event.action": "dienstenMut", "logrite.idx": idx})
+            logger.debug("dienstenMut(idx=%s): msoort → %s", idx, msoort, extra={"event.action": "dienstenMut", "logrite.idx": idx})
+            logger.debug("dienstenMut(idx=%s): momschr → %s", idx, momschr, extra={"event.action": "dienstenMut", "logrite.idx": idx})
+            logger.debug("dienstenMut(idx=%s): mregel → %s", idx, mregel, extra={"event.action": "dienstenMut", "logrite.idx": idx})
             minkordernr = rporddnst[2]
           
             class Widget(QDialog):
                 def __init__(self, parent=None):
                     super(Widget, self).__init__(parent)
+                    logger.debug("<<< Exiting dienstenMut(idx=%s)", idx, extra={"event.action": "dienstenMut", "logrite.idx": idx})
                     self.setWindowTitle("Mutate costs services")
                     self.setWindowIcon(QIcon('./images/logos/logo.jpg'))
             
@@ -540,33 +699,51 @@ def toonMutaties(keuze,zoekterm, m_email):
                     cBox = QCheckBox('     More/less work')
                     cBox.stateChanged.connect(self.cBoxChanged)
                     grid.addWidget(cBox, 6, 2)
+                    logger.debug("<<< Exiting __init__(parent=%s)", parent, extra={"event.action": "__init__"})
                       
                 def q2Changed(self,text):
+                    logger.warning(">>> Entering q2Changed(text=%s)", text, extra={"event.action": "q2Changed", "logrite.text": text})
                     self.Bedrag.setText(text)
+                    logger.debug("<<< Exiting q2Changed(text=%s)", text, extra={"event.action": "q2Changed", "logrite.text": text})
                     
                 def q4Changed(self,text):
+                    logger.warning(">>> Entering q4Changed(text=%s)", text, extra={"event.action": "q4Changed", "logrite.text": text})
                     self.Omschrijving.setText(text)
+                    logger.debug("<<< Exiting q4Changed(text=%s)", text, extra={"event.action": "q4Changed", "logrite.text": text})
                     
                 state = False 
                 def cBoxChanged(self, state):
+                    logger.warning(">>> Entering cBoxChanged(state=%s)", state, extra={"event.action": "cBoxChanged", "logrite.state": state})
+                    logger.debug("cBoxChanged(state=%s): self.state → %s", state, self.state, extra={"event.action": "cBoxChanged", "logrite.state": state})
+                    logger.debug("cBoxChanged(self=%s,state=%s): self.state → %s", self, state, self.state, extra={"event.action": "cBoxChanged", "logrite.state": state})
                     if state == Qt.Checked :
                         self.state = True
                     if state == Qt.Unchecked:
+                        logger.debug("<<< Exiting cBoxChanged(state=%s)", state, extra={"event.action": "cBoxChanged", "logrite.state": state})
                         self.state = False
                                            
                 def returnq2(self):
+                    logger.warning(">>> Entering returnq2()", extra={"event.action": "returnq2"})
+                    logger.debug("<<< Exiting returnq2()", extra={"event.action": "returnq2"})
                     return self.Bedrag.text()
         
                 def returnq4(self):
+                    logger.warning(">>> Entering returnq4()", extra={"event.action": "returnq4"})
+                    logger.debug("<<< Exiting returnq4()", extra={"event.action": "returnq4"})
                     return self.Omschrijving.text()
                            
                 def returncBox(self):
+                    logger.warning(">>> Entering returncBox()", extra={"event.action": "returncBox"})
+                    logger.debug("<<< Exiting returncBox()", extra={"event.action": "returncBox"})
                     return self.state
                                  
                 @staticmethod
                 def getData(parent=None):
+                    logger.warning(">>> Entering getData(parent=%s)", parent, extra={"event.action": "getData"})
                     dialog = Widget(parent)
+                    logger.debug("getData(parent=%s): dialog → %s", parent, dialog, extra={"event.action": "getData"})
                     dialog.exec_()
+                    logger.debug("<<< Exiting getData(parent=%s)", parent, extra={"event.action": "getData"})
                     return [dialog.returnq2(), dialog.returnq4(), dialog.returncBox()]
                  
             window = Widget()

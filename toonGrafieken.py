@@ -9,34 +9,50 @@ from PyQt5.QtWidgets import QDialog, QLabel, QLineEdit, QGridLayout,\
         QPushButton, QMessageBox, QComboBox
 from sqlalchemy import (Table, Column, Integer, String, MetaData,\
                         create_engine, Float, select, and_)
+import logging
+logger = logging.getLogger(__name__)
 
 # colorpicker hex for graph line colors https://colors-picker.com/hex-color-picker/
 
 def jaarweek():
+    logger.warning(">>> Entering jaarweek()", extra={"event.action": "jaarweek"})
     dt = datetime.datetime.now()
+    logger.debug("jaarweek(): dt → %s", dt, extra={"event.action": "jaarweek"})
     week = str('0'+str(dt.isocalendar()[1]))[-2:]
+    logger.debug("jaarweek(): week → %s", week, extra={"event.action": "jaarweek"})
     jaar = str(dt.isocalendar()[0])
     jrwk = jaar+week
+    logger.debug("jaarweek(): jrwk → %s", jrwk, extra={"event.action": "jaarweek"})
+    logger.debug("jaarweek(): jaar → %s", jaar, extra={"event.action": "jaarweek"})
+    logger.debug("<<< Exiting jaarweek()", extra={"event.action": "jaarweek"})
     return(jrwk)
     
 def windowSluit(self, m_email):
+    logger.warning(">>> Entering windowSluit(m_email=%s)", m_email, extra={"event.action": "windowSluit"})
     self.close()
     hoofdMenu(m_email)
+    logger.debug("<<< Exiting windowSluit(m_email=%s)", m_email, extra={"event.action": "windowSluit"})
     
 def sluit(self, m_email):
+    logger.warning(">>> Entering sluit(m_email=%s)", m_email, extra={"event.action": "sluit"})
     self.close()
     zoekwk(m_email)   
+    logger.debug("<<< Exiting sluit(m_email=%s)", m_email, extra={"event.action": "sluit"})
     
 def ongInvoer():
+    logger.warning(">>> Entering ongInvoer()", extra={"event.action": "ongInvoer"})
     msg = QMessageBox()
+    logger.debug("ongInvoer(): msg → %s", msg, extra={"event.action": "ongInvoer"})
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setIcon(QMessageBox.Warning)
     msg.setText('Please re-enter incorrect input\nsearch term!')
     msg.setWindowTitle('Progress charts')
+    logger.debug("<<< Exiting ongInvoer()", extra={"event.action": "ongInvoer"})
     msg.exec_()
  
 def zoekwk(m_email):
+    logger.warning(">>> Entering zoekwk(m_email=%s)", m_email, extra={"event.action": "zoekwk"})
     class Widget(QDialog):
         def __init__(self, parent=None):
             super(Widget, self).__init__(parent)
@@ -113,23 +129,101 @@ def zoekwk(m_email):
             sluitBtn.setFont(QFont("Arial", 10))
             sluitBtn.setFixedWidth(100)
             sluitBtn.setStyleSheet("color: black;  background-color: gainsboro")
+            logger.warning(">>> Entering __init__(parent=%s)", parent, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): selres → %s", parent, selres, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): resultaten → %s", parent, resultaten, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): grid → %s", parent, grid, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): grid → %s", self, parent, grid, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): metadata → %s", parent, metadata, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): metadata → %s", self, parent, metadata, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): engine → %s", parent, engine, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): engine → %s", self, parent, engine, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): con → %s", parent, con, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): con → %s", self, parent, con, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): selpar → %s", parent, selpar, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): selpar → %s", self, parent, selpar, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): rppar → %s", parent, rppar, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): rppar → %s", self, parent, rppar, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): bo_incr → %s", self, parent, bo_incr, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): bw_incr → %s", self, parent, bw_incr, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): jaar → %s", self, parent, jaar, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): rpres → %s", parent, rpres, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): rpres → %s", self, parent, rpres, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): t1 → %s", parent, t1, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): t2 → %s", parent, t2, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): t3 → %s", parent, t3, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): ysch → %s", self, parent, ysch, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): y3 → %s", parent, y3, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): y3val → %s", self, parent, y3val, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): x1 → %s", parent, x1, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): xval1 → %s", self, parent, xval1, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): y4 → %s", parent, y4, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): y4val → %s", self, parent, y4val, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): x2 → %s", parent, x2, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): xval2 → %s", self, parent, xval2, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): x → %s", parent, x, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): y1 → %s", parent, y1, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): y2 → %s", parent, y2, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): idx → %s", self, parent, idx, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): yval1 → %s", self, parent, yval1, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): yval2 → %s", self, parent, yval2, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): series1 → %s", parent, series1, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): series1 → %s", self, parent, series1, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): series2 → %s", parent, series2, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): series2 → %s", self, parent, series2, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): chart → %s", parent, chart, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): chart → %s", self, parent, chart, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): font → %s", parent, font, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): font → %s", self, parent, font, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): axisX → %s", parent, axisX, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): axisX → %s", self, parent, axisX, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): axisY → %s", parent, axisY, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): axisY → %s", self, parent, axisY, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): axisPen → %s", parent, axisPen, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): axisPen → %s", self, parent, axisPen, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): axisBrush → %s", parent, axisBrush, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): axisBrush → %s", self, parent, axisBrush, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): Lfont → %s", parent, Lfont, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): Lfont → %s", self, parent, Lfont, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): Dfont → %s", parent, Dfont, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): Dfont → %s", self, parent, Dfont, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.chartView → %s", parent, self.chartView, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): chartView → %s", self, parent, chartView, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): buttonPreview → %s", parent, buttonPreview, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): buttonPreview → %s", self, parent, buttonPreview, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): buttonPrint → %s", parent, buttonPrint, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): buttonPrint → %s", self, parent, buttonPrint, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): buttonSluit → %s", parent, buttonSluit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): buttonSluit → %s", self, parent, buttonSluit, extra={"event.action": "__init__"})
+            logger.debug("<<< Exiting __init__(parent=%s)", parent, extra={"event.action": "__init__"})
           
         def kChanged(self, text):
+            logger.warning(">>> Entering kChanged(text=%s)", text, extra={"event.action": "kChanged", "logrite.text": text})
             self.Keuze.setText(text)
+            logger.debug("<<< Exiting kChanged(text=%s)", text, extra={"event.action": "kChanged", "logrite.text": text})
             
         def zktermChanged(self, text):
+            logger.warning(">>> Entering zktermChanged(text=%s)", text, extra={"event.action": "zktermChanged", "logrite.text": text})
             self.Zoekterm.setText(text)
+            logger.debug("<<< Exiting zktermChanged(text=%s)", text, extra={"event.action": "zktermChanged", "logrite.text": text})
  
         def returnk(self):
+            logger.warning(">>> Entering returnk()", extra={"event.action": "returnk"})
+            logger.debug("<<< Exiting returnk()", extra={"event.action": "returnk"})
             return self.Keuze.text()
         
         def returnzkterm(self):
+            logger.warning(">>> Entering returnzkterm()", extra={"event.action": "returnzkterm"})
+            logger.debug("<<< Exiting returnzkterm()", extra={"event.action": "returnzkterm"})
             return self.Zoekterm.text()
         
         @staticmethod
         def getData(parent=None):
+            logger.warning(">>> Entering getData(parent=%s)", parent, extra={"event.action": "getData"})
             dialog = Widget(parent)
+            logger.debug("getData(parent=%s): dialog → %s", parent, dialog, extra={"event.action": "getData"})
             dialog.exec_()
+            logger.debug("<<< Exiting getData(parent=%s)", parent, extra={"event.action": "getData"})
             return [dialog.returnk(),dialog.returnzkterm()]       
 
     window = Widget()
@@ -150,6 +244,7 @@ def zoekwk(m_email):
         zoekwk(m_email)
         
 def printGrafiek(keuze, jrwk, m_email):
+    logger.warning(">>> Entering printGrafiek(keuze=%s,jrwk=%s,m_email=%s)", keuze, jrwk, m_email, extra={"event.action": "printGrafiek", "logrite.keuze": keuze, "logrite.jrwk": jrwk})
     class Widget(QDialog):
         def __init__(self, parent=None):
             super(Widget, self).__init__(parent)
@@ -451,14 +546,23 @@ def printGrafiek(keuze, jrwk, m_email):
             self.setGeometry(200, 40, 1395, 930)
             
         def handle_print(self):
+            logger.warning(">>> Entering handle_print()", extra={"event.action": "handle_print"})
             printer = QPrinter(QPrinter.HighResolution)
+            logger.debug("handle_print(): printer → %s", printer, extra={"event.action": "handle_print"})
+            logger.debug("handle_print(self=%s): printer → %s", self, printer, extra={"event.action": "handle_print"})
             printer.setOrientation(QPrinter.Landscape)                      
             dialog = QPrintDialog(printer, self)
             if dialog.exec_() == QPrintDialog.Accepted:
+                logger.debug("handle_print(self=%s): dialog → %s", self, dialog, extra={"event.action": "handle_print"})
+                logger.debug("handle_print(): dialog → %s", dialog, extra={"event.action": "handle_print"})
                 self.handle_paint_request(printer)
+                logger.debug("<<< Exiting handle_print()", extra={"event.action": "handle_print"})
     
         def handle_preview(self):
+            logger.warning(">>> Entering handle_preview()", extra={"event.action": "handle_preview"})
             dialog = QPrintPreviewDialog()
+            logger.debug("handle_preview(): dialog → %s", dialog, extra={"event.action": "handle_preview"})
+            logger.debug("handle_preview(self=%s): dialog → %s", self, dialog, extra={"event.action": "handle_preview"})
             dialog.setWindowIcon(QIcon('./images/logos/logo.jpg'))
             dialog.setWindowFlags(dialog.windowFlags()| Qt.WindowSystemMenuHint |
                                                       Qt.WindowMinMaxButtonsHint)
@@ -466,14 +570,20 @@ def printGrafiek(keuze, jrwk, m_email):
             dialog.resize(1470, 980)
             #dialog.setMinimumSize(1470, 980)
             dialog.exec_()
+            logger.debug("<<< Exiting handle_preview()", extra={"event.action": "handle_preview"})
     
         def handle_paint_request(self, printer):
+            logger.warning(">>> Entering handle_paint_request(printer=%s)", printer, extra={"event.action": "handle_paint_request", "logrite.printer": printer})
+            logger.debug("handle_paint_request(self=%s,printer=%s): printer → %s", self, printer, printer, extra={"event.action": "handle_paint_request", "logrite.printer": printer})
+            logger.debug("handle_paint_request(self=%s,printer=%s): painter → %s", self, printer, painter, extra={"event.action": "handle_paint_request", "logrite.printer": printer})
+            logger.debug("handle_paint_request(printer=%s): painter → %s", printer, painter, extra={"event.action": "handle_paint_request", "logrite.printer": printer})
             printer.setPageOrientation(QPageLayout.Landscape)
             painter = QPainter(printer)            
             painter.setViewport(self.chartView.rect())
             painter.setWindow(self.chartView.rect()) 
             self.chartView.render(painter)
             painter.end()
+            logger.debug("<<< Exiting handle_paint_request(printer=%s)", printer, extra={"event.action": "handle_paint_request", "logrite.printer": printer})
 
     win = Widget()
     win.exec_()

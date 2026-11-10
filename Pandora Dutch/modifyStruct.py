@@ -4,61 +4,87 @@ from PyQt5.QtCore import Qt, QAbstractTableModel, QSize
 from PyQt5.QtGui import QFont, QPixmap, QIcon, QMovie
 from PyQt5.QtWidgets import QLabel, QPushButton, QWidget, QDialog, QGridLayout,\
       QMessageBox, QTableView, QVBoxLayout, QLineEdit
+import time
 from sqlalchemy import (Table, Column, Integer, String, MetaData, create_engine, select, update, insert, func)
+import logging
+logger = logging.getLogger(__name__)
 
 def insertReq():
+    logger.warning(">>> Entering insertReq()", extra={"event.action": "insertReq"})
     msg = QMessageBox()
+    logger.debug("insertReq(): msg → %s", msg, extra={"event.action": "insertReq"})
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setIcon(QMessageBox.Warning)
     msg.setText('Insert data is required!')
     msg.setWindowTitle('Insert Menu Strukturen')
+    logger.debug("<<< Exiting insertReq()", extra={"event.action": "insertReq"})
     msg.exec_()
 
 def insertOK():
+    logger.warning(">>> Entering insertOK()", extra={"event.action": "insertOK"})
     msg = QMessageBox()
+    logger.debug("insertOK(): msg → %s", msg, extra={"event.action": "insertOK"})
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setIcon(QMessageBox.Information)
     msg.setText('Inserting data was successful!')
     msg.setWindowTitle('Insert Menu Strukturen')
+    logger.debug("<<< Exiting insertOK()", extra={"event.action": "insertOK"})
     msg.exec_()
 
 def errorInsert(message):
+    logger.warning(">>> Entering errorInsert(message=%s)", message, extra={"event.action": "errorInsert", "logrite.message": message})
     msg = QMessageBox()
+    logger.debug("errorInsert(message=%s): msg → %s", message, msg, extra={"event.action": "errorInsert", "logrite.message": message})
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setIcon(QMessageBox.Critical)
     msg.setText('An error has occurred!\n'+message)
     msg.setWindowTitle('Insert Menu Strukturen')
+    logger.debug("<<< Exiting errorInsert(message=%s)", message, extra={"event.action": "errorInsert", "logrite.message": message})
     msg.exec_()
 
 def closeInsert(sector, m_email, self):
+    logger.warning(">>> Entering closeInsert(sector=%s,m_email=%s)", sector, m_email, extra={"event.action": "closeInsert", "logrite.sector": sector})
     self.close()
     hoofdMenu(m_email)
+    logger.debug("<<< Exiting closeInsert(sector=%s,m_email=%s)", sector, m_email, extra={"event.action": "closeInsert", "logrite.sector": sector})
 
 def noChange():
+    logger.warning(">>> Entering noChange()", extra={"event.action": "noChange"})
     msg = QMessageBox()
+    logger.debug("noChange(): msg → %s", msg, extra={"event.action": "noChange"})
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setIcon(QMessageBox.Critical)
     msg.setText('An error has occurred, no changes are processed!')
     msg.setWindowTitle('Modify Menu Structures')
+    logger.debug("<<< Exiting noChange()", extra={"event.action": "noChange"})
     msg.exec_()
 
 def changeOK():
+    logger.warning(">>> Entering changeOK()", extra={"event.action": "changeOK"})
     msg = QMessageBox()
+    logger.debug("changeOK(): msg → %s", msg, extra={"event.action": "changeOK"})
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setIcon(QMessageBox.Information)
     msg.setText('Changes are successful!')
     msg.setWindowTitle('Modify Menu Structures')
+    logger.debug("<<< Exiting changeOK()", extra={"event.action": "changeOK"})
     msg.exec_()
 
 def refresh(m_email, self):
+    logger.warning(">>> Entering refresh(m_email=%s)", m_email, extra={"event.action": "refresh"})
     self.close()
     menuStructure(m_email, self)
+    logger.debug("<<< Exiting refresh(m_email=%s)", m_email, extra={"event.action": "refresh"})
 
 def selectRow(index):
+    logger.warning(">>> Entering selectRow(index=%s)", index, extra={"event.action": "selectRow", "logrite.index": index})
     print('Recordnumber: ', index.row())
+    logger.debug("<<< Exiting selectRow(index=%s)", index, extra={"event.action": "selectRow", "logrite.index": index})
 
 def menuStructure(sector, m_email):
+    logger.warning(">>> Entering menuStructure(sector=%s,m_email=%s)", sector, m_email, extra={"event.action": "menuStructure", "logrite.sector": sector})
     metadata = MetaData()
+    logger.debug("menuStructure(sector=%s,m_email=%s): metadata → %s", sector, m_email, metadata, extra={"event.action": "menuStructure", "logrite.sector": sector})
     cluster_structure_external = Table('cluster_structure_external', metadata,
        Column('structID', Integer(), primary_key=True),
        Column('overall_heading', String),
@@ -102,16 +128,22 @@ def menuStructure(sector, m_email):
        Column('line15', String))
 
     engine = create_engine('postgresql+psycopg2://postgres@localhost/bisystem')
+    logger.debug("menuStructure(sector=%s,m_email=%s): engine → %s", sector, m_email, engine, extra={"event.action": "menuStructure", "logrite.sector": sector})
     if sector == 'external':
         con = engine.connect()
+        logger.debug("menuStructure(sector=%s,m_email=%s): con → %s", sector, m_email, con, extra={"event.action": "menuStructure", "logrite.sector": sector})
         sel = select([cluster_structure_external]).order_by(cluster_structure_external.c.line_level0)
+        logger.debug("menuStructure(sector=%s,m_email=%s): sel → %s", sector, m_email, sel, extra={"event.action": "menuStructure", "logrite.sector": sector})
         rpa = con1.execute(sel)
     else:
         con = engine.connect()
         sel = select([cluster_structure_internal]).order_by(cluster_structure_internal.c.line_level0)
         rpa = con.execute(sel)
+        logger.debug("menuStructure(sector=%s,m_email=%s): rpa → %s", sector, m_email, rpa, extra={"event.action": "menuStructure", "logrite.sector": sector})
     class MyWindow(QDialog):
+        logger.debug("<<< Exiting menuStructure(sector=%s,m_email=%s)", sector, m_email, extra={"event.action": "menuStructure", "logrite.sector": sector})
         def __init__(self, data_list, header, *args):
+            logger.warning(">>> Entering __init__(data_list=%s,header=%s)", data_list, header, extra={"event.action": "__init__", "logrite.data_list": data_list})
             QWidget.__init__(self, *args, )
             self.setGeometry(50, 50, 1700, 900)
             self.setWindowTitle('Request account information')
@@ -119,7 +151,13 @@ def menuStructure(sector, m_email):
             self.setWindowFlags(self.windowFlags() | Qt.WindowSystemMenuHint |
                                 Qt.WindowMinMaxButtonsHint)
             table_model = MyTableModel(self, data_list, header)
+            logger.debug("__init__(data_list=%s,header=%s): table_model → %s", data_list, header, table_model, extra={"event.action": "__init__", "logrite.data_list": data_list})
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): table_model → %s", self, data_list, header, table_model, extra={"event.action": "__init__", "logrite.data_list": data_list})
+            logger.debug("__init__(data_list=%s,header=%s): font → %s", data_list, header, font, extra={"event.action": "__init__", "logrite.data_list": data_list})
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): font → %s", self, data_list, header, font, extra={"event.action": "__init__", "logrite.data_list": data_list})
             table_view = QTableView()
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): table_view → %s", self, data_list, header, table_view, extra={"event.action": "__init__", "logrite.data_list": data_list})
+            logger.debug("__init__(data_list=%s,header=%s): table_view → %s", data_list, header, table_view, extra={"event.action": "__init__", "logrite.data_list": data_list})
             table_view.setModel(table_model)
             font = QFont("Arial", 10)
             table_view.setFont(font)
@@ -128,27 +166,152 @@ def menuStructure(sector, m_email):
             table_view.clicked.connect(showSelection)
             # table_view.clicked.connect(selectRow)
             layout = QVBoxLayout(self)
+            logger.debug("__init__(data_list=%s,header=%s): layout → %s", data_list, header, layout, extra={"event.action": "__init__", "logrite.data_list": data_list})
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): layout → %s", self, data_list, header, layout, extra={"event.action": "__init__", "logrite.data_list": data_list})
             layout.addWidget(table_view)
             self.setLayout(layout)
+            logger.debug("<<< Exiting __init__(data_list=%s,header=%s)", data_list, header, extra={"event.action": "__init__", "logrite.data_list": data_list})
 
     class MyTableModel(QAbstractTableModel):
         def __init__(self, parent, mylist, header, *args):
+            logger.warning(">>> Entering __init__(parent=%s,mylist=%s,header=%s)", parent, mylist, header, extra={"event.action": "__init__", "logrite.mylist": mylist})
+            logger.debug("__init__(self=%s,parent=%s,mylist=%s,header=%s): self.mylist → %s", self, parent, mylist, header, self.mylist, extra={"event.action": "__init__", "logrite.mylist": mylist})
+            logger.debug("__init__(self=%s,parent=%s,mylist=%s,header=%s): self.header → %s", self, parent, mylist, header, self.header, extra={"event.action": "__init__", "logrite.mylist": mylist})
             QAbstractTableModel.__init__(self, parent, *args)
+            logger.debug("<<< Exiting __init__(parent=%s,mylist=%s,header=%s)", parent, mylist, header, extra={"event.action": "__init__", "logrite.mylist": mylist})
             self.mylist = mylist
             self.header = header
+            logger.warning(">>> Entering __init__()", extra={"event.action": "__init__"})
+            logger.debug("__init__(): grid → %s", grid, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): grid → %s", self, grid, extra={"event.action": "__init__"})
+            logger.debug("__init__(): lbl1 → %s", lbl1, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): lbl1 → %s", self, lbl1, extra={"event.action": "__init__"})
+            logger.debug("__init__(): q1Edit → %s", q1Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): q1Edit → %s", self, q1Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): self.q2 → %s", self.q2, extra={"event.action": "__init__"})
+            logger.debug("__init__(): lbl2 → %s", lbl2, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): lbl2 → %s", self, lbl2, extra={"event.action": "__init__"})
+            logger.debug("__init__(): q2Edit → %s", q2Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): q2Edit → %s", self, q2Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): self.q3 → %s", self.q3, extra={"event.action": "__init__"})
+            logger.debug("__init__(): lbl3 → %s", lbl3, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): lbl3 → %s", self, lbl3, extra={"event.action": "__init__"})
+            logger.debug("__init__(): q3Edit → %s", q3Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): q3Edit → %s", self, q3Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): self.q4 → %s", self.q4, extra={"event.action": "__init__"})
+            logger.debug("__init__(): lbl4 → %s", lbl4, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): lbl4 → %s", self, lbl4, extra={"event.action": "__init__"})
+            logger.debug("__init__(): q4Edit → %s", q4Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): q4Edit → %s", self, q4Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): self.q5 → %s", self.q5, extra={"event.action": "__init__"})
+            logger.debug("__init__(): lbl5 → %s", lbl5, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): lbl5 → %s", self, lbl5, extra={"event.action": "__init__"})
+            logger.debug("__init__(): q5Edit → %s", q5Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): q5Edit → %s", self, q5Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): self.q7 → %s", self.q7, extra={"event.action": "__init__"})
+            logger.debug("__init__(): lbl7 → %s", lbl7, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): lbl7 → %s", self, lbl7, extra={"event.action": "__init__"})
+            logger.debug("__init__(): q7Edit → %s", q7Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): q7Edit → %s", self, q7Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): self.q8 → %s", self.q8, extra={"event.action": "__init__"})
+            logger.debug("__init__(): lbl8 → %s", lbl8, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): lbl8 → %s", self, lbl8, extra={"event.action": "__init__"})
+            logger.debug("__init__(): q8Edit → %s", q8Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): q8Edit → %s", self, q8Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): self.q9 → %s", self.q9, extra={"event.action": "__init__"})
+            logger.debug("__init__(): lbl9 → %s", lbl9, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): lbl9 → %s", self, lbl9, extra={"event.action": "__init__"})
+            logger.debug("__init__(): q9Edit → %s", q9Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): q9Edit → %s", self, q9Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): self.q10 → %s", self.q10, extra={"event.action": "__init__"})
+            logger.debug("__init__(): lbl10 → %s", lbl10, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): lbl10 → %s", self, lbl10, extra={"event.action": "__init__"})
+            logger.debug("__init__(): q10Edit → %s", q10Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): q10Edit → %s", self, q10Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): self.q20 → %s", self.q20, extra={"event.action": "__init__"})
+            logger.debug("__init__(): lbl20 → %s", lbl20, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): lbl20 → %s", self, lbl20, extra={"event.action": "__init__"})
+            logger.debug("__init__(): q20Edit → %s", q20Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): q20Edit → %s", self, q20Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): self.q21 → %s", self.q21, extra={"event.action": "__init__"})
+            logger.debug("__init__(): lbl21 → %s", lbl21, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): lbl21 → %s", self, lbl21, extra={"event.action": "__init__"})
+            logger.debug("__init__(): q21Edit → %s", q21Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): q21Edit → %s", self, q21Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): self.q22 → %s", self.q22, extra={"event.action": "__init__"})
+            logger.debug("__init__(): lbl22 → %s", lbl22, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): lbl22 → %s", self, lbl22, extra={"event.action": "__init__"})
+            logger.debug("__init__(): q22Edit → %s", q22Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): q22Edit → %s", self, q22Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): self.q23 → %s", self.q23, extra={"event.action": "__init__"})
+            logger.debug("__init__(): lbl23 → %s", lbl23, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): lbl23 → %s", self, lbl23, extra={"event.action": "__init__"})
+            logger.debug("__init__(): q23Edit → %s", q23Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): q23Edit → %s", self, q23Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): self.q24 → %s", self.q24, extra={"event.action": "__init__"})
+            logger.debug("__init__(): lbl24 → %s", lbl24, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): lbl24 → %s", self, lbl24, extra={"event.action": "__init__"})
+            logger.debug("__init__(): q24Edit → %s", q24Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): q24Edit → %s", self, q24Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): self.q25 → %s", self.q25, extra={"event.action": "__init__"})
+            logger.debug("__init__(): lbl25 → %s", lbl25, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): lbl25 → %s", self, lbl25, extra={"event.action": "__init__"})
+            logger.debug("__init__(): q25Edit → %s", q25Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): q25Edit → %s", self, q25Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): self.q26 → %s", self.q26, extra={"event.action": "__init__"})
+            logger.debug("__init__(): lbl26 → %s", lbl26, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): lbl26 → %s", self, lbl26, extra={"event.action": "__init__"})
+            logger.debug("__init__(): q26Edit → %s", q26Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): q26Edit → %s", self, q26Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): self.q27 → %s", self.q27, extra={"event.action": "__init__"})
+            logger.debug("__init__(): lbl27 → %s", lbl27, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): lbl27 → %s", self, lbl27, extra={"event.action": "__init__"})
+            logger.debug("__init__(): q27Edit → %s", q27Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): q27Edit → %s", self, q27Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): self.q28 → %s", self.q28, extra={"event.action": "__init__"})
+            logger.debug("__init__(): lbl28 → %s", lbl28, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): lbl28 → %s", self, lbl28, extra={"event.action": "__init__"})
+            logger.debug("__init__(): q28Edit → %s", q28Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): q28Edit → %s", self, q28Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): self.q29 → %s", self.q29, extra={"event.action": "__init__"})
+            logger.debug("__init__(): lbl29 → %s", lbl29, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): lbl29 → %s", self, lbl29, extra={"event.action": "__init__"})
+            logger.debug("__init__(): q29Edit → %s", q29Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): q29Edit → %s", self, q29Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(): pyqt → %s", pyqt, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): pyqt → %s", self, pyqt, extra={"event.action": "__init__"})
+            logger.debug("__init__(): movie → %s", movie, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): movie → %s", self, movie, extra={"event.action": "__init__"})
+            logger.debug("__init__(): logo → %s", logo, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): logo → %s", self, logo, extra={"event.action": "__init__"})
+            logger.debug("__init__(): pixmap → %s", pixmap, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): pixmap → %s", self, pixmap, extra={"event.action": "__init__"})
+            logger.debug("__init__(): applyBtn → %s", applyBtn, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): applyBtn → %s", self, applyBtn, extra={"event.action": "__init__"})
+            logger.debug("__init__(): closeBtn → %s", closeBtn, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): closeBtn → %s", self, closeBtn, extra={"event.action": "__init__"})
+            logger.debug("<<< Exiting __init__()", extra={"event.action": "__init__"})
 
         def rowCount(self, parent):
+            logger.warning(">>> Entering rowCount(parent=%s)", parent, extra={"event.action": "rowCount"})
+            logger.debug("<<< Exiting rowCount(parent=%s)", parent, extra={"event.action": "rowCount"})
             return len(self.mylist)
 
         def columnCount(self, parent):
+            logger.warning(">>> Entering columnCount(parent=%s)", parent, extra={"event.action": "columnCount"})
             try:
                 return len(self.mylist[0])
             except:
+                logger.error("Exception in columnCount(parent=%s)", parent, exc_info=True, extra={"event.action": "columnCount", "event.category": "process"})
                 noRecord()
+                logger.debug("<<< Exiting columnCount(parent=%s)", parent, extra={"event.action": "columnCount"})
                 hoofdMenu(m_email)
 
         def data(self, index, role):
+            logger.warning(">>> Entering data(index=%s,role=%s)", index, role, extra={"event.action": "data", "logrite.index": index, "logrite.role": role})
             veld = self.mylist[index.row()][index.column()]
+            logger.debug("data(index=%s,role=%s): veld → %s", index, role, veld, extra={"event.action": "data", "logrite.index": index, "logrite.role": role})
+            logger.debug("data(self=%s,index=%s,role=%s): veld → %s", self, index, role, veld, extra={"event.action": "data", "logrite.index": index, "logrite.role": role})
             if not index.isValid():
                 return None
             elif role == Qt.TextAlignmentRole and (type(veld) == float or type(veld) == int):
@@ -158,11 +321,14 @@ def menuStructure(sector, m_email):
             if type(veld) == float:
                 return '{:12.2f}'.format(veld)
             else:
+                logger.debug("<<< Exiting data(index=%s,role=%s)", index, role, extra={"event.action": "data", "logrite.index": index, "logrite.role": role})
                 return veld
 
         def headerData(self, col, orientation, role):
+            logger.warning(">>> Entering headerData(col=%s,orientation=%s,role=%s)", col, orientation, role, extra={"event.action": "headerData", "logrite.col": col, "logrite.orientation": orientation, "logrite.role": role})
             if orientation == Qt.Horizontal and role == Qt.DisplayRole:
                 return self.header[col]
+            logger.debug("<<< Exiting headerData(col=%s,orientation=%s,role=%s)", col, orientation, role, extra={"event.action": "headerData", "logrite.col": col, "logrite.orientation": orientation, "logrite.role": role})
             return None
 
     header = ['StructureID', 'Toplevel', 'Heading Level 1', 'Line_level0', 'Line 1', 'Line 2', 'Line 3', 'Line 4', 'Line 5',\
@@ -173,18 +339,26 @@ def menuStructure(sector, m_email):
         data_list += [row]
 
     def showSelection(idx):
+        logger.warning(">>> Entering showSelection(idx=%s)", idx, extra={"event.action": "showSelection", "logrite.idx": idx})
         if idx.column() == 0:
             structnr = idx.data()
+            logger.debug("showSelection(idx=%s): structnr → %s", idx, structnr, extra={"event.action": "showSelection", "logrite.idx": idx})
             engine = create_engine('postgresql+psycopg2://postgres@localhost/bisystem')
+            logger.debug("showSelection(idx=%s): engine → %s", idx, engine, extra={"event.action": "showSelection", "logrite.idx": idx})
             con = engine.connect()
             if sector == 'external':
+                logger.debug("showSelection(idx=%s): con → %s", idx, con, extra={"event.action": "showSelection", "logrite.idx": idx})
                 selstruct = select([cluster_structure_external]).where(cluster_structure_external.c.structID == structnr)
                 rpselstruct = con.execute(selstruct).first()
             else:
                 selstruct = select([cluster_structure_internal]).where(cluster_structure_internal.c.structID == structnr)
+                logger.debug("showSelection(idx=%s): selstruct → %s", idx, selstruct, extra={"event.action": "showSelection", "logrite.idx": idx})
                 rpselstruct = con.execute(selstruct).first()
+                logger.debug("showSelection(idx=%s): rpselstruct → %s", idx, rpselstruct, extra={"event.action": "showSelection", "logrite.idx": idx})
             class MainWindow(QDialog):
+                logger.debug("<<< Exiting showSelection(idx=%s)", idx, extra={"event.action": "showSelection", "logrite.idx": idx})
                 def __init__(self):
+                    logger.warning(">>> Entering __init__()", extra={"event.action": "__init__"})
                     QDialog.__init__(self)
 
                     grid = QGridLayout()
@@ -418,119 +592,213 @@ def menuStructure(sector, m_email):
 
                     self.setLayout(grid)
                     self.setGeometry(400, 50, 150, 150)
+                    logger.debug("<<< Exiting __init__()", extra={"event.action": "__init__"})
 
                 def q2Changed(self, text):
+                    logger.warning(">>> Entering q2Changed(text=%s)", text, extra={"event.action": "q2Changed", "logrite.text": text})
+                    logger.debug("q2Changed(self=%s,text=%s): q2 → %s", self, text, q2, extra={"event.action": "q2Changed", "logrite.text": text})
                     self.q2.setText(text)
+                    logger.debug("<<< Exiting q2Changed(text=%s)", text, extra={"event.action": "q2Changed", "logrite.text": text})
 
                 def q3Changed(self, text):
+                    logger.warning(">>> Entering q3Changed(text=%s)", text, extra={"event.action": "q3Changed", "logrite.text": text})
+                    logger.debug("q3Changed(self=%s,text=%s): q3 → %s", self, text, q3, extra={"event.action": "q3Changed", "logrite.text": text})
                     self.q3.setText(text)
+                    logger.debug("<<< Exiting q3Changed(text=%s)", text, extra={"event.action": "q3Changed", "logrite.text": text})
 
                 def q4Changed(self, text):
+                    logger.warning(">>> Entering q4Changed(text=%s)", text, extra={"event.action": "q4Changed", "logrite.text": text})
+                    logger.debug("q4Changed(self=%s,text=%s): q4 → %s", self, text, q4, extra={"event.action": "q4Changed", "logrite.text": text})
                     self.q4.setText(text)
+                    logger.debug("<<< Exiting q4Changed(text=%s)", text, extra={"event.action": "q4Changed", "logrite.text": text})
 
                 def q5Changed(self, text):
+                    logger.warning(">>> Entering q5Changed(text=%s)", text, extra={"event.action": "q5Changed", "logrite.text": text})
+                    logger.debug("q5Changed(self=%s,text=%s): q5 → %s", self, text, q5, extra={"event.action": "q5Changed", "logrite.text": text})
                     self.q5.setText(text)
+                    logger.debug("<<< Exiting q5Changed(text=%s)", text, extra={"event.action": "q5Changed", "logrite.text": text})
 
                 def q7Changed(self, text):
+                    logger.warning(">>> Entering q7Changed(text=%s)", text, extra={"event.action": "q7Changed", "logrite.text": text})
+                    logger.debug("q7Changed(self=%s,text=%s): q7 → %s", self, text, q7, extra={"event.action": "q7Changed", "logrite.text": text})
                     self.q7.setText(text)
+                    logger.debug("<<< Exiting q7Changed(text=%s)", text, extra={"event.action": "q7Changed", "logrite.text": text})
 
                 def q8Changed(self, text):
+                    logger.warning(">>> Entering q8Changed(text=%s)", text, extra={"event.action": "q8Changed", "logrite.text": text})
+                    logger.debug("q8Changed(self=%s,text=%s): q8 → %s", self, text, q8, extra={"event.action": "q8Changed", "logrite.text": text})
                     self.q8.setText(text)
+                    logger.debug("<<< Exiting q8Changed(text=%s)", text, extra={"event.action": "q8Changed", "logrite.text": text})
 
                 def q9Changed(self, text):
+                    logger.warning(">>> Entering q9Changed(text=%s)", text, extra={"event.action": "q9Changed", "logrite.text": text})
+                    logger.debug("q9Changed(self=%s,text=%s): q9 → %s", self, text, q9, extra={"event.action": "q9Changed", "logrite.text": text})
                     self.q9.setText(text)
+                    logger.debug("<<< Exiting q9Changed(text=%s)", text, extra={"event.action": "q9Changed", "logrite.text": text})
 
                 def q10Changed(self, text):
+                    logger.warning(">>> Entering q10Changed(text=%s)", text, extra={"event.action": "q10Changed", "logrite.text": text})
+                    logger.debug("q10Changed(self=%s,text=%s): q10 → %s", self, text, q10, extra={"event.action": "q10Changed", "logrite.text": text})
                     self.q10.setText(text)
+                    logger.debug("<<< Exiting q10Changed(text=%s)", text, extra={"event.action": "q10Changed", "logrite.text": text})
 
                 def q20Changed(self, text):
+                    logger.warning(">>> Entering q20Changed(text=%s)", text, extra={"event.action": "q20Changed", "logrite.text": text})
+                    logger.debug("q20Changed(self=%s,text=%s): q20 → %s", self, text, q20, extra={"event.action": "q20Changed", "logrite.text": text})
                     self.q20.setText(text)
+                    logger.debug("<<< Exiting q20Changed(text=%s)", text, extra={"event.action": "q20Changed", "logrite.text": text})
 
                 def q21Changed(self, text):
+                    logger.warning(">>> Entering q21Changed(text=%s)", text, extra={"event.action": "q21Changed", "logrite.text": text})
+                    logger.debug("q21Changed(self=%s,text=%s): q21 → %s", self, text, q21, extra={"event.action": "q21Changed", "logrite.text": text})
                     self.q21.setText(text)
+                    logger.debug("<<< Exiting q21Changed(text=%s)", text, extra={"event.action": "q21Changed", "logrite.text": text})
 
                 def q22Changed(self, text):
+                    logger.warning(">>> Entering q22Changed(text=%s)", text, extra={"event.action": "q22Changed", "logrite.text": text})
+                    logger.debug("q22Changed(self=%s,text=%s): q22 → %s", self, text, q22, extra={"event.action": "q22Changed", "logrite.text": text})
                     self.q22.setText(text)
+                    logger.debug("<<< Exiting q22Changed(text=%s)", text, extra={"event.action": "q22Changed", "logrite.text": text})
 
                 def q23Changed(self, text):
+                    logger.warning(">>> Entering q23Changed(text=%s)", text, extra={"event.action": "q23Changed", "logrite.text": text})
+                    logger.debug("q23Changed(self=%s,text=%s): q23 → %s", self, text, q23, extra={"event.action": "q23Changed", "logrite.text": text})
                     self.q23.setText(text)
+                    logger.debug("<<< Exiting q23Changed(text=%s)", text, extra={"event.action": "q23Changed", "logrite.text": text})
 
                 def q24Changed(self, text):
+                    logger.warning(">>> Entering q24Changed(text=%s)", text, extra={"event.action": "q24Changed", "logrite.text": text})
+                    logger.debug("q24Changed(self=%s,text=%s): q24 → %s", self, text, q24, extra={"event.action": "q24Changed", "logrite.text": text})
                     self.q24.setText(text)
+                    logger.debug("<<< Exiting q24Changed(text=%s)", text, extra={"event.action": "q24Changed", "logrite.text": text})
 
                 def q25Changed(self, text):
+                    logger.warning(">>> Entering q25Changed(text=%s)", text, extra={"event.action": "q25Changed", "logrite.text": text})
+                    logger.debug("q25Changed(self=%s,text=%s): q25 → %s", self, text, q25, extra={"event.action": "q25Changed", "logrite.text": text})
                     self.q25.setText(text)
+                    logger.debug("<<< Exiting q25Changed(text=%s)", text, extra={"event.action": "q25Changed", "logrite.text": text})
 
                 def q26Changed(self, text):
+                    logger.warning(">>> Entering q26Changed(text=%s)", text, extra={"event.action": "q26Changed", "logrite.text": text})
+                    logger.debug("q26Changed(self=%s,text=%s): q26 → %s", self, text, q26, extra={"event.action": "q26Changed", "logrite.text": text})
                     self.q26.setText(text)
+                    logger.debug("<<< Exiting q26Changed(text=%s)", text, extra={"event.action": "q26Changed", "logrite.text": text})
 
                 def q27Changed(self, text):
+                    logger.warning(">>> Entering q27Changed(text=%s)", text, extra={"event.action": "q27Changed", "logrite.text": text})
+                    logger.debug("q27Changed(self=%s,text=%s): q27 → %s", self, text, q27, extra={"event.action": "q27Changed", "logrite.text": text})
                     self.q27.setText(text)
+                    logger.debug("<<< Exiting q27Changed(text=%s)", text, extra={"event.action": "q27Changed", "logrite.text": text})
 
                 def q28Changed(self, text):
+                    logger.warning(">>> Entering q28Changed(text=%s)", text, extra={"event.action": "q28Changed", "logrite.text": text})
+                    logger.debug("q28Changed(self=%s,text=%s): q28 → %s", self, text, q28, extra={"event.action": "q28Changed", "logrite.text": text})
                     self.q28.setText(text)
+                    logger.debug("<<< Exiting q28Changed(text=%s)", text, extra={"event.action": "q28Changed", "logrite.text": text})
 
                 def q29Changed(self, text):
+                    logger.warning(">>> Entering q29Changed(text=%s)", text, extra={"event.action": "q29Changed", "logrite.text": text})
+                    logger.debug("q29Changed(self=%s,text=%s): q29 → %s", self, text, q29, extra={"event.action": "q29Changed", "logrite.text": text})
                     self.q29.setText(text)
+                    logger.debug("<<< Exiting q29Changed(text=%s)", text, extra={"event.action": "q29Changed", "logrite.text": text})
 
                 def returnq2(self):
+                    logger.warning(">>> Entering returnq2()", extra={"event.action": "returnq2"})
+                    logger.debug("<<< Exiting returnq2()", extra={"event.action": "returnq2"})
                     return self.q2.text()
 
                 def returnq3(self):
+                    logger.warning(">>> Entering returnq3()", extra={"event.action": "returnq3"})
+                    logger.debug("<<< Exiting returnq3()", extra={"event.action": "returnq3"})
                     return self.q3.text()
 
                 def returnq4(self):
+                    logger.warning(">>> Entering returnq4()", extra={"event.action": "returnq4"})
+                    logger.debug("<<< Exiting returnq4()", extra={"event.action": "returnq4"})
                     return self.q4.text()
 
                 def returnq5(self):
+                    logger.warning(">>> Entering returnq5()", extra={"event.action": "returnq5"})
+                    logger.debug("<<< Exiting returnq5()", extra={"event.action": "returnq5"})
                     return self.q5.text()
 
                 def returnq7(self):
+                    logger.warning(">>> Entering returnq7()", extra={"event.action": "returnq7"})
+                    logger.debug("<<< Exiting returnq7()", extra={"event.action": "returnq7"})
                     return self.q7.text()
 
                 def returnq8(self):
+                    logger.warning(">>> Entering returnq8()", extra={"event.action": "returnq8"})
+                    logger.debug("<<< Exiting returnq8()", extra={"event.action": "returnq8"})
                     return self.q8.text()
 
                 def returnq9(self):
+                    logger.warning(">>> Entering returnq9()", extra={"event.action": "returnq9"})
+                    logger.debug("<<< Exiting returnq9()", extra={"event.action": "returnq9"})
                     return self.q9.text()
 
                 def returnq10(self):
+                    logger.warning(">>> Entering returnq10()", extra={"event.action": "returnq10"})
+                    logger.debug("<<< Exiting returnq10()", extra={"event.action": "returnq10"})
                     return self.q10.text()
 
                 def returnq20(self):
+                    logger.warning(">>> Entering returnq20()", extra={"event.action": "returnq20"})
+                    logger.debug("<<< Exiting returnq20()", extra={"event.action": "returnq20"})
                     return self.q20.text()
 
                 def returnq21(self):
+                    logger.warning(">>> Entering returnq21()", extra={"event.action": "returnq21"})
+                    logger.debug("<<< Exiting returnq21()", extra={"event.action": "returnq21"})
                     return self.q21.text()
 
                 def returnq22(self):
+                    logger.warning(">>> Entering returnq22()", extra={"event.action": "returnq22"})
+                    logger.debug("<<< Exiting returnq22()", extra={"event.action": "returnq22"})
                     return self.q22.text()
 
                 def returnq23(self):
+                    logger.warning(">>> Entering returnq23()", extra={"event.action": "returnq23"})
+                    logger.debug("<<< Exiting returnq23()", extra={"event.action": "returnq23"})
                     return self.q23.text()
 
                 def returnq24(self):
+                    logger.warning(">>> Entering returnq24()", extra={"event.action": "returnq24"})
+                    logger.debug("<<< Exiting returnq24()", extra={"event.action": "returnq24"})
                     return self.q24.text()
 
                 def returnq25(self):
+                    logger.warning(">>> Entering returnq25()", extra={"event.action": "returnq25"})
+                    logger.debug("<<< Exiting returnq25()", extra={"event.action": "returnq25"})
                     return self.q25.text()
 
                 def returnq26(self):
+                    logger.warning(">>> Entering returnq26()", extra={"event.action": "returnq26"})
+                    logger.debug("<<< Exiting returnq26()", extra={"event.action": "returnq26"})
                     return self.q26.text()
 
                 def returnq27(self):
+                    logger.warning(">>> Entering returnq27()", extra={"event.action": "returnq27"})
+                    logger.debug("<<< Exiting returnq27()", extra={"event.action": "returnq27"})
                     return self.q27.text()
 
                 def returnq28(self):
+                    logger.warning(">>> Entering returnq28()", extra={"event.action": "returnq28"})
+                    logger.debug("<<< Exiting returnq28()", extra={"event.action": "returnq28"})
                     return self.q28.text()
 
                 def returnq29(self):
+                    logger.warning(">>> Entering returnq29()", extra={"event.action": "returnq29"})
+                    logger.debug("<<< Exiting returnq29()", extra={"event.action": "returnq29"})
                     return self.q29.text()
 
                 @staticmethod
                 def getData(parent=None):
+                    logger.warning(">>> Entering getData(parent=%s)", parent, extra={"event.action": "getData"})
                     dialog = MainWindow()
+                    logger.debug("getData(parent=%s): dialog → %s", parent, dialog, extra={"event.action": "getData"})
                     dialog.exec_()
+                    logger.debug("<<< Exiting getData(parent=%s)", parent, extra={"event.action": "getData"})
                     return [dialog.returnq2(), dialog.returnq3(), dialog.returnq4(), dialog.returnq5(), dialog.returnq7(),\
                             dialog.returnq8(), dialog.returnq9(), dialog.returnq10(), dialog.returnq20(), dialog.returnq21(),\
                             dialog.returnq22(), dialog.returnq23(), dialog.returnq24(), dialog.returnq25(), dialog.returnq26(),\
@@ -641,7 +909,9 @@ def menuStructure(sector, m_email):
     hoofdMenu(m_email)
 
 def insertStruct(sector, m_email):
+    logger.warning(">>> Entering insertStruct(sector=%s,m_email=%s)", sector, m_email, extra={"event.action": "insertStruct", "logrite.sector": sector})
     metadata = MetaData()
+    logger.debug("insertStruct(sector=%s,m_email=%s): metadata → %s", sector, m_email, metadata, extra={"event.action": "insertStruct", "logrite.sector": sector})
     cluster_structure_external = Table('cluster_structure_external', metadata,
            Column('structID', Integer(), primary_key=True),
            Column('overall_heading', String),
@@ -685,23 +955,31 @@ def insertStruct(sector, m_email):
            Column('line15', String))
 
     engine = create_engine('postgresql+psycopg2://postgres@localhost/bisystem')
+    logger.debug("insertStruct(sector=%s,m_email=%s): engine → %s", sector, m_email, engine, extra={"event.action": "insertStruct", "logrite.sector": sector})
     con = engine.connect()
+    logger.debug("insertStruct(sector=%s,m_email=%s): con → %s", sector, m_email, con, extra={"event.action": "insertStruct", "logrite.sector": sector})
 
     if sector == 'external':
         try:
             structnr = (con.execute(select([func.max(cluster_structure_external.c.structID, \
                                                        type_=Integer)])).scalar())
+            logger.debug("insertStruct(sector=%s,m_email=%s): type_ → %s", sector, m_email, type_, extra={"event.action": "insertStruct", "logrite.sector": sector})
             structnr += 1
         except:
+            __log_start = time.time()
             structnr = 1
+            logger.debug("insertStruct(sector=%s,m_email=%s): structnr → %s", sector, m_email, structnr, extra={"event.action": "insertStruct", "logrite.sector": sector})
+            logger.error("Exception in insertStruct(sector=%s,m_email=%s)", sector, m_email, exc_info=True, extra={"event.action": "insertStruct", "event.category": "process", "logrite.sector": sector})
     if sector == 'internal':
         try:
+            logger.info("insertStruct(sector,m_email)=%s,%s: save operation took %s ms", sector, m_email, int((time.time() - __log_start) * 1000), extra={"event.action": "insertStruct", "event.category": "database", "logrite.sector": sector})
             structnr = (con.execute(select([func.max(cluster_structure_internal.c.structID, \
                                                  type_=Integer)])).scalar())
             structnr += 1
         except:
             structnr = 1
     class insWindow(QDialog):
+        logger.debug("<<< Exiting insertStruct(sector=%s,m_email=%s)", sector, m_email, extra={"event.action": "insertStruct", "logrite.sector": sector})
         def __init__(self, *args):
             QWidget.__init__(self, *args, )
             self.setGeometry(50, 50, 1700, 900)

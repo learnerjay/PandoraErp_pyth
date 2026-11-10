@@ -6,17 +6,25 @@ from PyQt5.QtCore import Qt, QRegExp
 from PyQt5.QtGui import QFont, QPixmap, QIcon, QMovie, QColor, QRegExpValidator
 from PyQt5.QtWidgets import (QDialog, QGridLayout, QMessageBox, QLabel, QLineEdit, QPushButton, QComboBox)
 from sqlalchemy import (Table, Column, Integer, String, MetaData, create_engine, select)
+import logging
+logger = logging.getLogger(__name__)
 
 def password_check(hashed_password, password):
+    logger.warning(">>> Entering password_check(hashed_password=<redacted>,password=<redacted>)", extra={"event.action": "password_check"})
     ph = PasswordHasher()
+    logger.debug("password_check(hashed_password=<redacted>,password=<redacted>): ph → %s", ph, extra={"event.action": "password_check"})
     try:
         if ph.verify(hashed_password, password) and (len(password) > 7):  # True
            return(True)
     except Exception:
+        logger.error("Exception in password_check(hashed_password=<redacted>,password=<redacted>)", exc_info=True, extra={"event.action": "password_check", "event.category": "process"})
+        logger.debug("<<< Exiting password_check(hashed_password=<redacted>,password=<redacted>)", extra={"event.action": "password_check"})
         return(False)
 
 def totZiens():
+    logger.warning(">>> Entering totZiens()", extra={"event.action": "totZiens"})
     msg = QMessageBox()
+    logger.debug("totZiens(): msg → %s", msg, extra={"event.action": "totZiens"})
     msg.setStyleSheet("font: 10pt Arial; color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg')) 
     msg.setIcon(QMessageBox.Information)
@@ -25,12 +33,15 @@ def totZiens():
     home = os.path.expanduser("~")
     os.remove(str(home)+'/.pandora_lock')
     '''
+    logger.debug("totZiens(): home → %s", home, extra={"event.action": "totZiens"})
     msg.setText('Tot ziens!       ')
     msg.setWindowTitle('Loginscherm')
     msg.exec_()
     sys.exit()
+    logger.debug("<<< Exiting totZiens()", extra={"event.action": "totZiens"})
      
 def info():
+    logger.warning(">>> Entering info()", extra={"event.action": "info"})
     class Widget(QDialog):
         def __init__(self, parent=None):
             super(Widget, self).__init__(parent)
@@ -101,70 +112,94 @@ def info():
     window.exec_()
     
 def closeIt(self):
+    logger.warning(">>> Entering closeIt()", extra={"event.action": "closeIt"})
     self.close()
     inlog()  
+    logger.debug("<<< Exiting closeIt()", extra={"event.action": "closeIt"})
       
 def geenKeuze():
+    logger.warning(">>> Entering geenKeuze()", extra={"event.action": "geenKeuze"})
     msg = QMessageBox()
+    logger.debug("geenKeuze(): msg → %s", msg, extra={"event.action": "geenKeuze"})
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg')) 
     msg.setIcon(QMessageBox.Warning)
     msg.setText('Geen keuze\nof meer dan één keuze gemaakt!')
     msg.setWindowTitle('KEUZEMENU')
+    logger.debug("<<< Exiting geenKeuze()", extra={"event.action": "geenKeuze"})
     msg.exec_()
     
 def capslkOn():
+    logger.warning(">>> Entering capslkOn()", extra={"event.action": "capslkOn"})
     msg = QMessageBox()
+    logger.debug("capslkOn(): msg → %s", msg, extra={"event.action": "capslkOn"})
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg')) 
     msg.setIcon(QMessageBox.Critical)
     msg.setText('Capslock is ingeschakeld!')
     msg.setWindowTitle('AANMELDING!')
+    logger.debug("<<< Exiting capslkOn()", extra={"event.action": "capslkOn"})
     msg.exec_()
 
 def foutemailAdres():
+    logger.warning(">>> Entering foutemailAdres()", extra={"event.action": "foutemailAdres"})
     msg = QMessageBox()
+    logger.debug("foutemailAdres(): msg → %s", msg, extra={"event.action": "foutemailAdres"})
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg')) 
     msg.setIcon(QMessageBox.Warning)
     msg.setText('E-mail adres onjuist')
     msg.setWindowTitle('AANMELDING')
+    logger.debug("<<< Exiting foutemailAdres()", extra={"event.action": "foutemailAdres"})
     msg.exec_()
 
 def foutWachtw():
+    logger.warning(">>> Entering foutWachtw()", extra={"event.action": "foutWachtw"})
     msg = QMessageBox()
+    logger.debug("foutWachtw(): msg → %s", msg, extra={"event.action": "foutWachtw"})
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg')) 
     msg.setIcon(QMessageBox.Warning)
     msg.setText('Wachtwoord onjuist')
     msg.setWindowTitle('AANMELDING')
+    logger.debug("<<< Exiting foutWachtw()", extra={"event.action": "foutWachtw"})
     msg.exec_()
     
 def foutKlantnummer():
+    logger.warning(">>> Entering foutKlantnummer()", extra={"event.action": "foutKlantnummer"})
     msg = QMessageBox()
+    logger.debug("foutKlantnummer(): msg → %s", msg, extra={"event.action": "foutKlantnummer"})
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg')) 
     msg.setIcon(QMessageBox.Warning)
     msg.setText('Klantnummer onjuist!')
     msg.setWindowTitle('AANMELDING')
+    logger.debug("<<< Exiting foutKlantnummer()", extra={"event.action": "foutKlantnummer"})
     msg.exec_()
     
 def foutInlog():
+    logger.warning(">>> Entering foutInlog()", extra={"event.action": "foutInlog"})
     msg = QMessageBox()
+    logger.debug("foutInlog(): msg → %s", msg, extra={"event.action": "foutInlog"})
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg')) 
     msg.setIcon(QMessageBox.Warning)
     msg.setText('Inlog onjuist!')
     msg.setWindowTitle('AANMELDING')
+    logger.debug("<<< Exiting foutInlog()", extra={"event.action": "foutInlog"})
     msg.exec_()
 
 def maakAccount(self):
+    logger.warning(">>> Entering maakAccount()", extra={"event.action": "maakAccount"})
     from invoerAccount import nieuwAccount
     nieuwAccount(self)
+    logger.debug("<<< Exiting maakAccount()", extra={"event.action": "maakAccount"})
      
 def inlog():
+    logger.warning(">>> Entering inlog()", extra={"event.action": "inlog"})
     #verification and logon
     class Widget(QDialog):
+        logger.debug("<<< Exiting inlog()", extra={"event.action": "inlog"})
         def __init__(self, parent=None):
             super(Widget, self).__init__(parent)
             self.setWindowTitle("Pandora bedrijfs informatie systeem login scherm")
@@ -272,29 +307,93 @@ def inlog():
             infoBtn.setStyleSheet("color: black;  background-color: gainsboro")           
             
             grid.addWidget(QLabel('\u00A9 2017 all rights reserved dj.jansen@casema.nl'), 7, 0, 1, 3, Qt.AlignCenter)
+            logger.warning(">>> Entering __init__(parent=%s)", parent, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.k0Edit → %s", parent, self.k0Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): k0Edit → %s", self, parent, k0Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.k1Edit → %s", parent, self.k1Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): k1Edit → %s", self, parent, k1Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.k2Edit → %s", parent, self.k2Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): k2Edit → %s", self, parent, k2Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.k3Edit → %s", parent, self.k3Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): k3Edit → %s", self, parent, k3Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.k4Edit → %s", parent, self.k4Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): k4Edit → %s", self, parent, k4Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.k5Edit → %s", parent, self.k5Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): k5Edit → %s", self, parent, k5Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.k6Edit → %s", parent, self.k6Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): k6Edit → %s", self, parent, k6Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.k7Edit → %s", parent, self.k7Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): k7Edit → %s", self, parent, k7Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.k8Edit → %s", parent, self.k8Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): k8Edit → %s", self, parent, k8Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.k9Edit → %s", parent, self.k9Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): k9Edit → %s", self, parent, k9Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.k10Edit → %s", parent, self.k10Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): k10Edit → %s", self, parent, k10Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.k11Edit → %s", parent, self.k11Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): k11Edit → %s", self, parent, k11Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.k12Edit → %s", parent, self.k12Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): k12Edit → %s", self, parent, k12Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.k13Edit → %s", parent, self.k13Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): k13Edit → %s", self, parent, k13Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.k14Edit → %s", parent, self.k14Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): k14Edit → %s", self, parent, k14Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.k15Edit → %s", parent, self.k15Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): k15Edit → %s", self, parent, k15Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): mplist → %s", self, parent, mplist, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): lineperm → %s", self, parent, lineperm, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): menuperms → %s", self, parent, menuperms, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): perms → %s", self, parent, perms, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): linepointer → %s", self, parent, linepointer, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): grid → %s", parent, grid, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): grid → %s", self, parent, grid, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): pandora → %s", parent, pandora, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): pandora → %s", self, parent, pandora, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): pixmap → %s", parent, pixmap, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): pixmap → %s", self, parent, pixmap, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): logo → %s", parent, logo, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): logo → %s", self, parent, logo, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): cancelBtn → %s", parent, cancelBtn, extra={"event.action": "__init__"})
+            logger.debug("<<< Exiting __init__(parent=%s)", parent, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): cancelBtn → %s", self, parent, cancelBtn, extra={"event.action": "__init__"})
 
         def emailChanged(self, text):
+            logger.warning(">>> Entering emailChanged(text=%s)", text, extra={"event.action": "emailChanged", "logrite.text": text})
             self.Email.setText(text)
+            logger.debug("<<< Exiting emailChanged(text=%s)", text, extra={"event.action": "emailChanged", "logrite.text": text})
 
         def accountChanged(self, text):
+            logger.warning(">>> Entering accountChanged(text=%s)", text, extra={"event.action": "accountChanged", "logrite.text": text})
             self.Account.setText(text)
+            logger.debug("<<< Exiting accountChanged(text=%s)", text, extra={"event.action": "accountChanged", "logrite.text": text})
 
         def wachtwChanged(self, text):
+            logger.warning(">>> Entering wachtwChanged(text=%s)", text, extra={"event.action": "wachtwChanged", "logrite.text": text})
             self.Wachtwoord.setText(text)
+            logger.debug("<<< Exiting wachtwChanged(text=%s)", text, extra={"event.action": "wachtwChanged", "logrite.text": text})
 
         def returnEmail(self):
+            logger.warning(">>> Entering returnEmail()", extra={"event.action": "returnEmail"})
+            logger.debug("<<< Exiting returnEmail()", extra={"event.action": "returnEmail"})
             return self.Email.text()
 
         def returnAccount(self):
+            logger.warning(">>> Entering returnAccount()", extra={"event.action": "returnAccount"})
+            logger.debug("<<< Exiting returnAccount()", extra={"event.action": "returnAccount"})
             return self.Account.text()
 
         def returnWachtwoord(self):
+            logger.warning(">>> Entering returnWachtwoord()", extra={"event.action": "returnWachtwoord"})
+            logger.debug("<<< Exiting returnWachtwoord()", extra={"event.action": "returnWachtwoord"})
             return self.Wachtwoord.text()
 
         @staticmethod
         def getData(parent=None):
             dialog = Widget(parent)
             dialog.exec_()
+            logger.warning(">>> Entering getData(parent=%s)", parent, extra={"event.action": "getData"})
+            logger.debug("getData(parent=%s): dialog → %s", parent, dialog, extra={"event.action": "getData"})
+            logger.debug("<<< Exiting getData(parent=%s)", parent, extra={"event.action": "getData"})
             return [dialog.returnEmail(), dialog.returnAccount(), dialog.returnWachtwoord()]
 
     window = Widget()
@@ -359,8 +458,10 @@ def inlog():
     hoofdMenu(m_email)
 
 def hoofdMenu(m_email):
+    logger.warning(">>> Entering hoofdMenu(m_email=%s)", m_email, extra={"event.action": "hoofdMenu"})
     # declare database table accounts for authorizations
     metadata = MetaData()
+    logger.debug("hoofdMenu(m_email=%s): metadata → %s", m_email, metadata, extra={"event.action": "hoofdMenu"})
     accounts = Table('accounts', metadata,
                      Column('accountID', Integer(), primary_key=True),
                      Column('email', String, nullable=False),
@@ -382,13 +483,20 @@ def hoofdMenu(m_email):
                      Column('p16', String))
 
     engine = create_engine('postgresql+psycopg2://postgres@localhost/bisystem')
+    logger.debug("hoofdMenu(m_email=%s): engine → %s", m_email, engine, extra={"event.action": "hoofdMenu"})
+    __log_start = time.time()
     conn = engine.connect()
+    logger.debug("hoofdMenu(m_email=%s): conn → %s", m_email, conn, extra={"event.action": "hoofdMenu"})
     sel = select([accounts]).where(accounts.c.email == m_email)
     rpaccount = conn.execute(sel).first()
+    logger.debug("hoofdMenu(m_email=%s): sel → %s", m_email, sel, extra={"event.action": "hoofdMenu"})
+    logger.debug("hoofdMenu(m_email=%s): rpaccount → %s", m_email, rpaccount, extra={"event.action": "hoofdMenu"})
     mp = rpaccount[2:18]
 
     #structure Menu's
+    logger.info("hoofdMenu(m_email)=%s: count operation took %s ms", m_email, int((time.time() - __log_start) * 1000), extra={"event.action": "hoofdMenu", "event.category": "database"})
     class Widget(QDialog):
+        logger.debug("<<< Exiting hoofdMenu(m_email=%s)", m_email, extra={"event.action": "hoofdMenu"})
         def __init__(self, parent=None):
             super(Widget, self).__init__(parent)
             self.setWindowTitle("Pandora bedrijfs informatie systeem")
@@ -824,82 +932,130 @@ def hoofdMenu(m_email):
             cancelBtn.setStyleSheet("color: black;  background-color: gainsboro")
 
             def k0Changed():
+                logger.warning(">>> Entering k0Changed()", extra={"event.action": "k0Changed"})
+                logger.debug("k0Changed(): k0Edit → %s", k0Edit, extra={"event.action": "k0Changed"})
                 self.k0Edit.setCurrentIndex(self.k0Edit.currentIndex())
+                logger.debug("<<< Exiting k0Changed()", extra={"event.action": "k0Changed"})
                 self.accept()
             self.k0Edit.currentIndexChanged.connect(k0Changed)
 
             def k1Changed():
+                logger.warning(">>> Entering k1Changed()", extra={"event.action": "k1Changed"})
+                logger.debug("k1Changed(): k1Edit → %s", k1Edit, extra={"event.action": "k1Changed"})
                 self.k1Edit.setCurrentIndex(self.k1Edit.currentIndex())
+                logger.debug("<<< Exiting k1Changed()", extra={"event.action": "k1Changed"})
                 self.accept()
             self.k1Edit.currentIndexChanged.connect(k1Changed)
 
             def k2Changed():
+                logger.warning(">>> Entering k2Changed()", extra={"event.action": "k2Changed"})
+                logger.debug("k2Changed(): k2Edit → %s", k2Edit, extra={"event.action": "k2Changed"})
                 self.k2Edit.setCurrentIndex(self.k2Edit.currentIndex())
+                logger.debug("<<< Exiting k2Changed()", extra={"event.action": "k2Changed"})
                 self.accept()
             self.k2Edit.currentIndexChanged.connect(k2Changed)
 
             def k3Changed():
+                logger.warning(">>> Entering k3Changed()", extra={"event.action": "k3Changed"})
+                logger.debug("k3Changed(): k3Edit → %s", k3Edit, extra={"event.action": "k3Changed"})
                 self.k3Edit.setCurrentIndex(self.k3Edit.currentIndex())
+                logger.debug("<<< Exiting k3Changed()", extra={"event.action": "k3Changed"})
                 self.accept()
             self.k3Edit.currentIndexChanged.connect(k3Changed)
 
             def k4Changed():
+                logger.warning(">>> Entering k4Changed()", extra={"event.action": "k4Changed"})
+                logger.debug("k4Changed(): k4Edit → %s", k4Edit, extra={"event.action": "k4Changed"})
                 self.k4Edit.setCurrentIndex(self.k4Edit.currentIndex())
+                logger.debug("<<< Exiting k4Changed()", extra={"event.action": "k4Changed"})
                 self.accept()
             self.k4Edit.currentIndexChanged.connect(k4Changed)
 
             def k5Changed():
+                logger.warning(">>> Entering k5Changed()", extra={"event.action": "k5Changed"})
+                logger.debug("k5Changed(): k5Edit → %s", k5Edit, extra={"event.action": "k5Changed"})
                 self.k5Edit.setCurrentIndex(self.k5Edit.currentIndex())
+                logger.debug("<<< Exiting k5Changed()", extra={"event.action": "k5Changed"})
                 self.accept()
             self.k5Edit.currentIndexChanged.connect(k5Changed)
 
             def k6Changed():
+                logger.warning(">>> Entering k6Changed()", extra={"event.action": "k6Changed"})
+                logger.debug("k6Changed(): k6Edit → %s", k6Edit, extra={"event.action": "k6Changed"})
                 self.k6Edit.setCurrentIndex(self.k6Edit.currentIndex())
+                logger.debug("<<< Exiting k6Changed()", extra={"event.action": "k6Changed"})
                 self.accept()
             self.k6Edit.currentIndexChanged.connect(k6Changed)
 
             def k7Changed():
+                logger.warning(">>> Entering k7Changed()", extra={"event.action": "k7Changed"})
+                logger.debug("k7Changed(): k7Edit → %s", k7Edit, extra={"event.action": "k7Changed"})
                 self.k7Edit.setCurrentIndex(self.k7Edit.currentIndex())
+                logger.debug("<<< Exiting k7Changed()", extra={"event.action": "k7Changed"})
                 self.accept()
             self.k7Edit.currentIndexChanged.connect(k7Changed)
 
             def k8Changed():
+                logger.warning(">>> Entering k8Changed()", extra={"event.action": "k8Changed"})
+                logger.debug("k8Changed(): k8Edit → %s", k8Edit, extra={"event.action": "k8Changed"})
                 self.k8Edit.setCurrentIndex(self.k8Edit.currentIndex())
+                logger.debug("<<< Exiting k8Changed()", extra={"event.action": "k8Changed"})
                 self.accept()
             self.k8Edit.currentIndexChanged.connect(k8Changed)
 
             def k9Changed():
+                logger.warning(">>> Entering k9Changed()", extra={"event.action": "k9Changed"})
+                logger.debug("k9Changed(): k9Edit → %s", k9Edit, extra={"event.action": "k9Changed"})
                 self.k9Edit.setCurrentIndex(self.k9Edit.currentIndex())
+                logger.debug("<<< Exiting k9Changed()", extra={"event.action": "k9Changed"})
                 self.accept()
             self.k9Edit.currentIndexChanged.connect(k9Changed)
 
             def k10Changed():
+                logger.warning(">>> Entering k10Changed()", extra={"event.action": "k10Changed"})
+                logger.debug("k10Changed(): k10Edit → %s", k10Edit, extra={"event.action": "k10Changed"})
                 self.k10Edit.setCurrentIndex(self.k10Edit.currentIndex())
+                logger.debug("<<< Exiting k10Changed()", extra={"event.action": "k10Changed"})
                 self.accept()
             self.k10Edit.currentIndexChanged.connect(k10Changed)
 
             def k11Changed():
+                logger.warning(">>> Entering k11Changed()", extra={"event.action": "k11Changed"})
+                logger.debug("k11Changed(): k11Edit → %s", k11Edit, extra={"event.action": "k11Changed"})
                 self.k11Edit.setCurrentIndex(self.k11Edit.currentIndex())
+                logger.debug("<<< Exiting k11Changed()", extra={"event.action": "k11Changed"})
                 self.accept()
             self.k11Edit.currentIndexChanged.connect(k11Changed)
 
             def k12Changed():
+                logger.warning(">>> Entering k12Changed()", extra={"event.action": "k12Changed"})
+                logger.debug("k12Changed(): k12Edit → %s", k12Edit, extra={"event.action": "k12Changed"})
                 self.k12Edit.setCurrentIndex(self.k12Edit.currentIndex())
+                logger.debug("<<< Exiting k12Changed()", extra={"event.action": "k12Changed"})
                 self.accept()
             self.k12Edit.currentIndexChanged.connect(k12Changed)
 
             def k13Changed():
+                logger.warning(">>> Entering k13Changed()", extra={"event.action": "k13Changed"})
+                logger.debug("k13Changed(): k13Edit → %s", k13Edit, extra={"event.action": "k13Changed"})
                 self.k13Edit.setCurrentIndex(self.k13Edit.currentIndex())
+                logger.debug("<<< Exiting k13Changed()", extra={"event.action": "k13Changed"})
                 self.accept()
             self.k13Edit.currentIndexChanged.connect(k13Changed)
 
             def k14Changed():
+                logger.warning(">>> Entering k14Changed()", extra={"event.action": "k14Changed"})
+                logger.debug("k14Changed(): k14Edit → %s", k14Edit, extra={"event.action": "k14Changed"})
                 self.k14Edit.setCurrentIndex(self.k14Edit.currentIndex())
+                logger.debug("<<< Exiting k14Changed()", extra={"event.action": "k14Changed"})
                 self.accept()
             self.k14Edit.currentIndexChanged.connect(k14Changed)
 
             def k15Changed():
+                logger.warning(">>> Entering k15Changed()", extra={"event.action": "k15Changed"})
+                logger.debug("k15Changed(): k15Edit → %s", k15Edit, extra={"event.action": "k15Changed"})
                 self.k15Edit.setCurrentIndex(self.k15Edit.currentIndex())
+                logger.debug("<<< Exiting k15Changed()", extra={"event.action": "k15Changed"})
                 self.accept()
             self.k15Edit.currentIndexChanged.connect(k15Changed)
 

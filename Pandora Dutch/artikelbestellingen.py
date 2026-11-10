@@ -7,53 +7,76 @@ from PyQt5.QtWidgets import QLabel, QPushButton, QWidget, QGridLayout, QStyledIt
       QDialog, QLineEdit, QVBoxLayout, QTableView, QMessageBox
 from sqlalchemy import (Table, Column, Integer, String, Float, Boolean,\
                      MetaData, create_engine, select, update, and_, or_)
+import logging
+logger = logging.getLogger(__name__)
 
 def ongKeuze():
+    logger.warning(">>> Entering ongKeuze()", extra={"event.action": "ongKeuze"})
     msg = QMessageBox()
+    logger.debug("ongKeuze(): msg → %s", msg, extra={"event.action": "ongKeuze"})
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     msg.setIcon(QMessageBox.Warning)
     msg.setText('Ongeldige keuze')
     msg.setWindowTitle('Artikel Bestelling')               
+    logger.debug("<<< Exiting ongKeuze()", extra={"event.action": "ongKeuze"})
     msg.exec_()
 
 def bestelStatus():
+    logger.warning(">>> Entering bestelStatus()", extra={"event.action": "bestelStatus"})
     msg = QMessageBox()
+    logger.debug("bestelStatus(): msg → %s", msg, extra={"event.action": "bestelStatus"})
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     msg.setWindowTitle('Bestelbrief printen')
     msg.setIcon(QMessageBox.Warning)
     msg.setText('Bestelbrief is reeds aangemaakt!')
+    logger.debug("<<< Exiting bestelStatus()", extra={"event.action": "bestelStatus"})
     msg.exec_()
     
 def handle_paint_request(self, printer):
+    logger.warning(">>> Entering handle_paint_request(printer=%s)", printer, extra={"event.action": "handle_paint_request", "logrite.printer": printer})
     painter = QPainter(printer)
+    logger.debug("handle_paint_request(printer=%s): painter → %s", printer, painter, extra={"event.action": "handle_paint_request", "logrite.printer": printer})
+    logger.debug("handle_paint_request(self=%s,printer=%s): painter → %s", self, printer, painter, extra={"event.action": "handle_paint_request", "logrite.printer": printer})
     painter.setViewport(self.view.rect())
     painter.setWindow(self.view.rect())                        
     self.view.render(painter)
     painter.end()
+    logger.debug("<<< Exiting handle_paint_request(printer=%s)", printer, extra={"event.action": "handle_paint_request", "logrite.printer": printer})
 
 def printBrief(rpartikel):
+    logger.warning(">>> Entering printBrief(rpartikel=%s)", rpartikel, extra={"event.action": "printBrief", "logrite.rpartikel": rpartikel})
     from sys import platform
     vandaag = str(date.today())[0:10]
+    logger.debug("printBrief(rpartikel=%s): vandaag → %s", rpartikel, vandaag, extra={"event.action": "printBrief", "logrite.rpartikel": rpartikel})
     metadata =  MetaData()
+    logger.debug("printBrief(rpartikel=%s): metadata → %s", rpartikel, metadata, extra={"event.action": "printBrief", "logrite.rpartikel": rpartikel})
     params_system = Table('params_system', metadata,
        Column('systemID', Integer, primary_key=True),
        Column('system_value', Integer))
 
     engine = create_engine('postgresql+psycopg2://postgres@localhost/bisystem')
+    logger.debug("printBrief(rpartikel=%s): engine → %s", rpartikel, engine, extra={"event.action": "printBrief", "logrite.rpartikel": rpartikel})
     con = engine.connect()
+    logger.debug("printBrief(rpartikel=%s): con → %s", rpartikel, con, extra={"event.action": "printBrief", "logrite.rpartikel": rpartikel})
     selpar = select([params_system]).where(params_system.c.systemID == 1)
     rppar = con.execute(selpar).first()
+    logger.debug("printBrief(rpartikel=%s): selpar → %s", rpartikel, selpar, extra={"event.action": "printBrief", "logrite.rpartikel": rpartikel})
+    logger.debug("printBrief(rpartikel=%s): rppar → %s", rpartikel, rppar, extra={"event.action": "printBrief", "logrite.rpartikel": rpartikel})
     bestnr = int(rppar[1])
     updpar = update(params_system).where(params_system.c.systemID == 1).values(system_value=int(bestnr + 1))
     con.execute(updpar)
+    logger.debug("printBrief(rpartikel=%s): bestnr → %s", rpartikel, bestnr, extra={"event.action": "printBrief", "logrite.rpartikel": rpartikel})
     if rpartikel[9] == 1:
         besteltekst = 'Bestelgrootte voorraadgestuurd: '+str(round(rpartikel[11],2))+'\n\n' 
+        logger.debug("printBrief(rpartikel=%s): updpar → %s", rpartikel, updpar, extra={"event.action": "printBrief", "logrite.rpartikel": rpartikel})
         termijn = ' 3 weken'
     elif rpartikel[9] == 2:
         besteltekst = 'Bestelgrootte voorraadgestuurd: '+str(round(rpartikel[11],2))+'\n\n' 
+        logger.debug("printBrief(rpartikel=%s): besteltekst → %s", rpartikel, besteltekst, extra={"event.action": "printBrief", "logrite.rpartikel": rpartikel})
         termijn = ' 8 weken'
+        logger.debug("printBrief(rpartikel=%s): termijn → %s", rpartikel, termijn, extra={"event.action": "printBrief", "logrite.rpartikel": rpartikel})
     elif rpartikel[9] == 3:
         besteltekst = 'Bestelgrootte voorraadgestuurd: '+str(round(rpartikel[11],2))+'\n\n'
         termijn = ' 26 weken'
@@ -96,7 +119,9 @@ def printBrief(rpartikel):
     open(filename,"a").write(gegevens+'\n')
 
     class Window(QDialog):
+        logger.debug("<<< Exiting printBrief(rpartikel=%s)", rpartikel, extra={"event.action": "printBrief", "logrite.rpartikel": rpartikel})
         def __init__(self):
+            logger.warning(">>> Entering __init__()", extra={"event.action": "__init__"})
             QDialog.__init__(self)
             self.setWindowTitle("Printen interne orderbrief") 
             self.setWindowIcon(QIcon('./images/logos/logo.jpg'))
@@ -105,15 +130,24 @@ def printBrief(rpartikel):
             self.setFont(QFont('Arial', 10))
             self.view = QLabel(self)
             self.view = self.create_view()
+            logger.debug("__init__(): self.view → %s", self.view, extra={"event.action": "__init__"})
             layout = QGridLayout(self)
+            logger.debug("__init__(): layout → %s", layout, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): layout → %s", self, layout, extra={"event.action": "__init__"})
+            logger.debug("__init__(): printer → %s", printer, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): printer → %s", self, printer, extra={"event.action": "__init__"})
+            logger.debug("__init__(): dialog → %s", dialog, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s): dialog → %s", self, dialog, extra={"event.action": "__init__"})
             layout.addWidget(self.view, 0, 0, 1, 2)
             printer = QPrinter(QPrinter.HighResolution)
             #printer.setPageMargins(12, 16, 12, 20, QPrinter.Millimeter)
             dialog = QPrintDialog(printer, self)
             if dialog.exec_() == QPrintDialog.Accepted:
                 handle_paint_request(self, printer)
+                logger.debug("<<< Exiting __init__()", extra={"event.action": "__init__"})
        
         def create_view(self):
+            logger.warning(">>> Entering create_view()", extra={"event.action": "create_view"})
             lblinfo = QLabel(
         '\n\n\n'+\
         'Datum: '+str(vandaag)+'\n\n\n'+\
@@ -140,25 +174,34 @@ def printBrief(rpartikel):
     Window()
             
 def bestelBrief(rpartikel, bestelBtn):
+    logger.warning(">>> Entering bestelBrief(rpartikel=%s,bestelBtn=%s)", rpartikel, bestelBtn, extra={"event.action": "bestelBrief", "logrite.rpartikel": rpartikel, "logrite.bestelBtn": bestelBtn})
     metadata = MetaData()
+    logger.debug("bestelBrief(rpartikel=%s,bestelBtn=%s): metadata → %s", rpartikel, bestelBtn, metadata, extra={"event.action": "bestelBrief", "logrite.rpartikel": rpartikel, "logrite.bestelBtn": bestelBtn})
     artikelen = Table('artikelen', metadata,
         Column('artikelID', Integer(), primary_key=True),
         Column('bestelstatus', Boolean))
     
     engine = create_engine('postgresql+psycopg2://postgres@localhost/bisystem')
+    logger.debug("bestelBrief(rpartikel=%s,bestelBtn=%s): engine → %s", rpartikel, bestelBtn, engine, extra={"event.action": "bestelBrief", "logrite.rpartikel": rpartikel, "logrite.bestelBtn": bestelBtn})
     con = engine.connect()
+    logger.debug("bestelBrief(rpartikel=%s,bestelBtn=%s): con → %s", rpartikel, bestelBtn, con, extra={"event.action": "bestelBrief", "logrite.rpartikel": rpartikel, "logrite.bestelBtn": bestelBtn})
     if rpartikel[7] == False:
         bestelStatus()
     else:
         updart = update(artikelen).where(artikelen.c.artikelID == rpartikel[0])\
         .values(bestelstatus = False)
+        logger.debug("bestelBrief(rpartikel=%s,bestelBtn=%s): updart → %s", rpartikel, bestelBtn, updart, extra={"event.action": "bestelBrief", "logrite.rpartikel": rpartikel, "logrite.bestelBtn": bestelBtn})
         con.execute(updart)
         
         printBrief(rpartikel)
+        logger.debug("<<< Exiting bestelBrief(rpartikel=%s,bestelBtn=%s)", rpartikel, bestelBtn, extra={"event.action": "bestelBrief", "logrite.rpartikel": rpartikel, "logrite.bestelBtn": bestelBtn})
+        logger.debug("bestelBrief(rpartikel=%s,bestelBtn=%s): bestelBtn → %s", rpartikel, bestelBtn, bestelBtn, extra={"event.action": "bestelBrief", "logrite.rpartikel": rpartikel, "logrite.bestelBtn": bestelBtn})
         bestelBtn.setEnabled(False)
 
 def toonArtikellijst(m_email):
+    logger.warning(">>> Entering toonArtikellijst(m_email=%s)", m_email, extra={"event.action": "toonArtikellijst"})
     metadata = MetaData()
+    logger.debug("toonArtikellijst(m_email=%s): metadata → %s", m_email, metadata, extra={"event.action": "toonArtikellijst"})
     artikelen = Table('artikelen', metadata,
         Column('artikelID', Integer(), primary_key=True),
         Column('artikelomschrijving', String),
@@ -174,27 +217,40 @@ def toonArtikellijst(m_email):
         Column('art_bestelgrootte', Float))
     
     engine = create_engine('postgresql+psycopg2://postgres@localhost/bisystem')
+    logger.debug("toonArtikellijst(m_email=%s): engine → %s", m_email, engine, extra={"event.action": "toonArtikellijst"})
     conn = engine.connect()
+    logger.debug("toonArtikellijst(m_email=%s): conn → %s", m_email, conn, extra={"event.action": "toonArtikellijst"})
     sel = select([artikelen]).where(or_(and_(artikelen.c.art_voorraad+artikelen.c.bestelsaldo\
          -artikelen.c.reserveringsaldo < artikelen.c.art_min_voorraad, artikelen.c.categorie < 5),\
          and_(artikelen.c.art_voorraad+artikelen.c.bestelsaldo < artikelen.c.reserveringsaldo,\
          artikelen.c.categorie > 4))).order_by(artikelen.c.artikelID)
     rpartikelen = conn.execute(sel)
+    logger.debug("toonArtikellijst(m_email=%s): sel → %s", m_email, sel, extra={"event.action": "toonArtikellijst"})
     updart = update(artikelen).where(and_(artikelen.c.art_voorraad+artikelen.c.bestelsaldo\
          < artikelen.c.reserveringsaldo, artikelen.c.categorie > 4))\
           .values(art_bestelgrootte = artikelen.c.reserveringsaldo \
           - artikelen.c.art_voorraad - artikelen.c.bestelsaldo)
+    logger.debug("toonArtikellijst(m_email=%s): rpartikelen → %s", m_email, rpartikelen, extra={"event.action": "toonArtikellijst"})
     conn.execute(updart)
     class MyWindow(QDialog):
+        logger.debug("toonArtikellijst(m_email=%s): updart → %s", m_email, updart, extra={"event.action": "toonArtikellijst"})
         def __init__(self, data_list, header, *args):
+            logger.debug("<<< Exiting toonArtikellijst(m_email=%s)", m_email, extra={"event.action": "toonArtikellijst"})
             QWidget.__init__(self, *args,)
+            logger.warning(">>> Entering __init__(data_list=%s,header=%s)", data_list, header, extra={"event.action": "__init__", "logrite.data_list": data_list})
             self.setGeometry(100, 50, 1800, 900)
             self.setWindowTitle('Artikelen bestellijst')
             self.setWindowIcon(QIcon('./images/logos/logo.jpg')) 
             self.setWindowFlags(self.windowFlags()| Qt.WindowSystemMenuHint |
                               Qt.WindowMinMaxButtonsHint)
             table_model = MyTableModel(self, data_list, header)
+            logger.debug("__init__(data_list=%s,header=%s): table_model → %s", data_list, header, table_model, extra={"event.action": "__init__", "logrite.data_list": data_list})
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): table_model → %s", self, data_list, header, table_model, extra={"event.action": "__init__", "logrite.data_list": data_list})
+            logger.debug("__init__(data_list=%s,header=%s): font → %s", data_list, header, font, extra={"event.action": "__init__", "logrite.data_list": data_list})
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): font → %s", self, data_list, header, font, extra={"event.action": "__init__", "logrite.data_list": data_list})
             table_view = QTableView()
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): table_view → %s", self, data_list, header, table_view, extra={"event.action": "__init__", "logrite.data_list": data_list})
+            logger.debug("__init__(data_list=%s,header=%s): table_view → %s", data_list, header, table_view, extra={"event.action": "__init__", "logrite.data_list": data_list})
             table_view.setModel(table_model)
             font = QFont("Arial", 10)
             table_view.setFont(font)
@@ -205,19 +261,30 @@ def toonArtikellijst(m_email):
             table_view.verticalHeader().setDefaultSectionSize(75)
             table_view.clicked.connect(showArtikel)
             layout = QVBoxLayout(self)
+            logger.debug("__init__(data_list=%s,header=%s): layout → %s", data_list, header, layout, extra={"event.action": "__init__", "logrite.data_list": data_list})
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): layout → %s", self, data_list, header, layout, extra={"event.action": "__init__", "logrite.data_list": data_list})
             layout.addWidget(table_view)
             self.setLayout(layout)
+            logger.debug("<<< Exiting __init__(data_list=%s,header=%s)", data_list, header, extra={"event.action": "__init__", "logrite.data_list": data_list})
 
     class MyTableModel(QAbstractTableModel):
         def __init__(self, parent, mylist, header, *args):
+            logger.warning(">>> Entering __init__(parent=%s,mylist=%s,header=%s)", parent, mylist, header, extra={"event.action": "__init__", "logrite.mylist": mylist})
+            logger.debug("__init__(self=%s,parent=%s,mylist=%s,header=%s): self.mylist → %s", self, parent, mylist, header, self.mylist, extra={"event.action": "__init__", "logrite.mylist": mylist})
+            logger.debug("__init__(self=%s,parent=%s,mylist=%s,header=%s): self.header → %s", self, parent, mylist, header, self.header, extra={"event.action": "__init__", "logrite.mylist": mylist})
             QAbstractTableModel.__init__(self, parent, *args)
+            logger.debug("<<< Exiting __init__(parent=%s,mylist=%s,header=%s)", parent, mylist, header, extra={"event.action": "__init__", "logrite.mylist": mylist})
             self.mylist = mylist
+            logger.warning(">>> Entering __init__(parent=%s)", parent, extra={"event.action": "__init__"})
             self.header = header
         def rowCount(self, parent):
+            logger.warning(">>> Entering rowCount(parent=%s)", parent, extra={"event.action": "rowCount"})
             return len(self.mylist)
         def columnCount(self, parent):
+            logger.warning(">>> Entering columnCount(parent=%s)", parent, extra={"event.action": "columnCount"})
             return len(self.mylist[0])
         def data(self, index, role):
+            logger.warning(">>> Entering data(index=%s,role=%s)", index, role, extra={"event.action": "data", "logrite.index": index, "logrite.role": role})
             if not index.isValid():
                 return None
             #elif index.column() == 9 and role == Qt.DecorationRole: # alternatief picture echter
@@ -226,18 +293,75 @@ def toonArtikellijst(m_email):
                 return None
             return str(self.mylist[index.row()][index.column()])
         def headerData(self, col, orientation, role):
+            logger.warning(">>> Entering headerData(col=%s,orientation=%s,role=%s)", col, orientation, role, extra={"event.action": "headerData", "logrite.col": col, "logrite.orientation": orientation, "logrite.role": role})
             if orientation == Qt.Horizontal and role == Qt.DisplayRole:
                 return self.header[col]
+            logger.debug("<<< Exiting headerData(col=%s,orientation=%s,role=%s)", col, orientation, role, extra={"event.action": "headerData", "logrite.col": col, "logrite.orientation": orientation, "logrite.role": role})
             return None
        
     class showImage(QStyledItemDelegate):  
            def __init__(self, parent):
+               logger.warning(">>> Entering __init__(parent=%s)", parent, extra={"event.action": "__init__"})
+               logger.debug("__init__(parent=%s): self.Artikelnummer → %s", parent, self.Artikelnummer, extra={"event.action": "__init__"})
+               logger.debug("__init__(parent=%s): q1Edit → %s", parent, q1Edit, extra={"event.action": "__init__"})
+               logger.debug("__init__(self=%s,parent=%s): q1Edit → %s", self, parent, q1Edit, extra={"event.action": "__init__"})
+               logger.debug("__init__(parent=%s): self.Artikelomschrijving → %s", parent, self.Artikelomschrijving, extra={"event.action": "__init__"})
+               logger.debug("__init__(parent=%s): q2Edit → %s", parent, q2Edit, extra={"event.action": "__init__"})
+               logger.debug("__init__(self=%s,parent=%s): q2Edit → %s", self, parent, q2Edit, extra={"event.action": "__init__"})
+               logger.debug("__init__(parent=%s): self.Artikelprijs → %s", parent, self.Artikelprijs, extra={"event.action": "__init__"})
+               logger.debug("__init__(parent=%s): q3Edit → %s", parent, q3Edit, extra={"event.action": "__init__"})
+               logger.debug("__init__(self=%s,parent=%s): q3Edit → %s", self, parent, q3Edit, extra={"event.action": "__init__"})
+               logger.debug("__init__(parent=%s): self.Artikelvoorraad → %s", parent, self.Artikelvoorraad, extra={"event.action": "__init__"})
+               logger.debug("__init__(parent=%s): q4Edit → %s", parent, q4Edit, extra={"event.action": "__init__"})
+               logger.debug("__init__(self=%s,parent=%s): q4Edit → %s", self, parent, q4Edit, extra={"event.action": "__init__"})
+               logger.debug("__init__(parent=%s): self.Artikeleenheid → %s", parent, self.Artikeleenheid, extra={"event.action": "__init__"})
+               logger.debug("__init__(parent=%s): q5Edit → %s", parent, q5Edit, extra={"event.action": "__init__"})
+               logger.debug("__init__(self=%s,parent=%s): q5Edit → %s", self, parent, q5Edit, extra={"event.action": "__init__"})
+               logger.debug("__init__(parent=%s): self.Minimumvoorraad → %s", parent, self.Minimumvoorraad, extra={"event.action": "__init__"})
+               logger.debug("__init__(parent=%s): q6Edit → %s", parent, q6Edit, extra={"event.action": "__init__"})
+               logger.debug("__init__(self=%s,parent=%s): q6Edit → %s", self, parent, q6Edit, extra={"event.action": "__init__"})
+               logger.debug("__init__(parent=%s): self.Bestelsaldo → %s", parent, self.Bestelsaldo, extra={"event.action": "__init__"})
+               logger.debug("__init__(parent=%s): q16Edit → %s", parent, q16Edit, extra={"event.action": "__init__"})
+               logger.debug("__init__(self=%s,parent=%s): q16Edit → %s", self, parent, q16Edit, extra={"event.action": "__init__"})
+               logger.debug("__init__(parent=%s): self.Bestelstatus → %s", parent, self.Bestelstatus, extra={"event.action": "__init__"})
+               logger.debug("__init__(parent=%s): q7Edit → %s", parent, q7Edit, extra={"event.action": "__init__"})
+               logger.debug("__init__(self=%s,parent=%s): q7Edit → %s", self, parent, q7Edit, extra={"event.action": "__init__"})
+               logger.debug("__init__(parent=%s): self.Reserveringsaldo → %s", parent, self.Reserveringsaldo, extra={"event.action": "__init__"})
+               logger.debug("__init__(parent=%s): q12Edit → %s", parent, q12Edit, extra={"event.action": "__init__"})
+               logger.debug("__init__(self=%s,parent=%s): q12Edit → %s", self, parent, q12Edit, extra={"event.action": "__init__"})
+               logger.debug("__init__(parent=%s): self.Categorie → %s", parent, self.Categorie, extra={"event.action": "__init__"})
+               logger.debug("__init__(parent=%s): q8Edit → %s", parent, q8Edit, extra={"event.action": "__init__"})
+               logger.debug("__init__(self=%s,parent=%s): q8Edit → %s", self, parent, q8Edit, extra={"event.action": "__init__"})
+               logger.debug("__init__(parent=%s): self.Bestelhoeveelheid → %s", parent, self.Bestelhoeveelheid, extra={"event.action": "__init__"})
+               logger.debug("__init__(parent=%s): q9Edit → %s", parent, q9Edit, extra={"event.action": "__init__"})
+               logger.debug("__init__(self=%s,parent=%s): q9Edit → %s", self, parent, q9Edit, extra={"event.action": "__init__"})
+               logger.debug("__init__(parent=%s): grid → %s", parent, grid, extra={"event.action": "__init__"})
+               logger.debug("__init__(self=%s,parent=%s): grid → %s", self, parent, grid, extra={"event.action": "__init__"})
+               logger.debug("__init__(parent=%s): lbl → %s", parent, lbl, extra={"event.action": "__init__"})
+               logger.debug("__init__(self=%s,parent=%s): lbl → %s", self, parent, lbl, extra={"event.action": "__init__"})
+               logger.debug("__init__(parent=%s): pixmap → %s", parent, pixmap, extra={"event.action": "__init__"})
+               logger.debug("__init__(self=%s,parent=%s): pixmap → %s", self, parent, pixmap, extra={"event.action": "__init__"})
+               logger.debug("__init__(parent=%s): logo → %s", parent, logo, extra={"event.action": "__init__"})
+               logger.debug("__init__(self=%s,parent=%s): logo → %s", self, parent, logo, extra={"event.action": "__init__"})
+               logger.debug("__init__(parent=%s): lbl2 → %s", parent, lbl2, extra={"event.action": "__init__"})
+               logger.debug("__init__(self=%s,parent=%s): lbl2 → %s", self, parent, lbl2, extra={"event.action": "__init__"})
+               logger.debug("__init__(parent=%s): cancelBtn → %s", parent, cancelBtn, extra={"event.action": "__init__"})
+               logger.debug("__init__(self=%s,parent=%s): cancelBtn → %s", self, parent, cancelBtn, extra={"event.action": "__init__"})
+               logger.debug("__init__(parent=%s): bestelBtn → %s", parent, bestelBtn, extra={"event.action": "__init__"})
+               logger.debug("__init__(self=%s,parent=%s): bestelBtn → %s", self, parent, bestelBtn, extra={"event.action": "__init__"})
+               logger.debug("<<< Exiting __init__(parent=%s)", parent, extra={"event.action": "__init__"})
                QStyledItemDelegate.__init__(self, parent)
            def paint(self, painter, option, index):        
+                logger.warning(">>> Entering paint(painter=%s,option=%s,index=%s)", painter, option, index, extra={"event.action": "paint", "logrite.painter": painter, "logrite.option": option, "logrite.index": index})
                 painter.fillRect(option.rect,QColor(255,255,255))
                 image = QImage(index.data())
+                logger.debug("paint(painter=%s,option=%s,index=%s): image → %s", painter, option, index, image, extra={"event.action": "paint", "logrite.painter": painter, "logrite.option": option, "logrite.index": index})
+                logger.debug("paint(self=%s,painter=%s,option=%s,index=%s): image → %s", self, painter, option, index, image, extra={"event.action": "paint", "logrite.painter": painter, "logrite.option": option, "logrite.index": index})
                 pixmap = QPixmap(image)
+                logger.debug("paint(painter=%s,option=%s,index=%s): pixmap → %s", painter, option, index, pixmap, extra={"event.action": "paint", "logrite.painter": painter, "logrite.option": option, "logrite.index": index})
+                logger.debug("paint(self=%s,painter=%s,option=%s,index=%s): pixmap → %s", self, painter, option, index, pixmap, extra={"event.action": "paint", "logrite.painter": painter, "logrite.option": option, "logrite.index": index})
                 pixmap.scaled(256,256) 
+                logger.debug("<<< Exiting paint(painter=%s,option=%s,index=%s)", painter, option, index, extra={"event.action": "paint", "logrite.painter": painter, "logrite.option": option, "logrite.index": index})
                 return(painter.drawPixmap(option.rect, pixmap))
                                        
     header = ['Artikelnr', 'Omschrijving', 'Prijs', 'Voorraad', 'Eenheid','MinVrd',\
@@ -249,16 +373,23 @@ def toonArtikellijst(m_email):
         data_list += [(row)] 
         
     def showArtikel(idx):
+        logger.warning(">>> Entering showArtikel(idx=%s)", idx, extra={"event.action": "showArtikel", "logrite.idx": idx})
         martikelnr = idx.data()
+        logger.debug("showArtikel(idx=%s): martikelnr → %s", idx, martikelnr, extra={"event.action": "showArtikel", "logrite.idx": idx})
         if idx.column() == 0:
             engine = create_engine('postgresql+psycopg2://postgres@localhost/bisystem')
+            logger.debug("showArtikel(idx=%s): engine → %s", idx, engine, extra={"event.action": "showArtikel", "logrite.idx": idx})
             con = engine.connect()
             sel = select([artikelen]).where(artikelen.c.artikelID == martikelnr)
+            logger.debug("showArtikel(idx=%s): con → %s", idx, con, extra={"event.action": "showArtikel", "logrite.idx": idx})
             rpartikel = con.execute(sel).first()
               
+            logger.debug("showArtikel(idx=%s): sel → %s", idx, sel, extra={"event.action": "showArtikel", "logrite.idx": idx})
+            logger.debug("showArtikel(idx=%s): rpartikel → %s", idx, rpartikel, extra={"event.action": "showArtikel", "logrite.idx": idx})
             class Widget(QDialog):
                 def __init__(self, parent=None):
                     super(Widget, self).__init__(parent)
+                    logger.debug("<<< Exiting showArtikel(idx=%s)", idx, extra={"event.action": "showArtikel", "logrite.idx": idx})
                 
                     self.setWindowTitle("Artikelen Bestellijst")
                     self.setWindowIcon(QIcon('./images/logos/logo.jpg'))
@@ -405,6 +536,7 @@ def toonArtikellijst(m_email):
                     
                     self.setLayout(grid)
                     self.setGeometry(500, 100, 350, 300)
+                    logger.debug("<<< Exiting __init__(parent=%s)", parent, extra={"event.action": "__init__"})
                 
             window = Widget()
             window.exec_()

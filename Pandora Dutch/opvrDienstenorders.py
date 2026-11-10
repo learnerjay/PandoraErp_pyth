@@ -6,30 +6,41 @@ from PyQt5.QtWidgets import  QLabel, QPushButton, QWidget, QGridLayout,\
 from sqlalchemy import (Table, Column, ForeignKey,  Integer, String, MetaData,\
                        create_engine, Float)
 from sqlalchemy.sql import select, and_ 
+import logging
+logger = logging.getLogger(__name__)
 
 def windowSluit(self, m_email):
+    logger.warning(">>> Entering windowSluit(m_email=%s)", m_email, extra={"event.action": "windowSluit"})
     self.close()
     hoofdMenu(m_email)
+    logger.debug("<<< Exiting windowSluit(m_email=%s)", m_email, extra={"event.action": "windowSluit"})
     
 def ongInvoer():
+    logger.warning(">>> Entering ongInvoer()", extra={"event.action": "ongInvoer"})
     msg = QMessageBox()
+    logger.debug("ongInvoer(): msg → %s", msg, extra={"event.action": "ongInvoer"})
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     msg.setIcon(QMessageBox.Warning)
     msg.setText('Onjuiste invoer voer zoekterm\nopnieuw in!')
     msg.setWindowTitle('Opvragen stelposten')
+    logger.debug("<<< Exiting ongInvoer()", extra={"event.action": "ongInvoer"})
     msg.exec_() 
 
 def geenRecord():
+    logger.warning(">>> Entering geenRecord()", extra={"event.action": "geenRecord"})
     msg = QMessageBox()
+    logger.debug("geenRecord(): msg → %s", msg, extra={"event.action": "geenRecord"})
     msg.setStyleSheet("color: black;  background-color: gainsboro")
     msg.setWindowIcon(QIcon('./images/logos/logo.jpg'))
     msg.setIcon(QMessageBox.Warning)
     msg.setText('Geen record gevonden\nmaak een andere selektie!')
     msg.setWindowTitle('Opvragen stelposten')
+    logger.debug("<<< Exiting geenRecord()", extra={"event.action": "geenRecord"})
     msg.exec_() 
 
 def inkooporderKeuze(m_email):
+    logger.warning(">>> Entering inkooporderKeuze(m_email=%s)", m_email, extra={"event.action": "inkooporderKeuze"})
     class Widget(QDialog):
         def __init__(self, parent=None):
             super(Widget, self).__init__(parent)
@@ -96,23 +107,35 @@ def inkooporderKeuze(m_email):
             cancelBtn.setFont(QFont("Arial",10))
             cancelBtn.setFixedWidth(110)
             cancelBtn.setStyleSheet("color: black;  background-color: gainsboro")
+            logger.debug("<<< Exiting __init__(data_list=%s,header=%s)", data_list, header, extra={"event.action": "__init__", "logrite.data_list": data_list})
        
         def k0Changed(self, text):
+            logger.warning(">>> Entering k0Changed(text=%s)", text, extra={"event.action": "k0Changed", "logrite.text": text})
             self.Keuze.setText(text)
+            logger.debug("<<< Exiting k0Changed(text=%s)", text, extra={"event.action": "k0Changed", "logrite.text": text})
             
         def zktermChanged(self, text):
+            logger.warning(">>> Entering zktermChanged(text=%s)", text, extra={"event.action": "zktermChanged", "logrite.text": text})
             self.Zoekterm.setText(text)
+            logger.debug("<<< Exiting zktermChanged(text=%s)", text, extra={"event.action": "zktermChanged", "logrite.text": text})
  
         def returnk0(self):
+            logger.warning(">>> Entering returnk0()", extra={"event.action": "returnk0"})
+            logger.debug("<<< Exiting returnk0()", extra={"event.action": "returnk0"})
             return self.Keuze.text()
         
         def returnzkterm(self):
+            logger.warning(">>> Entering returnzkterm()", extra={"event.action": "returnzkterm"})
+            logger.debug("<<< Exiting returnzkterm()", extra={"event.action": "returnzkterm"})
             return self.Zoekterm.text()
         
         @staticmethod
         def getData(parent=None):
+            logger.warning(">>> Entering getData(parent=%s)", parent, extra={"event.action": "getData"})
             dialog = Widget(parent)
+            logger.debug("getData(parent=%s): dialog → %s", parent, dialog, extra={"event.action": "getData"})
             dialog.exec_()
+            logger.debug("<<< Exiting getData(parent=%s)", parent, extra={"event.action": "getData"})
             return [dialog.returnk0(), dialog.returnzkterm()]       
 
     window = Widget()
@@ -130,8 +153,10 @@ def inkooporderKeuze(m_email):
     opvrDienstorders(keuze,zoekterm, m_email)
     
 def opvrDienstorders(keuze,zoekterm, m_email):
+    logger.warning(">>> Entering opvrDienstorders(keuze=%s,zoekterm=%s,m_email=%s)", keuze, zoekterm, m_email, extra={"event.action": "opvrDienstorders", "logrite.keuze": keuze, "logrite.zoekterm": zoekterm})
     import validZt
     metadata = MetaData()
+    logger.debug("opvrDienstorders(keuze=%s,zoekterm=%s,m_email=%s): metadata → %s", keuze, zoekterm, m_email, metadata, extra={"event.action": "opvrDienstorders", "logrite.keuze": keuze, "logrite.zoekterm": zoekterm})
     orders_inkoop = Table('orders_inkoop', metadata,
         Column('orderinkoopID', Integer(), primary_key=True),
         Column('leverancierID', None, ForeignKey('leveranciers.leverancierID')),
@@ -163,7 +188,9 @@ def opvrDienstorders(keuze,zoekterm, m_email):
         Column('werkomschrijving', String))
       
     engine = create_engine('postgresql+psycopg2://postgres@localhost/bisystem')
+    logger.debug("opvrDienstorders(keuze=%s,zoekterm=%s,m_email=%s): engine → %s", keuze, zoekterm, m_email, engine, extra={"event.action": "opvrDienstorders", "logrite.keuze": keuze, "logrite.zoekterm": zoekterm})
     con = engine.connect()
+    logger.debug("opvrDienstorders(keuze=%s,zoekterm=%s,m_email=%s): con → %s", keuze, zoekterm, m_email, con, extra={"event.action": "opvrDienstorders", "logrite.keuze": keuze, "logrite.zoekterm": zoekterm})
  
     if keuze == 1:
         sel = select([orders_inkoop_diensten, orders_inkoop, leveranciers,werken]).\
@@ -220,11 +247,14 @@ def opvrDienstorders(keuze,zoekterm, m_email):
     if con.execute(sel).fetchone():
         rpinkorders = con.execute(sel)
     else:
+        logger.debug("opvrDienstorders(keuze=%s,zoekterm=%s,m_email=%s): rpinkorders → <redacted>", keuze, zoekterm, m_email, extra={"event.action": "opvrDienstorders", "logrite.keuze": keuze, "logrite.zoekterm": zoekterm})
         geenRecord()
         inkooporderKeuze(m_email)
                                      
     class Window(QDialog):
+       logger.debug("<<< Exiting opvrDienstorders(keuze=%s,zoekterm=%s,m_email=%s)", keuze, zoekterm, m_email, extra={"event.action": "opvrDienstorders", "logrite.keuze": keuze, "logrite.zoekterm": zoekterm})
        def __init__(self, data_list, header, *args):
+            logger.warning(">>> Entering __init__(data_list=%s,header=%s)", data_list, header, extra={"event.action": "__init__", "logrite.data_list": data_list})
             QWidget.__init__(self, *args,)
             self.setGeometry(100, 50, 1600, 900)
             self.setWindowTitle('Opvragen order stelposten')
@@ -232,7 +262,13 @@ def opvrDienstorders(keuze,zoekterm, m_email):
             self.setWindowFlags(self.windowFlags()| Qt.WindowSystemMenuHint |
                               Qt.WindowMinMaxButtonsHint)
             table_model = MyTableModel(self, data_list, header)
+            logger.debug("__init__(data_list=%s,header=%s): table_model → %s", data_list, header, table_model, extra={"event.action": "__init__", "logrite.data_list": data_list})
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): table_model → %s", self, data_list, header, table_model, extra={"event.action": "__init__", "logrite.data_list": data_list})
+            logger.debug("__init__(data_list=%s,header=%s): font → %s", data_list, header, font, extra={"event.action": "__init__", "logrite.data_list": data_list})
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): font → %s", self, data_list, header, font, extra={"event.action": "__init__", "logrite.data_list": data_list})
             table_view = QTableView()
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): table_view → %s", self, data_list, header, table_view, extra={"event.action": "__init__", "logrite.data_list": data_list})
+            logger.debug("__init__(data_list=%s,header=%s): table_view → %s", data_list, header, table_view, extra={"event.action": "__init__", "logrite.data_list": data_list})
             table_view.setModel(table_model)
             font = QFont("Arial", 10)
             table_view.setFont(font)
@@ -244,20 +280,109 @@ def opvrDienstorders(keuze,zoekterm, m_email):
             table_view.setSelectionBehavior(QTableView.SelectRows)
             table_view.clicked.connect(showOrder)
             layout = QVBoxLayout(self)
+            logger.debug("__init__(data_list=%s,header=%s): layout → %s", data_list, header, layout, extra={"event.action": "__init__", "logrite.data_list": data_list})
+            logger.debug("__init__(self=%s,data_list=%s,header=%s): layout → %s", self, data_list, header, layout, extra={"event.action": "__init__", "logrite.data_list": data_list})
             layout.addWidget(table_view)
             self.setLayout(layout)
     
     class MyTableModel(QAbstractTableModel):
         def __init__(self, parent, mylist, header, *args):
+            logger.warning(">>> Entering __init__(parent=%s,mylist=%s,header=%s)", parent, mylist, header, extra={"event.action": "__init__", "logrite.mylist": mylist})
+            logger.debug("__init__(self=%s,parent=%s,mylist=%s,header=%s): self.mylist → %s", self, parent, mylist, header, self.mylist, extra={"event.action": "__init__", "logrite.mylist": mylist})
+            logger.debug("__init__(self=%s,parent=%s,mylist=%s,header=%s): self.header → %s", self, parent, mylist, header, self.header, extra={"event.action": "__init__", "logrite.mylist": mylist})
             QAbstractTableModel.__init__(self, parent, *args)
+            logger.debug("<<< Exiting __init__(parent=%s,mylist=%s,header=%s)", parent, mylist, header, extra={"event.action": "__init__", "logrite.mylist": mylist})
             self.mylist = mylist
+            logger.warning(">>> Entering __init__(parent=%s)", parent, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.Orderinkoopdienst → %s", parent, self.Orderinkoopdienst, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): q2Edit → %s", parent, q2Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): q2Edit → %s", self, parent, q2Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.Leveranciernummer → %s", parent, self.Leveranciernummer, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): q4Edit → %s", parent, q4Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): q4Edit → %s", self, parent, q4Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.Besteldatum → %s", parent, self.Besteldatum, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): q5Edit → %s", parent, q5Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): q5Edit → %s", self, parent, q5Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.Goedgekeurd → %s", parent, self.Goedgekeurd, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): q8Edit → %s", parent, q8Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): q8Edit → %s", self, parent, q8Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.Betaald → %s", parent, self.Betaald, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): q18Edit → %s", parent, q18Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): q18Edit → %s", self, parent, q18Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.Afgemeld → %s", parent, self.Afgemeld, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): q12Edit → %s", parent, q12Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): q12Edit → %s", self, parent, q12Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): q13Edit → %s", parent, q13Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): q13Edit → %s", self, parent, q13Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.Bedrijfsnaam → %s", parent, self.Bedrijfsnaam, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): q19Edit → %s", parent, q19Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): q19Edit → %s", self, parent, q19Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.Rechtsvorm → %s", parent, self.Rechtsvorm, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): q14Edit → %s", parent, q14Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): q14Edit → %s", self, parent, q14Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.Werknummer → %s", parent, self.Werknummer, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): q15Edit → %s", parent, q15Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): q15Edit → %s", self, parent, q15Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.Werkomschrijving → %s", parent, self.Werkomschrijving, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): q16Edit → %s", parent, q16Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): q16Edit → %s", self, parent, q16Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.Dienstomschrijving → %s", parent, self.Dienstomschrijving, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): q17Edit → %s", parent, q17Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): q17Edit → %s", self, parent, q17Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.Dienstsoort → %s", parent, self.Dienstsoort, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): q11Edit → %s", parent, q11Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): q11Edit → %s", self, parent, q11Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.Aanneemsom → %s", parent, self.Aanneemsom, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): q20Edit → %s", parent, q20Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): q20Edit → %s", self, parent, q20Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.Planstart → %s", parent, self.Planstart, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): q21Edit → %s", parent, q21Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): q21Edit → %s", self, parent, q21Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.Werkelijkstart → %s", parent, self.Werkelijkstart, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): q22Edit → %s", parent, q22Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): q22Edit → %s", self, parent, q22Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.Plangereed → %s", parent, self.Plangereed, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): q23Edit → %s", parent, q23Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): q23Edit → %s", self, parent, q23Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.Werkelijkgereed → %s", parent, self.Werkelijkgereed, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): q24Edit → %s", parent, q24Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): q24Edit → %s", self, parent, q24Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.AcceptatieaantaL → %s", parent, self.AcceptatieaantaL, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): q25Edit → %s", parent, q25Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): q25Edit → %s", self, parent, q25Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.Acceptatiedatum → %s", parent, self.Acceptatiedatum, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): q26Edit → %s", parent, q26Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): q26Edit → %s", self, parent, q26Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): self.Meerminderwerk → %s", parent, self.Meerminderwerk, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): q27Edit → %s", parent, q27Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): q27Edit → %s", self, parent, q27Edit, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): grid → %s", parent, grid, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): grid → %s", self, parent, grid, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): lbl → %s", parent, lbl, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): lbl → %s", self, parent, lbl, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): pixmap → %s", parent, pixmap, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): pixmap → %s", self, parent, pixmap, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): logo → %s", parent, logo, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): logo → %s", self, parent, logo, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): lbl1 → %s", parent, lbl1, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): lbl1 → %s", self, parent, lbl1, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): lbl2 → %s", parent, lbl2, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): lbl2 → %s", self, parent, lbl2, extra={"event.action": "__init__"})
+            logger.debug("__init__(parent=%s): cancelBtn → %s", parent, cancelBtn, extra={"event.action": "__init__"})
+            logger.debug("__init__(self=%s,parent=%s): cancelBtn → %s", self, parent, cancelBtn, extra={"event.action": "__init__"})
+            logger.debug("<<< Exiting __init__(parent=%s)", parent, extra={"event.action": "__init__"})
             self.header = header
         def rowCount(self, parent):
+            logger.warning(">>> Entering rowCount(parent=%s)", parent, extra={"event.action": "rowCount"})
             return len(self.mylist)
         def columnCount(self, parent):
+            logger.warning(">>> Entering columnCount(parent=%s)", parent, extra={"event.action": "columnCount"})
             return len(self.mylist[0])
         def data(self, index, role):
+            logger.warning(">>> Entering data(index=%s,role=%s)", index, role, extra={"event.action": "data", "logrite.index": index, "logrite.role": role})
             veld = self.mylist[index.row()][index.column()]
+            logger.debug("data(index=%s,role=%s): veld → %s", index, role, veld, extra={"event.action": "data", "logrite.index": index, "logrite.role": role})
+            logger.debug("data(self=%s,index=%s,role=%s): veld → %s", self, index, role, veld, extra={"event.action": "data", "logrite.index": index, "logrite.role": role})
             if not index.isValid():
                 return None
             elif role == Qt.TextAlignmentRole and (type(veld) == float or type(veld) == int):
@@ -267,10 +392,13 @@ def opvrDienstorders(keuze,zoekterm, m_email):
             if type(veld) == float:
                 return '{:12.2f}'.format(veld)
             else:
+                logger.debug("<<< Exiting data(index=%s,role=%s)", index, role, extra={"event.action": "data", "logrite.index": index, "logrite.role": role})
                 return veld
         def headerData(self, col, orientation, role):
+            logger.warning(">>> Entering headerData(col=%s,orientation=%s,role=%s)", col, orientation, role, extra={"event.action": "headerData", "logrite.col": col, "logrite.orientation": orientation, "logrite.role": role})
             if orientation == Qt.Horizontal and role == Qt.DisplayRole:
                 return self.header[col]
+            logger.debug("<<< Exiting headerData(col=%s,orientation=%s,role=%s)", col, orientation, role, extra={"event.action": "headerData", "logrite.col": col, "logrite.orientation": orientation, "logrite.role": role})
             return None
        
     header = ['Order inkoopID','Order inkoop nummer', 'Werknummer','Type van stelpost', 'Stelpost omschrijving', 'Aanneemsom',\
@@ -283,19 +411,26 @@ def opvrDienstorders(keuze,zoekterm, m_email):
         data_list += [(row)] 
         
     def showOrder(idx):
+        logger.warning(">>> Entering showOrder(idx=%s)", idx, extra={"event.action": "showOrder", "logrite.idx": idx})
         mordinkdnst = idx.data()
+        logger.debug("showOrder(idx=%s): mordinkdnst → %s", idx, mordinkdnst, extra={"event.action": "showOrder", "logrite.idx": idx})
         engine = create_engine('postgresql+psycopg2://postgres@localhost/bisystem')
         con = engine.connect()
+        logger.debug("showOrder(idx=%s): engine → %s", idx, engine, extra={"event.action": "showOrder", "logrite.idx": idx})
         if idx.column() == 0:
             selorddnst = select([orders_inkoop_diensten, orders_inkoop, leveranciers,werken])\
                 .where(and_(orders_inkoop.c.leverancierID == leveranciers.c.\
                 leverancierID, orders_inkoop_diensten.c.werknummerID == werken.c.\
                 werknummerID, orders_inkoop_diensten.c.orderinkoopID == orders_inkoop.c.\
                 orderinkoopID, orders_inkoop_diensten.c.orddienstlevID == mordinkdnst))
+            logger.debug("showOrder(idx=%s): con → %s", idx, con, extra={"event.action": "showOrder", "logrite.idx": idx})
+            logger.debug("showOrder(idx=%s): selorddnst → %s", idx, selorddnst, extra={"event.action": "showOrder", "logrite.idx": idx})
             rporddnst = con.execute(selorddnst).first() 
             class Widget(QDialog):
+                 logger.debug("<<< Exiting showOrder(idx=%s)", idx, extra={"event.action": "showOrder", "logrite.idx": idx})
                  def __init__(self, parent=None):
                     super(Widget, self).__init__(parent)
+                    logger.warning(">>> Entering __init__(parent=%s)", parent, extra={"event.action": "__init__"})
                     self.setWindowTitle("Opvragen inkoop orders stelposten")
                     self.setWindowIcon(QIcon('./images/logos/logo.jpg')) 
                                           
@@ -524,6 +659,7 @@ def opvrDienstorders(keuze,zoekterm, m_email):
                     cancelBtn.clicked.connect(self.close)
                 
                     grid.addWidget(cancelBtn, 15, 5, 1, 1, Qt.AlignRight)
+                    logger.debug("<<< Exiting __init__(parent=%s)", parent, extra={"event.action": "__init__"})
                     cancelBtn.setFont(QFont("Arial",10))
                     cancelBtn.setFixedWidth(100)
                     cancelBtn.setStyleSheet("color: black;  background-color: gainsboro")
